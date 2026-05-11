@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagement Roadmap</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: #f2ede3;
+  color: #1a1a1a;
+  padding: 24px 28px;
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.view-tabs {
+  display: flex;
+  border: 1px solid #c8c0b0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.view-tab {
+  padding: 7px 15px;
+  background: #fff;
+  border: none;
+  border-right: 1px solid #c8c0b0;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  color: #555;
+  letter-spacing: 0.03em;
+  transition: background 0.12s, color 0.12s;
+}
+.view-tab:last-child { border-right: none; }
+.view-tab:hover { background: #f5f0e8; }
+.view-tab.active {
+  background: #E3120B;
+  color: #fff;
+  font-weight: bold;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.filter-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+select {
+  padding: 7px 10px;
+  border: 1px solid #c8c0b0;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: #fff;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+select:focus { outline: 1px solid #E3120B; }
+
+.backlog-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+  user-select: none;
+}
+.backlog-toggle input[type="checkbox"] {
+  accent-color: #E3120B;
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+}
+
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #faf7f0;
+  border: 1px solid #c8c0b0;
+  table-layout: fixed;
+}
+
+col.lane-col { width: 170px; }
+col.horizon-col { width: auto; }
+
+thead tr th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  background: #f2ede3;
+  border-bottom: 1px solid #c8c0b0;
+  vertical-align: bottom;
+}
+
+th.h-now     { color: #2f7a2f; border-top: 3px solid #2f7a2f; }
+th.h-next    { color: #b86d00; border-top: 3px solid #b86d00; }
+th.h-later   { color: #E3120B; border-top: 3px solid #E3120B; }
+th.h-backlog { color: #999;    border-top: 3px solid #bbb; }
+th.h-lane    { color: #1a1a1a; border-top: 3px solid transparent; }
+
+tbody tr { border-bottom: 1px dashed #c8c0b0; }
+tbody tr:last-child { border-bottom: none; }
+
+td.lane-cell {
+  padding: 11px 14px;
+  font-weight: bold;
+  font-size: 12px;
+  vertical-align: top;
+  border-right: 1px solid #c8c0b0;
+  background: #f2ede3;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.lane-count {
+  display: inline-block;
+  background: #ddd8cc;
+  color: #777;
+  font-size: 10px;
+  font-weight: normal;
+  padding: 1px 5px;
+  border-radius: 9px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+td.feat-cell {
+  padding: 11px 14px;
+  vertical-align: top;
+  border-right: 1px solid #e0d9cc;
+}
+td.feat-cell:last-child { border-right: none; }
+
+.feat {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #1a1a1a;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ece6d8;
+}
+.feat:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.feat.is-highlight { color: #b86d00; font-style: italic; }
+
+.tag-pill {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 9px;
+  margin-right: 5px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Team pills */
+.pill-web  { background: #ddeeff; color: #2255aa; }
+.pill-disc { background: #eeddf5; color: #7733aa; }
+.pill-core { background: #ddf5ee; color: #226644; }
+.pill-av   { background: #fff0dd; color: #aa5500; }
+.pill-ads  { background: #fff5dd; color: #886600; }
+
+/* Goal pills */
+.pill-g-post  { background: #dde8ff; color: #1a4a99; }
+.pill-g-early { background: #ddf2e0; color: #1a6e33; }
+.pill-g-deep  { background: #efe0f8; color: #6a1fa0; }
+.pill-g-prem  { background: #fde0de; color: #b01a10; }
+.pill-g-aud   { background: #d8f2ef; color: #0e6b5e; }
+.pill-g-plat  { background: #e8e4de; color: #5a5248; }
+
+.empty-table {
+  padding: 40px;
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Engagement Scope — Roadmap</h1>
+  <span class="subtitle" id="view-subtitle">All teams · Goals as swim lanes</span>
+</div>
+
+<div class="controls">
+  <div class="view-tabs">
+    <button class="view-tab active" data-view="all">All Teams</button>
+    <button class="view-tab" data-view="team">By Team</button>
+    <button class="view-tab" data-view="goal">By Goal</button>
+  </div>
+
+  <div class="filter-group" id="team-filter" style="display:none">
+    <span class="filter-label">Team</span>
+    <select id="team-select">
+      <option value="">All teams</option>
+    </select>
+  </div>
+
+  <div class="filter-group" id="goal-filter" style="display:none">
+    <span class="filter-label">Goal</span>
+    <select id="goal-select">
+      <option value="">All goals</option>
+    </select>
+  </div>
+
+  <label class="backlog-toggle">
+    <input type="checkbox" id="show-backlog"> Show Backlog
+  </label>
+</div>
+
+<div class="table-wrap" id="table-wrap"></div>
+
+<script>
+const DATA = [
+  { f:"MCP App Beta test",                              t:"Web, NL & GenAI",             g:"Post search",         r:"Now",  hi:true },
+  { f:"Get Started MVP - Iterations",                   t:"Web, NL & GenAI",             g:"Early engagement",    r:"Now" },
+  { f:"Voting polls in newsletters",                    t:"Web, NL & GenAI",             g:"Deep habits",         r:"Now" },
+  { f:"Games on web",                                   t:"Web, NL & GenAI",             g:"Premium experiences", r:"Now" },
+  { f:"Business In Brief NL",                           t:"Web, NL & GenAI",             g:"Premium experiences", r:"Now" },
+  { f:"TWIB 2.0 on web",                                t:"Web, NL & GenAI",             g:"Premium experiences", r:"Now" },
+  { f:"AI-native engineering enablers",                 t:"Web, NL & GenAI",             g:"Platform excellence", r:"Now" },
+  { f:"Preview tier",                                   t:"Web, NL & GenAI",             g:"Post search",         r:"Next" },
+  { f:"Rich topic pages update",                        t:"Web, NL & GenAI",             g:"Post search",         r:"Next" },
+  { f:"For You Newsletter v1",                          t:"Web, NL & GenAI",             g:"Deep habits",         r:"Next" },
+  { f:"Pro Newsletter",                                 t:"Web, NL & GenAI",             g:"Premium experiences", r:"Next" },
+  { f:"Preview tier",                                   t:"Web, NL & GenAI",             g:"Post search",         r:"Later" },
+  { f:"For You Newsletter v2",                          t:"Web, NL & GenAI",             g:"Deep habits",         r:"Later" },
+  { f:"Articles onward journeys",                       t:"Web, NL & GenAI",             g:"Post search",         r:"Later" },
+  { f:"Video / animated article headers",               t:"Web, NL & GenAI",             g:"Premium experiences", r:"Later" },
+  { f:"Comment sections on Articles on Web",            t:"Web, NL & GenAI",             g:"Premium experiences", r:"Backlog" },
+  { f:"Personalised Content feed (B2B/B2C)",            t:"Discovery & Personalisation", g:"Deep habits",         r:"Now" },
+  { f:"Collections (Mobile)",                           t:"Discovery & Personalisation", g:"Deep habits",         r:"Now" },
+  { f:"Ask The Economist (B2B)",                        t:"Discovery & Personalisation", g:"Deep habits",         r:"Next" },
+  { f:"Improved For You feed (B2C)",                    t:"Discovery & Personalisation", g:"Deep habits",         r:"Next" },
+  { f:"Reader History",                                 t:"Discovery & Personalisation", g:"Deep habits",         r:"Next" },
+  { f:"B2C first party data (move to Ads?)",            t:"Discovery & Personalisation", g:"Audience value",      r:"Next" },
+  { f:"Sync PUWILO & History",                          t:"Discovery & Personalisation", g:"Platform excellence", r:"Next" },
+  { f:"BFF orchestration for homepages",                t:"Discovery & Personalisation", g:"Platform excellence", r:"Next" },
+  { f:"Sunset Econobot",                                t:"Discovery & Personalisation", g:"Platform excellence", r:"Next" },
+  { f:"Newsletters in app (native)",                    t:"Discovery & Personalisation", g:"Deep habits",         r:"Later" },
+  { f:"Access to Downloads in For You",                 t:"Discovery & Personalisation", g:"Deep habits",         r:"Later" },
+  { f:"Automated topic push notifications",             t:"Discovery & Personalisation", g:"Deep habits",         r:"Later" },
+  { f:"Contextual search in bottom nav (Liquid Glass)", t:"Discovery & Personalisation", g:"Premium experiences", r:"Later" },
+  { f:"Games in the app",                               t:"Core App",                    g:"Premium experiences", r:"Now" },
+  { f:"Games push notifications",                       t:"Core App",                    g:"Deep habits",         r:"Now" },
+  { f:"eReader in the app",                             t:"Core App",                    g:"Audience value",      r:"Now" },
+  { f:"Design system for agentic dev",                  t:"Core App",                    g:"Platform excellence", r:"Now" },
+  { f:"Preview in the app",                             t:"Core App",                    g:"Post search",         r:"Later" },
+  { f:"Get Started in the app",                         t:"Core App",                    g:"Early engagement",    r:"Later" },
+  { f:"Liquid Glass (iOS)",                             t:"Core App",                    g:"Platform excellence", r:"Later" },
+  { f:"Native Newsletters in the app",                  t:"Core App",                    g:"Premium experiences", r:"Later" },
+  { f:"Offline behaviour improvement",                  t:"Core App",                    g:"Platform excellence", r:"Later" },
+  { f:"Review LUCIQ integration",                       t:"Core App",                    g:"Platform excellence", r:"Later" },
+  { f:"Referers tracking in app",                       t:"Core App",                    g:"Platform excellence", r:"Later" },
+  { f:"Weekly selection for Reg",                       t:"Core App",                    g:"Deep habits",         r:"Backlog" },
+  { f:"Comment sections on Articles in the App",        t:"Core App",                    g:"Premium experiences", r:"Backlog" },
+  { f:"iOS / Android widgets",                          t:"Core App",                    g:"Deep habits",         r:"Backlog" },
+  { f:"Play: TWIB component",                           t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"Play: deep linking and push",                    t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"Play: newsletters webview",                      t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"Play: add components to Podcasts tab",           t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"AI Guided Session (iOS only)",                   t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"Play: podcast carousel",                         t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"Play: Continue Listening",                       t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"Vertical video Zephr",                           t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"Podcasts Zephr",                                 t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"New podcast launch: American Apostle",           t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"Featured vertical video on web Home",            t:"Audio & Video",               g:"Premium experiences", r:"Now" },
+  { f:"InsiderxPodcasts: audio player rearch",          t:"Audio & Video",               g:"Premium experiences", r:"Next" },
+  { f:"InsiderxPodcasts: unified player",               t:"Audio & Video",               g:"Premium experiences", r:"Next" },
+  { f:"Vertical video speed controls on web",           t:"Audio & Video",               g:"Premium experiences", r:"Next" },
+  { f:"InsiderxPodcasts: audio player rearch (cont.)",  t:"Audio & Video",               g:"Premium experiences", r:"Later" },
+  { f:"InsiderxPodcasts: unified player (cont.)",       t:"Audio & Video",               g:"Premium experiences", r:"Later" },
+  { f:"Play full launch",                               t:"Audio & Video",               g:"Premium experiences", r:"Later" },
+  { f:"Android Auto",                                   t:"Audio & Video",               g:"Premium experiences", r:"Later" },
+  { f:"Ads on Play Pilot",                              t:"Ad experience",               g:"Audience value",      r:"Now" },
+  { f:"Migration to GAM in newsletters",                t:"Ad experience",               g:"Audience value",      r:"Now" },
+  { f:"B2C First party data",                           t:"Ad experience",               g:"Audience value",      r:"Now" },
+  { f:"Preview Ad experience",                          t:"Ad experience",               g:"Audience value",      r:"Next" },
+  { f:"Play / Video Ad experience",                     t:"Ad experience",               g:"Audience value",      r:"Later" }
+];
+
+const GOALS = ["Post search","Early engagement","Deep habits","Premium experiences","Audience value","Platform excellence"];
+const TEAMS = ["Web, NL & GenAI","Discovery & Personalisation","Core App","Audio & Video","Ad experience"];
+const HNOW  = ["Now","Next","Later"];
+
+const TEAM_PILL = {
+  "Web, NL & GenAI":            ["pill-web",  "Web"],
+  "Discovery & Personalisation":["pill-disc", "D&P"],
+  "Core App":                   ["pill-core", "Core App"],
+  "Audio & Video":              ["pill-av",   "A&V"],
+  "Ad experience":              ["pill-ads",  "Ads"]
+};
+
+const GOAL_PILL = {
+  "Post search":         ["pill-g-post",  "Post search"],
+  "Early engagement":    ["pill-g-early", "Early eng."],
+  "Deep habits":         ["pill-g-deep",  "Deep habits"],
+  "Premium experiences": ["pill-g-prem",  "Premium"],
+  "Audience value":      ["pill-g-aud",   "Audience"],
+  "Platform excellence": ["pill-g-plat",  "Platform"]
+};
+
+const H_CLASS = { Now:"h-now", Next:"h-next", Later:"h-later", Backlog:"h-backlog" };
+
+let view = "all";
+
+const teamSel = document.getElementById("team-select");
+const goalSel = document.getElementById("goal-select");
+
+TEAMS.forEach(function(t) {
+  const o = document.createElement("option");
+  o.value = t; o.textContent = t;
+  teamSel.appendChild(o);
+});
+GOALS.forEach(function(g) {
+  const o = document.createElement("option");
+  o.value = g; o.textContent = g;
+  goalSel.appendChild(o);
+});
+
+document.querySelectorAll(".view-tab").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    view = btn.dataset.view;
+    document.querySelectorAll(".view-tab").forEach(function(b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    document.getElementById("team-filter").style.display = (view === "team") ? "flex" : "none";
+    document.getElementById("goal-filter").style.display = (view === "goal") ? "flex" : "none";
+    render();
+  });
+});
+
+teamSel.addEventListener("change", render);
+goalSel.addEventListener("change", render);
+document.getElementById("show-backlog").addEventListener("change", render);
+
+function render() {
+  var showBacklog = document.getElementById("show-backlog").checked;
+  var horizons = showBacklog ? ["Now","Next","Later","Backlog"] : ["Now","Next","Later"];
+  var selTeam  = teamSel.value;
+  var selGoal  = goalSel.value;
+
+  var lanes, laneKey, filterKey, filterVal, showPills, pillType;
+
+  if (view === "all") {
+    lanes      = GOALS;
+    laneKey    = "g";
+    filterKey  = null;
+    filterVal  = null;
+    showPills  = true;
+    pillType   = "team";
+    document.getElementById("view-subtitle").textContent = "All teams · Goals as swim lanes";
+  } else if (view === "team") {
+    lanes      = GOALS;
+    laneKey    = "g";
+    filterKey  = "t";
+    filterVal  = selTeam || null;
+    showPills  = true;
+    pillType   = "team";
+    var tlabel = selTeam || "all teams";
+    document.getElementById("view-subtitle").textContent = tlabel + " · Goals as swim lanes";
+  } else {
+    lanes      = TEAMS;
+    laneKey    = "t";
+    filterKey  = "g";
+    filterVal  = selGoal || null;
+    showPills  = true;
+    pillType   = "goal";
+    var glabel = selGoal || "all goals";
+    document.getElementById("view-subtitle").textContent = glabel + " · Teams as swim lanes";
+  }
+
+  var colgroup = "<colgroup><col class=\"lane-col\">" +
+    horizons.map(function() { return "<col class=\"horizon-col\">"; }).join("") +
+    "</colgroup>";
+
+  var headerRow = "<tr><th class=\"h-lane\"></th>" +
+    horizons.map(function(h) { return "<th class=\"" + H_CLASS[h] + "\">" + h + "</th>"; }).join("") +
+    "</tr>";
+
+  var bodyRows = "";
+
+  lanes.forEach(function(lane) {
+    var cells = horizons.map(function(h) {
+      return DATA.filter(function(d) {
+        return d[laneKey] === lane &&
+               d.r === h &&
+               (!filterKey || !filterVal || d[filterKey] === filterVal);
+      });
+    });
+
+    var total = cells.reduce(function(s, c) { return s + c.length; }, 0);
+    if (total === 0) return;
+
+    var tds = cells.map(function(items) {
+      if (!items.length) return "<td class=\"feat-cell\"></td>";
+      var feats = items.map(function(item) {
+        var hi = item.hi ? " is-highlight" : "";
+        var pill = "";
+        if (showPills) {
+          var pillMap = (pillType === "goal") ? GOAL_PILL : TEAM_PILL;
+          var pillKey = (pillType === "goal") ? item.g : item.t;
+          var pillData = pillMap[pillKey] || ["", pillKey];
+          var cls = pillData[0];
+          var lbl = pillData[1];
+          pill = "<span class=\"tag-pill " + cls + "\">" + lbl + "</span>";
+        }
+        return "<div class=\"feat" + hi + "\">" + pill + item.f + "</div>";
+      }).join("");
+      return "<td class=\"feat-cell\">" + feats + "</td>";
+    }).join("");
+
+    bodyRows += "<tr><td class=\"lane-cell\">" + lane +
+      "<span class=\"lane-count\">" + total + "</span></td>" + tds + "</tr>";
+  });
+
+  if (!bodyRows) {
+    bodyRows = "<tr><td class=\"feat-cell empty-table\" colspan=\"" + (horizons.length + 1) + "\">No features match the current filter.</td></tr>";
+  }
+
+  document.getElementById("table-wrap").innerHTML =
+    "<table>" + colgroup + "<thead>" + headerRow + "</thead><tbody>" + bodyRows + "</tbody></table>";
+}
+
+render();
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
