@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagement Goals</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: #f2ede3;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+/* ── NAV ─────────────────────────────────────────────────────────── */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 28px;
+  background: #fff;
+  border-bottom: 1px solid #d4cec4;
+  height: 44px;
+}
+
+.nav-brand {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin-right: 24px;
+  text-decoration: none;
+}
+
+.nav-tab {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 16px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #666;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.12s, border-color 0.12s;
+  letter-spacing: 0.02em;
+}
+.nav-tab:hover { color: #1a1a1a; }
+.nav-tab.active {
+  color: #E3120B;
+  border-bottom-color: #E3120B;
+  font-weight: 600;
+}
+
+/* ── PAGE ────────────────────────────────────────────────────────── */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 28px 60px;
+}
+
+/* ── SECTION LABELS ──────────────────────────────────────────────── */
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 28px;
+}
+
+/* ── JOURNEY TIMELINE ────────────────────────────────────────────── */
+.journey-wrap {
+  margin-bottom: 8px;
+  position: relative;
+  padding: 0 20px;
+}
+
+.timeline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: calc(12.5% + 8px);
+  right: calc(12.5% + 8px);
+  height: 2px;
+  background: #E3120B;
+  z-index: 0;
+}
+
+.timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.step-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.step-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #d4cec4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 300;
+  color: #1a1a1a;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* ── JOURNEY CARDS ───────────────────────────────────────────────── */
+.journey-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.goal-card {
+  background: #fff;
+  border-radius: 8px;
+  border-top: 3px solid #E3120B;
+  padding: 20px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.goal-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #E3120B;
+  margin-bottom: 12px;
+}
+
+.goal-desc {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #1a1a1a;
+  flex: 1;
+}
+
+.goal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 18px;
+}
+
+.goal-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #f0ece4;
+  color: #555;
+  border: 1px solid #ddd8cc;
+}
+
+/* ── REVENUE LAYER ───────────────────────────────────────────────── */
+.revenue-wrap {
+  margin-bottom: 28px;
+}
+
+.wide-card {
+  background: #fff;
+  border-radius: 8px;
+  border-left: 4px solid #E3120B;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.wide-card .step-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+.wide-card-body {
+  flex: 1;
+}
+
+.wide-card-body .goal-name {
+  margin-bottom: 4px;
+}
+
+.wide-card-body .goal-desc {
+  font-size: 15px;
+}
+
+.wide-card .goal-tags {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+/* ── FOUNDATION ──────────────────────────────────────────────────── */
+.foundation-wrap .section-label {
+  color: #aaa;
+}
+
+.foundation-card {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.foundation-card .step-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #3a3a3a;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+.foundation-card-body {
+  flex: 1;
+}
+
+.foundation-card .goal-name {
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.foundation-card .goal-desc {
+  color: #fff;
+  font-size: 15px;
+}
+
+.foundation-tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #2e2e2e;
+  color: #aaa;
+  border: 1px solid #3a3a3a;
+}
+
+.foundation-card .goal-tags {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Engagement</span>
+  <a href="index.html" class="nav-tab">Roadmap</a>
+  <a href="goals.html" class="nav-tab active">Goals</a>
+</nav>
+
+<div class="page">
+
+  <!-- THE SUBSCRIBER JOURNEY -->
+  <div class="journey-wrap">
+    <div class="section-label">The Subscriber Journey</div>
+
+    <div class="timeline">
+      <div class="timeline-step">
+        <div class="step-label">Find us</div>
+        <div class="step-circle">1</div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-label">Arrive</div>
+        <div class="step-circle">2</div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-label">Get hooked</div>
+        <div class="step-circle">3</div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-label">Stay engaged</div>
+        <div class="step-circle">4</div>
+      </div>
+    </div>
+
+    <div class="journey-cards">
+
+      <div class="goal-card">
+        <div class="goal-name">Beyond Search</div>
+        <div class="goal-desc">Ensure The Economist thrives as discovery shifts from search to AI and LLMs</div>
+        <div class="goal-tags">
+          <span class="goal-tag">Gen AI &amp; Conversation</span>
+          <span class="goal-tag">Discovery &amp; Personalisation</span>
+        </div>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-name">First 30 Days</div>
+        <div class="goal-desc">Win the first 30 days and turn new subscribers into engaged, long-term users</div>
+        <div class="goal-tags">
+          <span class="goal-tag">First-Touch Experience</span>
+        </div>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-name">Deep Habits</div>
+        <div class="goal-desc">Build deep, habitual engagement across all subscriber types</div>
+        <div class="goal-tags">
+          <span class="goal-tag">Core App</span>
+          <span class="goal-tag">Discovery &amp; Personalisation</span>
+        </div>
+      </div>
+
+      <div class="goal-card">
+        <div class="goal-name">Play &amp; Premium</div>
+        <div class="goal-desc">Differentiate The Economist through Play and Premium experiences</div>
+        <div class="goal-tags">
+          <span class="goal-tag">Audio &amp; Video</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- REVENUE LAYER -->
+  <div class="revenue-wrap">
+    <div class="section-label">Revenue Layer</div>
+    <div class="wide-card">
+      <div class="step-num">5</div>
+      <div class="wide-card-body">
+        <div class="goal-name">Audience Value</div>
+        <div class="goal-desc">Grow advertising revenue by maximising the value of our premium audience</div>
+      </div>
+      <div class="goal-tags">
+        <span class="goal-tag">Digital Ads</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOUNDATION -->
+  <div class="foundation-wrap">
+    <div class="section-label">Foundation</div>
+    <div class="foundation-card">
+      <div class="step-num">6</div>
+      <div class="foundation-card-body">
+        <div class="goal-name">Platform Excellence</div>
+        <div class="goal-desc">Deliver a fast, reliable and technically excellent platform across web and app</div>
+      </div>
+      <div class="goal-tags">
+        <span class="foundation-tag">Core App</span>
+        <span class="foundation-tag">First-Touch Experience</span>
+        <span class="foundation-tag">Digital Ads</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -8,13 +8,54 @@
 :root { color-scheme: light; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+nav {
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  background: #fff;
+  border-bottom: 1px solid #d4cec4;
+  height: 44px;
+}
+.nav-brand {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin-right: 24px;
+  text-decoration: none;
+}
+.nav-tab {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 16px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #666;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.12s, border-color 0.12s;
+  letter-spacing: 0.02em;
+}
+.nav-tab:hover { color: #1a1a1a; }
+.nav-tab.active {
+  color: #E3120B;
+  border-bottom-color: #E3120B;
+  font-weight: 600;
+}
+
 body {
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
   background: #f2ede3;
   color: #1a1a1a;
-  padding: 24px 28px;
+  padding: 0;
   min-height: 100vh;
   font-size: 14px;
+}
+
+.page-content {
+  padding: 24px 28px;
 }
 
 .page-header {
@@ -227,6 +268,13 @@ td.feat-cell:last-child { border-right: none; }
 </head>
 <body>
 
+<nav>
+  <span class="nav-brand">Engagement</span>
+  <a href="index.html" class="nav-tab active">Roadmap</a>
+  <a href="goals.html" class="nav-tab">Goals</a>
+</nav>
+
+<div class="page-content">
 <div class="page-header">
   <h1>Engagement Scope — Roadmap</h1>
   <span class="subtitle" id="view-subtitle">All teams · Goals as swim lanes</span>
@@ -474,6 +522,7 @@ function render() {
 
 render();
 </script>
+</div>
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                              
