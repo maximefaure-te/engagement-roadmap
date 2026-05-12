@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goals &amp; Teams</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: #f2ede3;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  background: #fff;
+  border-bottom: 1px solid #d4cec4;
+  height: 44px;
+}
+.nav-brand {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin-right: 24px;
+  text-decoration: none;
+}
+.nav-tab {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 16px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #666;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.12s, border-color 0.12s;
+  letter-spacing: 0.02em;
+}
+.nav-tab:hover { color: #1a1a1a; }
+.nav-tab.active {
+  color: #E3120B;
+  border-bottom-color: #E3120B;
+  font-weight: 600;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 28px 60px;
+}
+
+.page-header { margin-bottom: 6px; }
+.page-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.page-header .sub {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 16px 0 32px;
+  font-size: 12px;
+  color: #555;
+}
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-line {
+  width: 36px;
+  height: 2px;
+  background: #555;
+  border-radius: 1px;
+}
+.legend-line.dashed {
+  background: none;
+  border-top: 2px dashed #aaa;
+  height: 0;
+}
+
+#diagram {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  position: relative;
+}
+
+#goals-col {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#teams-col {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#svg-area {
+  flex: 1;
+  position: relative;
+  align-self: stretch;
+}
+
+#svg-area svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.goal-box {
+  border-radius: 6px;
+  padding: 14px 16px;
+  color: #fff;
+  min-height: 88px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.goal-num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: 6px;
+}
+.goal-desc {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.team-box {
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #ddd8cc;
+  padding: 0 16px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  border-left-width: 4px;
+  border-left-style: solid;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Engagement</span>
+  <a href="index.html" class="nav-tab">Roadmap</a>
+  <a href="goals.html" class="nav-tab">Goals</a>
+  <a href="mapping.html" class="nav-tab active">Goals &amp; Teams</a>
+  <a href="okr.html" class="nav-tab">OKR Map</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1>Engagement Experience — Goals &amp; Teams</h1>
+    <div class="sub">Solid lines = accountable &nbsp;·&nbsp; Dashed lines = also involved</div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-line"></div>
+      <span>Accountable</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-line dashed"></div>
+      <span>Also involved</span>
+    </div>
+  </div>
+
+  <div id="diagram">
+    <div id="goals-col">
+      <div class="goal-box" data-goal="0" style="background:#2d4a7a">
+        <div class="goal-num">Goal 1 — Beyond Search</div>
+        <div class="goal-desc">Ensure The Economist thrives as discovery shifts from search to AI and LLMs</div>
+      </div>
+      <div class="goal-box" data-goal="1" style="background:#6a2fa0">
+        <div class="goal-num">Goal 2 — First 30 Days</div>
+        <div class="goal-desc">Win the first 30 days and turn new subscribers into engaged, long-term users</div>
+      </div>
+      <div class="goal-box" data-goal="2" style="background:#b01a10">
+        <div class="goal-num">Goal 3 — Deep Habits</div>
+        <div class="goal-desc">Build deep, habitual engagement across all subscriber types</div>
+      </div>
+      <div class="goal-box" data-goal="3" style="background:#0e6b5e">
+        <div class="goal-num">Goal 4 — Play &amp; Premium</div>
+        <div class="goal-desc">Differentiate The Economist through Play and Premium experiences</div>
+      </div>
+      <div class="goal-box" data-goal="4" style="background:#444">
+        <div class="goal-num">Goal 5 — Audience Value</div>
+        <div class="goal-desc">Grow advertising revenue by maximising the value of our premium audience</div>
+      </div>
+      <div class="goal-box" data-goal="5" style="background:#b86d00">
+        <div class="goal-num">Goal 6 — Platform Excellence</div>
+        <div class="goal-desc">Deliver a fast, reliable and technically excellent platform across web and app</div>
+      </div>
+    </div>
+
+    <div id="svg-area">
+      <svg id="conn-svg"></svg>
+    </div>
+
+    <div id="teams-col">
+      <div class="team-box" data-team="0" style="border-left-color:#2d4a7a">Gen AI &amp; Conversation</div>
+      <div class="team-box" data-team="1" style="border-left-color:#2d4a7a">Discovery &amp; Personalisation</div>
+      <div class="team-box" data-team="2" style="border-left-color:#6a2fa0">First-Touch Experience</div>
+      <div class="team-box" data-team="3" style="border-left-color:#b01a10">Core App</div>
+      <div class="team-box" data-team="4" style="border-left-color:#0e6b5e">Audio &amp; Video</div>
+      <div class="team-box" data-team="5" style="border-left-color:#444">Digital Ads</div>
+    </div>
+  </div>
+</div>
+
+<script>
+var CONNECTIONS = [
+  [0, 0, "solid"],
+  [0, 1, "solid"],
+  [0, 2, "dashed"],
+  [1, 2, "solid"],
+  [1, 1, "dashed"],
+  [1, 3, "dashed"],
+  [2, 3, "solid"],
+  [2, 1, "solid"],
+  [2, 4, "dashed"],
+  [3, 4, "solid"],
+  [3, 3, "dashed"],
+  [3, 1, "dashed"],
+  [4, 5, "solid"],
+  [4, 2, "dashed"],
+  [5, 3, "solid"],
+  [5, 2, "solid"],
+  [5, 5, "solid"],
+  [5, 0, "dashed"]
+];
+
+var GOAL_COLORS = ["#2d4a7a","#6a2fa0","#b01a10","#0e6b5e","#444","#b86d00"];
+
+function draw() {
+  var svg = document.getElementById("conn-svg");
+  var diagram = document.getElementById("diagram");
+  var goalEls = document.querySelectorAll(".goal-box");
+  var teamEls = document.querySelectorAll(".team-box");
+  var svgArea = document.getElementById("svg-area");
+
+  var diagRect = diagram.getBoundingClientRect();
+  var svgRect  = svgArea.getBoundingClientRect();
+
+  var goalRects = Array.prototype.map.call(goalEls, function(el) {
+    var r = el.getBoundingClientRect();
+    return {
+      right: r.right  - diagRect.left,
+      cy:    (r.top + r.bottom) / 2 - diagRect.top,
+      bottom: r.bottom - diagRect.top
+    };
+  });
+
+  var teamRects = Array.prototype.map.call(teamEls, function(el) {
+    var r = el.getBoundingClientRect();
+    return {
+      left: r.left - diagRect.left,
+      cy:   (r.top + r.bottom) / 2 - diagRect.top,
+      bottom: r.bottom - diagRect.top
+    };
+  });
+
+  var maxH = Math.max(
+    goalRects[goalRects.length - 1].bottom,
+    teamRects[teamRects.length - 1].bottom
+  ) + 10;
+
+  svg.setAttribute("width",  svgRect.width);
+  svg.setAttribute("height", maxH);
+  svgArea.style.height = maxH + "px";
+
+  var svgOffsetX = svgRect.left - diagRect.left;
+
+  var perGoal = {};
+  var perTeam = {};
+  CONNECTIONS.forEach(function(c) {
+    var g = c[0], t = c[1];
+    if (!perGoal[g]) perGoal[g] = [];
+    if (!perTeam[t]) perTeam[t] = [];
+    perGoal[g].push(c);
+    perTeam[t].push(c);
+  });
+  Object.keys(perGoal).forEach(function(g) { perGoal[g].sort(function(a,b){ return a[1]-b[1]; }); });
+  Object.keys(perTeam).forEach(function(t) { perTeam[t].sort(function(a,b){ return a[0]-b[0]; }); });
+
+  svg.innerHTML = "";
+  var SPACING = 9;
+
+  ["dashed","solid"].forEach(function(layer) {
+    CONNECTIONS.forEach(function(conn) {
+      if (conn[2] !== layer) return;
+      var g = conn[0], t = conn[1], type = conn[2];
+      var gGroup = perGoal[g], tGroup = perTeam[t];
+      var gIdx = gGroup.indexOf(conn), tIdx = tGroup.indexOf(conn);
+
+      var gy = goalRects[g].cy + (gIdx - (gGroup.length - 1) / 2) * SPACING;
+      var ty = teamRects[t].cy + (tIdx - (tGroup.length - 1) / 2) * SPACING;
+
+      var x1 = goalRects[g].right - svgOffsetX;
+      var x2 = teamRects[t].left  - svgOffsetX;
+      var cp = (x2 - x1) * 0.45;
+
+      var d = "M " + x1 + " " + gy +
+              " C " + (x1+cp) + " " + gy +
+              ", "  + (x2-cp) + " " + ty +
+              ", "  + x2 + " " + ty;
+
+      var path = document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d", d);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", GOAL_COLORS[g]);
+      if (type === "solid") {
+        path.setAttribute("stroke-width", "2.5");
+        path.setAttribute("opacity", "0.9");
+      } else {
+        path.setAttribute("stroke-width", "1.5");
+        path.setAttribute("stroke-dasharray", "5,4");
+        path.setAttribute("opacity", "0.35");
+      }
+      svg.appendChild(path);
+    });
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() { setTimeout(draw, 50); });
+} else {
+  setTimeout(draw, 50);
+}
+window.addEventListener("resize", draw);
+</script>
+</body>
+</html>

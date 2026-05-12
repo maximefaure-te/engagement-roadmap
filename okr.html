@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKR Map</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: #f2ede3;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  background: #fff;
+  border-bottom: 1px solid #d4cec4;
+  height: 44px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-brand { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #1a1a1a; margin-right: 24px; text-decoration: none; }
+.nav-tab { display: inline-flex; align-items: center; height: 44px; padding: 0 16px; font-size: 12px; font-family: inherit; color: #666; text-decoration: none; border-bottom: 2px solid transparent; letter-spacing: .02em; }
+.nav-tab:hover { color: #1a1a1a; }
+.nav-tab.active { color: #E3120B; border-bottom-color: #E3120B; font-weight: 600; }
+
+.page { padding: 28px 28px 60px; }
+
+.page-hdr { margin-bottom: 20px; }
+.page-hdr h1 { font-size: 18px; font-weight: 700; }
+.page-hdr .sub { font-size: 12px; color: #999; margin-top: 3px; }
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.view-tabs { display: flex; border: 1px solid #c8c0b0; border-radius: 3px; overflow: hidden; }
+.view-tab-btn {
+  padding: 7px 15px;
+  background: #fff;
+  border: none;
+  border-right: 1px solid #c8c0b0;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  color: #555;
+  letter-spacing: .03em;
+}
+.view-tab-btn:last-child { border-right: none; }
+.view-tab-btn.active { background: #E3120B; color: #fff; font-weight: 600; }
+.filter-group { display: flex; align-items: center; gap: 7px; }
+.filter-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .06em; }
+select {
+  padding: 7px 10px;
+  border: 1px solid #c8c0b0;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: inherit;
+  background: #fff;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+.hint { font-size: 11px; color: #aaa; font-style: italic; margin-left: auto; }
+
+#diagram {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  position: relative;
+}
+
+#left-panel {
+  width: 380px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#svg-area {
+  flex: 1;
+  position: relative;
+  min-width: 80px;
+}
+
+#conn-svg {
+  position: absolute;
+  top: 0; left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+#right-panel {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.goal-section { display: flex; gap: 8px; transition: opacity .2s; }
+.goal-lbl {
+  width: 72px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  padding: 10px 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-align: center;
+  color: #fff;
+}
+.goal-lbl-n { font-size: 10px; font-weight: 700; opacity: .7; letter-spacing: .06em; text-transform: uppercase; }
+.goal-lbl-name { font-size: 10px; font-weight: 700; line-height: 1.3; }
+.kr-group { flex: 1; display: flex; flex-direction: column; gap: 7px; }
+
+.kr-box {
+  background: #fff;
+  border-radius: 5px;
+  border-left: 3px solid #ccc;
+  padding: 9px 11px;
+  cursor: default;
+  transition: box-shadow .15s, opacity .2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.kr-box:hover { box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.kr-box.dimmed { opacity: .2; }
+.kr-lbl { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
+.kr-desc { font-size: 11.5px; line-height: 1.4; color: #444; }
+
+.init-box {
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #ddd8cc;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  transition: box-shadow .15s, opacity .2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  min-height: 38px;
+}
+.init-box:hover { box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+.init-box.dimmed { opacity: .2; }
+.init-name { font-size: 11.5px; font-weight: 500; flex: 1; line-height: 1.3; }
+.init-badge {
+  display: inline-block;
+  font-size: 9.5px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.r-now    { color: #2f7a2f; background: #eaf5ea; }
+.r-next   { color: #b86d00; background: #fff3e0; }
+.r-later  { color: #c0321e; background: #fde8e6; }
+.r-backlog{ color: #888;    background: #eee; }
+.t-web  { background: #ddeeff; color: #2255aa; }
+.t-disc { background: #eeddf5; color: #7733aa; }
+.t-core { background: #ddf5ee; color: #226644; }
+.t-av   { background: #fff0dd; color: #aa5500; }
+.t-ads  { background: #fff5dd; color: #886600; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Engagement</span>
+  <a href="index.html" class="nav-tab">Roadmap</a>
+  <a href="goals.html" class="nav-tab">Goals</a>
+  <a href="mapping.html" class="nav-tab">Goals &amp; Teams</a>
+  <a href="okr.html" class="nav-tab active">OKR Map</a>
+</nav>
+
+<div class="page">
+  <div class="page-hdr">
+    <h1>Initiatives → Key Results</h1>
+    <div class="sub">How each initiative connects to its goal's key results. Hover over any KR or initiative to highlight its connections.</div>
+  </div>
+
+  <div class="controls">
+    <div class="view-tabs">
+      <button class="view-tab-btn active" data-mode="goal">By Goal</button>
+      <button class="view-tab-btn" data-mode="team">By Team</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label" id="filter-label">Goal</span>
+      <select id="filter-select"></select>
+    </div>
+    <span class="hint">Hover a KR or initiative to trace connections</span>
+  </div>
+
+  <div id="diagram">
+    <div id="left-panel"></div>
+    <div id="svg-area"><svg id="conn-svg"></svg></div>
+    <div id="right-panel"></div>
+  </div>
+</div>
+
+<script>
+var GOALS = [
+  {c:"#2d4a7a",name:"Beyond Search"},
+  {c:"#6a2fa0",name:"First 30 Days"},
+  {c:"#b01a10",name:"Deep Habits"},
+  {c:"#0e6b5e",name:"Play & Premium"},
+  {c:"#444444",name:"Audience Value"},
+  {c:"#b86d00",name:"Platform Excellence"}
+];
+
+var KRS = [
+  {id:"k1.1",g:0,lbl:"KR1.1",desc:"Grow AI/LLM-referred sessions to TBD% of total acquisition"},
+  {id:"k1.2",g:0,lbl:"KR1.2",desc:"Achieve TBD MAU on conversational and MCP entry points"},
+  {id:"k1.3",g:0,lbl:"KR1.3",desc:"Increase non-Google referral traffic by TBD% YoY"},
+  {id:"k2.1",g:1,lbl:"KR2.1",desc:"Increase Day-30 subscriber retention rate by TBD pp"},
+  {id:"k2.2",g:1,lbl:"KR2.2",desc:"Increase % of new subscribers completing onboarding to TBD%"},
+  {id:"k2.3",g:1,lbl:"KR2.3",desc:"Increase second-week return visit rate by TBD%"},
+  {id:"k3.1",g:2,lbl:"KR3.1",desc:"Increase average weekly active reading sessions per subscriber by TBD%"},
+  {id:"k3.2",g:2,lbl:"KR3.2",desc:"Increase newsletter engagement rate (open x click) by TBD%"},
+  {id:"k3.3",g:2,lbl:"KR3.3",desc:"Grow push notification opt-in and click-through rate by TBD%"},
+  {id:"k4.1",g:3,lbl:"KR4.1",desc:"Grow audio/video MAU to TBD% of total subscriber base"},
+  {id:"k4.2",g:3,lbl:"KR4.2",desc:"Increase premium content satisfaction score (CSAT) by TBD points"},
+  {id:"k4.3",g:3,lbl:"KR4.3",desc:"Grow games daily active users by TBD%"},
+  {id:"k5.1",g:4,lbl:"KR5.1",desc:"Increase total digital ad revenue by TBD%"},
+  {id:"k5.2",g:4,lbl:"KR5.2",desc:"Grow addressable first-party data audience to TBD% of subscribers"},
+  {id:"k5.3",g:4,lbl:"KR5.3",desc:"Achieve TBD% video/Play ad fill rate within 3 months of launch"},
+  {id:"k6.1",g:5,lbl:"KR6.1",desc:"Achieve TBD% Core Web Vitals pass rate across all key pages"},
+  {id:"k6.2",g:5,lbl:"KR6.2",desc:"Reduce app crash rate to below TBD per 1,000 sessions"},
+  {id:"k6.3",g:5,lbl:"KR6.3",desc:"TBD% of new feature development shipped via AI-assisted engineering"}
+];
+
+var FEATURES = [
+  {i:0, f:"MCP App Beta test",                              ti:0,g:0,r:"Now"},
+  {i:1, f:"Get Started MVP - Iterations",                   ti:0,g:1,r:"Now"},
+  {i:2, f:"Voting polls in newsletters",                    ti:0,g:2,r:"Now"},
+  {i:3, f:"Games on web",                                   ti:0,g:3,r:"Now"},
+  {i:4, f:"Business In Brief NL",                           ti:0,g:3,r:"Now"},
+  {i:5, f:"TWIB 2.0 on web",                                ti:0,g:3,r:"Now"},
+  {i:6, f:"AI-native engineering enablers",                 ti:0,g:5,r:"Now"},
+  {i:7, f:"Preview tier",                                   ti:0,g:0,r:"Next"},
+  {i:8, f:"Rich topic pages update",                        ti:0,g:0,r:"Next"},
+  {i:9, f:"For You Newsletter v1",                          ti:0,g:2,r:"Next"},
+  {i:10,f:"Pro Newsletter",                                 ti:0,g:3,r:"Next"},
+  {i:11,f:"Preview tier",                                   ti:0,g:0,r:"Later"},
+  {i:12,f:"For You Newsletter v2",                          ti:0,g:2,r:"Later"},
+  {i:13,f:"Articles onward journeys",                       ti:0,g:0,r:"Later"},
+  {i:14,f:"Video / animated article headers",               ti:0,g:3,r:"Later"},
+  {i:15,f:"Comment sections on Articles on Web",            ti:0,g:3,r:"Backlog"},
+  {i:16,f:"Personalised Content feed (B2B/B2C)",            ti:1,g:2,r:"Now"},
+  {i:17,f:"Collections (Mobile)",                           ti:1,g:2,r:"Now"},
+  {i:18,f:"Ask The Economist (B2B)",                        ti:1,g:2,r:"Next"},
+  {i:19,f:"Improved For You feed (B2C)",                    ti:1,g:2,r:"Next"},
+  {i:20,f:"Reader History",                                 ti:1,g:2,r:"Next"},
+  {i:21,f:"B2C first party data (move to Ads?)",            ti:1,g:4,r:"Next"},
+  {i:22,f:"Sync PUWILO & History",                          ti:1,g:5,r:"Next"},
+  {i:23,f:"BFF orchestration for homepages",                ti:1,g:5,r:"Next"},
+  {i:24,f:"Sunset Econobot",                                ti:1,g:5,r:"Next"},
+  {i:25,f:"Newsletters in app (native)",                    ti:1,g:2,r:"Later"},
+  {i:26,f:"Access to Downloads in For You",                 ti:1,g:2,r:"Later"},
+  {i:27,f:"Automated topic push notifications",             ti:1,g:2,r:"Later"},
+  {i:28,f:"Contextual search in bottom nav (Liquid Glass)", ti:1,g:3,r:"Later"},
+  {i:29,f:"Games in the app",                               ti:2,g:3,r:"Now"},
+  {i:30,f:"Games push notifications",                       ti:2,g:2,r:"Now"},
+  {i:31,f:"eReader in the app",                             ti:2,g:4,r:"Now"},
+  {i:32,f:"Design system for agentic dev",                  ti:2,g:5,r:"Now"},
+  {i:33,f:"Preview in the app",                             ti:2,g:0,r:"Later"},
+  {i:34,f:"Get Started in the app",                         ti:2,g:1,r:"Later"},
+  {i:35,f:"Liquid Glass (iOS)",                             ti:2,g:5,r:"Later"},
+  {i:36,f:"Native Newsletters in the app",                  ti:2,g:3,r:"Later"},
+  {i:37,f:"Offline behaviour improvement",                  ti:2,g:5,r:"Later"},
+  {i:38,f:"Review LUCIQ integration",                       ti:2,g:5,r:"Later"},
+  {i:39,f:"Referers tracking in app",                       ti:2,g:5,r:"Later"},
+  {i:40,f:"Weekly selection for Reg",                       ti:2,g:2,r:"Backlog"},
+  {i:41,f:"Comment sections on Articles in the App",        ti:2,g:3,r:"Backlog"},
+  {i:42,f:"iOS / Android widgets",                          ti:2,g:2,r:"Backlog"},
+  {i:43,f:"Play: TWIB component",                           ti:3,g:3,r:"Now"},
+  {i:44,f:"Play: deep linking and push",                    ti:3,g:3,r:"Now"},
+  {i:45,f:"Play: newsletters webview",                      ti:3,g:3,r:"Now"},
+  {i:46,f:"Play: add components to Podcasts tab",           ti:3,g:3,r:"Now"},
+  {i:47,f:"AI Guided Session (iOS only)",                   ti:3,g:3,r:"Now"},
+  {i:48,f:"Play: podcast carousel",                         ti:3,g:3,r:"Now"},
+  {i:49,f:"Play: Continue Listening",                       ti:3,g:3,r:"Now"},
+  {i:50,f:"Vertical video Zephr",                           ti:3,g:3,r:"Now"},
+  {i:51,f:"Podcasts Zephr",                                 ti:3,g:3,r:"Now"},
+  {i:52,f:"New podcast launch: American Apostle",           ti:3,g:3,r:"Now"},
+  {i:53,f:"Featured vertical video on web Home",            ti:3,g:3,r:"Now"},
+  {i:54,f:"InsiderxPodcasts: audio player rearch",          ti:3,g:3,r:"Next"},
+  {i:55,f:"InsiderxPodcasts: unified player",               ti:3,g:3,r:"Next"},
+  {i:56,f:"Vertical video speed controls on web",           ti:3,g:3,r:"Next"},
+  {i:57,f:"InsiderxPodcasts: audio player rearch (cont.)",  ti:3,g:3,r:"Later"},
+  {i:58,f:"InsiderxPodcasts: unified player (cont.)",       ti:3,g:3,r:"Later"},
+  {i:59,f:"Play full launch",                               ti:3,g:3,r:"Later"},
+  {i:60,f:"Android Auto",                                   ti:3,g:3,r:"Later"},
+  {i:61,f:"Ads on Play Pilot",                              ti:4,g:4,r:"Now"},
+  {i:62,f:"Migration to GAM in newsletters",                ti:4,g:4,r:"Now"},
+  {i:63,f:"B2C First party data",                           ti:4,g:4,r:"Now"},
+  {i:64,f:"Preview Ad experience",                          ti:4,g:4,r:"Next"},
+  {i:65,f:"Play / Video Ad experience",                     ti:4,g:4,r:"Later"}
+];
+
+var CONNECTIONS = [
+  ["k1.1",7],["k1.1",8],["k1.1",11],["k1.1",13],
+  ["k1.2",0],
+  ["k1.3",7],["k1.3",8],["k1.3",11],["k1.3",13],["k1.3",33],
+  ["k2.1",1],["k2.1",34],
+  ["k2.2",1],["k2.2",34],
+  ["k2.3",1],["k2.3",34],
+  ["k3.1",16],["k3.1",17],["k3.1",18],["k3.1",19],["k3.1",20],["k3.1",26],
+  ["k3.2",2],["k3.2",9],["k3.2",12],["k3.2",25],["k3.2",40],
+  ["k3.3",27],["k3.3",30],["k3.3",42],
+  ["k4.1",43],["k4.1",44],["k4.1",45],["k4.1",46],["k4.1",47],["k4.1",48],["k4.1",49],
+  ["k4.1",50],["k4.1",51],["k4.1",52],["k4.1",53],["k4.1",54],["k4.1",55],
+  ["k4.1",57],["k4.1",58],["k4.1",59],["k4.1",60],
+  ["k4.2",4],["k4.2",5],["k4.2",10],["k4.2",14],["k4.2",15],["k4.2",28],
+  ["k4.2",36],["k4.2",41],["k4.2",47],["k4.2",54],["k4.2",55],["k4.2",56],
+  ["k4.2",57],["k4.2",58],
+  ["k4.3",3],["k4.3",29],
+  ["k5.1",31],["k5.1",62],["k5.1",64],["k5.1",65],
+  ["k5.2",21],["k5.2",63],
+  ["k5.3",61],["k5.3",65],
+  ["k6.1",22],["k6.1",23],["k6.1",24],["k6.1",39],
+  ["k6.2",22],["k6.2",35],["k6.2",37],["k6.2",38],["k6.2",39],
+  ["k6.3",6],["k6.3",32]
+];
+
+var TEAM_LABELS  = ["Web","D&P","Core","A&V","Ads"];
+var TEAM_CLASSES = ["t-web","t-disc","t-core","t-av","t-ads"];
+var R_CLASSES    = {Now:"r-now",Next:"r-next",Later:"r-later",Backlog:"r-backlog"};
+var R_ORDER      = {Now:0,Next:1,Later:2,Backlog:3};
+var DEFAULT_OPACITY = "0.38";
+var DEFAULT_STROKE  = "1.8";
+var viewMode = "goal";
+var filterIdx = 0;
+var allPaths  = [];
+
+function populateSelect() {
+  var sel = document.getElementById("filter-select");
+  sel.innerHTML = "";
+  var items = viewMode === "goal"
+    ? GOALS
+    : [{name:"Web, NL & GenAI"},{name:"Discovery & Personalisation"},{name:"Core App"},{name:"Audio & Video"},{name:"Ad experience"}];
+  items.forEach(function(item, i) {
+    var o = document.createElement("option");
+    o.value = i; o.textContent = item.name;
+    sel.appendChild(o);
+  });
+  sel.value = filterIdx;
+  document.getElementById("filter-label").textContent = viewMode === "goal" ? "Goal" : "Team";
+}
+
+function render() {
+  renderLeft();
+  renderRight();
+  setTimeout(draw, 60);
+}
+
+function renderLeft() {
+  var panel = document.getElementById("left-panel");
+  panel.innerHTML = "";
+  GOALS.forEach(function(goal, gi) {
+    var dim = (viewMode === "goal") && (gi !== filterIdx);
+    var sec = document.createElement("div");
+    sec.className = "goal-section";
+    sec.style.opacity = dim ? "0.22" : "1";
+
+    var lbl = document.createElement("div");
+    lbl.className = "goal-lbl";
+    lbl.style.background = goal.c;
+    lbl.innerHTML = "<span class='goal-lbl-n'>G"+(gi+1)+"</span><span class='goal-lbl-name'>"+goal.name+"</span>";
+
+    var grp = document.createElement("div");
+    grp.className = "kr-group";
+    KRS.forEach(function(kr) {
+      if (kr.g !== gi) return;
+      var box = document.createElement("div");
+      box.className = "kr-box";
+      box.dataset.kr = kr.id;
+      box.style.borderLeftColor = goal.c;
+      box.innerHTML = "<div class='kr-lbl' style='color:"+goal.c+"'>"+kr.lbl+"</div><div class='kr-desc'>"+kr.desc+"</div>";
+      box.addEventListener("mouseenter", function() { onHoverKr(kr.id); });
+      box.addEventListener("mouseleave",  unhover);
+      grp.appendChild(box);
+    });
+
+    sec.appendChild(lbl);
+    sec.appendChild(grp);
+    panel.appendChild(sec);
+  });
+}
+
+function renderRight() {
+  var panel = document.getElementById("right-panel");
+  panel.innerHTML = "";
+  var feats = FEATURES.filter(function(f) {
+    return viewMode === "goal" ? f.g === filterIdx : f.ti === filterIdx;
+  });
+  feats.sort(function(a,b) { return R_ORDER[a.r] - R_ORDER[b.r]; });
+  feats.forEach(function(feat) {
+    var box = document.createElement("div");
+    box.className = "init-box";
+    box.dataset.fi = feat.i;
+    box.innerHTML =
+      "<span class='init-name'>"+feat.f+"</span>"+
+      "<span class='init-badge "+TEAM_CLASSES[feat.ti]+"'>"+TEAM_LABELS[feat.ti]+"</span>"+
+      "<span class='init-badge "+R_CLASSES[feat.r]+"'>"+feat.r+"</span>";
+    box.addEventListener("mouseenter", function() { onHoverInit(feat.i); });
+    box.addEventListener("mouseleave",  unhover);
+    panel.appendChild(box);
+  });
+}
+
+function draw() {
+  var svg     = document.getElementById("conn-svg");
+  var diag    = document.getElementById("diagram");
+  var svgArea = document.getElementById("svg-area");
+  var diagRect    = diag.getBoundingClientRect();
+  var svgAreaRect = svgArea.getBoundingClientRect();
+  var offX = svgAreaRect.left - diagRect.left;
+
+  var krRects   = {};
+  var initRects = {};
+  document.querySelectorAll(".kr-box").forEach(function(el) {
+    var r = el.getBoundingClientRect();
+    krRects[el.dataset.kr] = { cy: (r.top+r.bottom)/2-diagRect.top, right: r.right-diagRect.left };
+  });
+  document.querySelectorAll(".init-box").forEach(function(el) {
+    var r = el.getBoundingClientRect();
+    initRects[parseInt(el.dataset.fi)] = { cy: (r.top+r.bottom)/2-diagRect.top, left: r.left-diagRect.left };
+  });
+
+  var visible = CONNECTIONS.filter(function(c) { return krRects[c[0]] && initRects[c[1]]; });
+  if (!visible.length) { svg.innerHTML=""; allPaths=[]; svgArea.style.height="10px"; return; }
+
+  var byKr={}, byInit={};
+  visible.forEach(function(c) {
+    if (!byKr[c[0]])   byKr[c[0]]  =[];
+    if (!byInit[c[1]]) byInit[c[1]]=[];
+    byKr[c[0]].push(c[1]);
+    byInit[c[1]].push(c[0]);
+  });
+  Object.keys(byKr).forEach(function(k)  { byKr[k].sort(function(a,b)  { return (initRects[a]?initRects[a].cy:0)-(initRects[b]?initRects[b].cy:0); }); });
+  Object.keys(byInit).forEach(function(k){ byInit[k].sort(function(a,b){ return (krRects[a]?krRects[a].cy:0)-(krRects[b]?krRects[b].cy:0); }); });
+
+  var SPREAD = 7;
+  function exitY(kid,fi)  { var g=byKr[kid];   var i=g.indexOf(fi);  return krRects[kid].cy  +(i-(g.length-1)/2)*SPREAD; }
+  function entryY(fi,kid) { var g=byInit[fi];   var i=g.indexOf(kid); return initRects[fi].cy +(i-(g.length-1)/2)*SPREAD; }
+
+  var allCY=[];
+  Object.keys(krRects).forEach(function(k)  { allCY.push(krRects[k].cy); });
+  Object.keys(initRects).forEach(function(k){ allCY.push(initRects[k].cy); });
+  var maxH = Math.max.apply(null,allCY)+40;
+  svgArea.style.height = maxH+"px";
+  svg.setAttribute("width",  svgAreaRect.width);
+  svg.setAttribute("height", maxH);
+  svg.innerHTML=""; allPaths=[];
+
+  var goalColors={};
+  KRS.forEach(function(kr){ goalColors[kr.id]=GOALS[kr.g].c; });
+
+  visible.forEach(function(c) {
+    var kid=c[0],fi=c[1];
+    var x1=krRects[kid].right-offX, x2=initRects[fi].left-offX;
+    var y1=exitY(kid,fi), y2=entryY(fi,kid);
+    var cp=(x2-x1)*0.5;
+    var d="M"+x1+" "+y1+" C"+(x1+cp)+" "+y1+","+(x2-cp)+" "+y2+","+x2+" "+y2;
+    var path=document.createElementNS("http://www.w3.org/2000/svg","path");
+    path.setAttribute("d",d);
+    path.setAttribute("fill","none");
+    path.setAttribute("stroke",goalColors[kid]);
+    path.setAttribute("stroke-width",DEFAULT_STROKE);
+    path.setAttribute("opacity",DEFAULT_OPACITY);
+    path.setAttribute("stroke-linecap","round");
+    svg.appendChild(path);
+    allPaths.push({el:path,kid:kid,fi:fi});
+  });
+}
+
+function onHoverKr(kid) {
+  allPaths.forEach(function(p) {
+    var on=p.kid===kid;
+    p.el.setAttribute("opacity",on?"0.92":"0.05");
+    p.el.setAttribute("stroke-width",on?"2.5":"1.2");
+  });
+  document.querySelectorAll(".kr-box").forEach(function(el)   { el.classList.toggle("dimmed",el.dataset.kr!==kid); });
+  var fis=CONNECTIONS.filter(function(c){return c[0]===kid;}).map(function(c){return c[1];});
+  document.querySelectorAll(".init-box").forEach(function(el) { el.classList.toggle("dimmed",fis.indexOf(parseInt(el.dataset.fi))===-1); });
+}
+
+function onHoverInit(fi) {
+  allPaths.forEach(function(p) {
+    var on=p.fi===fi;
+    p.el.setAttribute("opacity",on?"0.92":"0.05");
+    p.el.setAttribute("stroke-width",on?"2.5":"1.2");
+  });
+  var krs=CONNECTIONS.filter(function(c){return c[1]===fi;}).map(function(c){return c[0];});
+  document.querySelectorAll(".kr-box").forEach(function(el)   { el.classList.toggle("dimmed",krs.indexOf(el.dataset.kr)===-1); });
+  document.querySelectorAll(".init-box").forEach(function(el) { el.classList.toggle("dimmed",parseInt(el.dataset.fi)!==fi); });
+}
+
+function unhover() {
+  allPaths.forEach(function(p) {
+    p.el.setAttribute("opacity",DEFAULT_OPACITY);
+    p.el.setAttribute("stroke-width",DEFAULT_STROKE);
+  });
+  document.querySelectorAll(".kr-box,.init-box").forEach(function(el){ el.classList.remove("dimmed"); });
+}
+
+document.querySelectorAll(".view-tab-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    viewMode=btn.dataset.mode; filterIdx=0;
+    document.querySelectorAll(".view-tab-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    populateSelect(); render();
+  });
+});
+document.getElementById("filter-select").addEventListener("change", function() {
+  filterIdx=parseInt(this.value); render();
+});
+
+populateSelect();
+if (document.readyState==="loading") {
+  document.addEventListener("DOMContentLoaded", render);
+} else { render(); }
+window.addEventListener("resize", draw);
+</script>
+</body>
+</html>
