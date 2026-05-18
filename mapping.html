@@ -15,6 +15,7 @@ body {
   min-height: 100vh;
 }
 
+/* ── NAV ─────────────────────────────────────────────────────────── */
 nav {
   display: flex;
   align-items: center;
@@ -24,147 +25,200 @@ nav {
   height: 44px;
 }
 .nav-brand {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #1a1a1a;
-  margin-right: 24px;
-  text-decoration: none;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: #1a1a1a; margin-right: 24px; text-decoration: none;
 }
 .nav-tab {
-  display: inline-flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 16px;
-  font-size: 12px;
-  font-family: inherit;
-  color: #666;
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  transition: color 0.12s, border-color 0.12s;
-  letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; height: 44px; padding: 0 16px;
+  font-size: 12px; font-family: inherit; color: #666; text-decoration: none;
+  border-bottom: 2px solid transparent; transition: color .12s, border-color .12s;
+  letter-spacing: .02em;
 }
 .nav-tab:hover { color: #1a1a1a; }
-.nav-tab.active {
-  color: #E3120B;
-  border-bottom-color: #E3120B;
-  font-weight: 600;
-}
+.nav-tab.active { color: #E3120B; border-bottom-color: #E3120B; font-weight: 600; }
 
-.page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 36px 28px 60px;
-}
+/* ── PAGE ────────────────────────────────────────────────────────── */
+.page { max-width: 1100px; margin: 0 auto; padding: 36px 28px 60px; }
 
-.page-header { margin-bottom: 6px; }
-.page-header h1 {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1a1a1a;
-}
-.page-header .sub {
-  font-size: 12px;
-  color: #999;
-  margin-top: 4px;
-}
-
-.legend {
+/* ── NORTH STARS ─────────────────────────────────────────────────── */
+.ns-bar {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   gap: 24px;
-  margin: 16px 0 32px;
-  font-size: 12px;
-  color: #555;
+  margin-bottom: 32px;
 }
-.legend-item { display: flex; align-items: center; gap: 8px; }
-.legend-line {
-  width: 36px;
-  height: 2px;
-  background: #555;
-  border-radius: 1px;
+.ns-label {
+  font-size: 10px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: #E3120B; white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
 }
-.legend-line.dashed {
-  background: none;
-  border-top: 2px dashed #aaa;
-  height: 0;
-}
+.ns-star { font-size: 14px; }
+.ns-sep { width: 1px; height: 34px; background: #333; flex-shrink: 0; }
+.ns-metrics { display: flex; gap: 40px; flex-wrap: wrap; }
+.ns-metric { display: flex; flex-direction: column; gap: 3px; }
+.ns-metric .val { font-size: 14px; font-weight: 700; color: #fff; }
+.ns-metric .lbl { font-size: 10px; color: #777; }
 
+/* ── PAGE HEADER ─────────────────────────────────────────────────── */
+.page-header { margin-bottom: 8px; }
+.page-header h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; }
+.page-header .sub { font-size: 12px; color: #999; margin-top: 4px; }
+
+/* ── COL HEADERS ─────────────────────────────────────────────────── */
+.col-headers {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0 12px;
+}
+.col-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #bbb; }
+
+/* ── DIAGRAM ─────────────────────────────────────────────────────── */
 #diagram {
   display: flex;
-  align-items: flex-start;
-  gap: 0;
   position: relative;
+  align-items: flex-start;
 }
 
 #goals-col {
-  width: 300px;
+  width: 490px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-#teams-col {
-  width: 220px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
 
 #svg-area {
   flex: 1;
   position: relative;
-  align-self: stretch;
+  min-width: 50px;
 }
-
 #svg-area svg {
   position: absolute;
   top: 0; left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   overflow: visible;
 }
 
-.goal-box {
-  border-radius: 6px;
-  padding: 14px 16px;
-  color: #fff;
-  min-height: 88px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.goal-num {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.75;
-  margin-bottom: 6px;
-}
-.goal-desc {
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.35;
+#teams-col {
+  width: 200px;
+  flex-shrink: 0;
+  position: relative;
 }
 
+/* ── GOAL CARDS ──────────────────────────────────────────────────── */
+.goal-card {
+  background: #fff;
+  border-radius: 7px;
+  border: 1px solid #e5dfd6;
+  border-left: 4px solid #E3120B;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  overflow: hidden;
+}
+
+.goal-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px 9px 14px;
+}
+
+.goal-num {
+  font-size: 9px; font-weight: 800; color: #E3120B;
+  background: #fce8e8; border-radius: 3px; padding: 2px 6px;
+  flex-shrink: 0; min-width: 26px; text-align: center; margin-top: 2px;
+}
+
+.goal-body { flex: 1; }
+.goal-title { font-size: 12px; font-weight: 700; color: #1a1a1a; line-height: 1.3; }
+.goal-desc { font-size: 10.5px; color: #aaa; line-height: 1.4; margin-top: 3px; }
+
+.goal-krs {
+  background: #fafaf8;
+  border-top: 1px solid #ede8e0;
+  padding: 8px 14px 9px 38px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.kr-item {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 11px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.kr-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #E3120B; flex-shrink: 0; opacity: 0.5;
+  position: relative; top: 1px;
+}
+
+/* ── TEAM BOXES ──────────────────────────────────────────────────── */
 .team-box {
+  position: absolute;
+  width: 100%;
   background: #fff;
   border-radius: 6px;
-  border: 1px solid #ddd8cc;
-  padding: 0 16px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
+  border: 1px solid #d4cec4;
+  border-right: 4px solid #1a3a6e;
+  padding: 12px 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #1a1a1a;
-  border-left-width: 4px;
-  border-left-style: solid;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  color: #1a3a6e;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ── DIVIDER ─────────────────────────────────────────────────────── */
+.goal-divider {
+  display: flex; align-items: center; gap: 8px; margin: 4px 0;
+}
+.goal-divider span {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: #bbb; white-space: nowrap;
+}
+.goal-divider::before, .goal-divider::after {
+  content: ''; flex: 1; height: 1px; background: #ddd8d0;
+}
+
+/* ── SUPPORT BANNER ──────────────────────────────────────────────── */
+.support-banner {
+  border: 1.5px dashed #c8c0b4;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #f9f6f0;
+  margin-top: 16px;
+}
+.support-num {
+  font-size: 9px; font-weight: 800; color: #999; background: #ede8e0;
+  border-radius: 3px; padding: 2px 6px; flex-shrink: 0; min-width: 26px;
+  text-align: center; margin-top: 2px;
+}
+.support-body { flex: 1; }
+.support-title { font-size: 12px; font-weight: 700; color: #888; margin-bottom: 3px; }
+.support-desc { font-size: 11px; color: #bbb; line-height: 1.4; margin-bottom: 8px; }
+.support-krs { display: flex; flex-direction: column; gap: 4px; }
+.support-kr {
+  display: flex; align-items: baseline; gap: 7px;
+  font-size: 11px; color: #bbb; line-height: 1.4;
+}
+.support-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: #ccc;
+  flex-shrink: 0; position: relative; top: 1px;
+}
+.support-badge {
+  font-size: 10px; color: #bbb; font-style: italic;
+  white-space: nowrap; padding-top: 2px;
 }
 </style>
 </head>
@@ -172,192 +226,278 @@ nav {
 
 <nav>
   <span class="nav-brand">Engagement</span>
-  <a href="index.html" class="nav-tab">Roadmap</a>
-  <a href="goals.html" class="nav-tab">Goals</a>
+  <a href="index.html"   class="nav-tab">Roadmap</a>
   <a href="mapping.html" class="nav-tab active">Goals &amp; Teams</a>
-  <a href="okr.html" class="nav-tab">OKR Map</a>
 </nav>
 
 <div class="page">
+
+  <!-- ── NORTH STARS ────────────────────────────────────────────── -->
+  <div class="ns-bar">
+    <div class="ns-label"><span class="ns-star">★</span> North Stars</div>
+    <div class="ns-sep"></div>
+    <div class="ns-metrics">
+      <div class="ns-metric">
+        <div class="val">App CSAT &gt; [X]</div>
+        <div class="lbl">Overall subscriber satisfaction</div>
+      </div>
+      <div class="ns-metric">
+        <div class="val">[X]% users with 9+ sessions / month</div>
+        <div class="lbl">Share of highly engaged subscribers</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE HEADER ────────────────────────────────────────────── -->
   <div class="page-header">
     <h1>Engagement Experience — Goals &amp; Teams</h1>
-    <div class="sub">Solid lines = accountable &nbsp;·&nbsp; Dashed lines = also involved</div>
+    <div class="sub">Strategic goals, key results and the teams accountable for delivering them</div>
   </div>
 
-  <div class="legend">
-    <div class="legend-item">
-      <div class="legend-line"></div>
-      <span>Accountable</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-line dashed"></div>
-      <span>Also involved</span>
-    </div>
+  <div class="col-headers">
+    <div class="col-header">Goals &amp; Key Results</div>
+    <div class="col-header">Teams</div>
   </div>
 
+  <!-- ── DIAGRAM ────────────────────────────────────────────────── -->
   <div id="diagram">
+
     <div id="goals-col">
-      <div class="goal-box" data-goal="0" style="background:#2d4a7a">
-        <div class="goal-num">Goal 1 — Beyond Search</div>
-        <div class="goal-desc">Ensure The Economist thrives as discovery shifts from search to AI and LLMs</div>
+
+      <div class="goal-card" id="g1">
+        <div class="goal-card-head">
+          <span class="goal-num">G1</span>
+          <div class="goal-body">
+            <div class="goal-title">Post Search</div>
+            <div class="goal-desc">The Economist thrives in the post-search era and grows its traffic from LLMs.</div>
+          </div>
+        </div>
+        <div class="goal-krs">
+          <div class="kr-item"><span class="kr-dot"></span>Organic traffic from AI-powered discovery grows [X]% YoY</div>
+          <div class="kr-item"><span class="kr-dot"></span>SEO traffic decrease is limited to [X]% YoY</div>
+        </div>
       </div>
-      <div class="goal-box" data-goal="1" style="background:#6a2fa0">
-        <div class="goal-num">Goal 2 — First 30 Days</div>
-        <div class="goal-desc">Win the first 30 days and turn new subscribers into engaged, long-term users</div>
+
+      <div class="goal-card" id="g2">
+        <div class="goal-card-head">
+          <span class="goal-num">G2</span>
+          <div class="goal-body">
+            <div class="goal-title">Content Value</div>
+            <div class="goal-desc">Every subscriber fully understands the breadth and value of their proposition.</div>
+          </div>
+        </div>
+        <div class="goal-krs">
+          <div class="kr-item"><span class="kr-dot"></span>[X]% of active subscribers engage with 2+ content types in a rolling 30-day window</div>
+        </div>
       </div>
-      <div class="goal-box" data-goal="2" style="background:#b01a10">
-        <div class="goal-num">Goal 3 — Deep Habits</div>
-        <div class="goal-desc">Build deep, habitual engagement across all subscriber types</div>
+
+      <div class="goal-card" id="g3">
+        <div class="goal-card-head">
+          <span class="goal-num">G3</span>
+          <div class="goal-body">
+            <div class="goal-title">Easy Access</div>
+            <div class="goal-desc">Fast, intuitive access to any content, on any device, at any time.</div>
+          </div>
+        </div>
+        <div class="goal-krs">
+          <div class="kr-item"><span class="kr-dot"></span>Search success rate (search ending in a content click within 60s) reaches [X]%</div>
+        </div>
       </div>
-      <div class="goal-box" data-goal="3" style="background:#0e6b5e">
-        <div class="goal-num">Goal 4 — Play &amp; Premium</div>
-        <div class="goal-desc">Differentiate The Economist through Play and Premium experiences</div>
+
+      <div class="goal-card" id="g4">
+        <div class="goal-card-head">
+          <span class="goal-num">G4</span>
+          <div class="goal-body">
+            <div class="goal-title">Personalisation</div>
+            <div class="goal-desc">Editorial curation complemented by the right content for you right now.</div>
+          </div>
+        </div>
+        <div class="goal-krs">
+          <div class="kr-item"><span class="kr-dot"></span>[X]% of active subscribers engage with at least one personalised recommendation per week</div>
+          <div class="kr-item"><span class="kr-dot"></span>[X]% of subscribers have set at least one explicit preference in their profile</div>
+        </div>
       </div>
-      <div class="goal-box" data-goal="4" style="background:#444">
-        <div class="goal-num">Goal 5 — Audience Value</div>
-        <div class="goal-desc">Grow advertising revenue by maximising the value of our premium audience</div>
+
+      <div class="goal-card" id="g5">
+        <div class="goal-card-head">
+          <span class="goal-num">G5</span>
+          <div class="goal-body">
+            <div class="goal-title">Habit Forming</div>
+            <div class="goal-desc">Digital experiences that form and maintain habits over time.</div>
+          </div>
+        </div>
+        <div class="goal-krs">
+          <div class="kr-item"><span class="kr-dot"></span>[X]% of active subscribers have at least 4 visit days in any rolling 30-day period</div>
+          <div class="kr-item"><span class="kr-dot"></span>Push notification opt-in rate reaches [X]% across iOS and Android</div>
+        </div>
       </div>
-      <div class="goal-box" data-goal="5" style="background:#b86d00">
-        <div class="goal-num">Goal 6 — Platform Excellence</div>
-        <div class="goal-desc">Deliver a fast, reliable and technically excellent platform across web and app</div>
+
+      <div class="goal-card" id="g6">
+        <div class="goal-card-head">
+          <span class="goal-num">G6</span>
+          <div class="goal-body">
+            <div class="goal-title">New Formats &amp; Features</div>
+            <div class="goal-desc">New formats and features that constantly add value to the subscription.</div>
+          </div>
+        </div>
+        <div class="goal-krs">
+          <div class="kr-item"><span class="kr-dot"></span>Weekly engagement rate among Play subscribers (active / total) reaches [X]%</div>
+          <div class="kr-item"><span class="kr-dot"></span>[X]% of Premium subscribers listen/watch Play content at least [X] times a month</div>
+        </div>
       </div>
-    </div>
+
+      <div class="goal-card" id="g7">
+        <div class="goal-card-head">
+          <span class="goal-num">G7</span>
+          <div class="goal-body">
+            <div class="goal-title">Advertising Experience</div>
+            <div class="goal-desc">A premium ad proposition that maximises revenue without compromising the subscriber experience.</div>
+          </div>
+        </div>
+        <div class="goal-krs">
+          <div class="kr-item"><span class="kr-dot"></span>Total addressable digital ad inventory grows [X]% YoY</div>
+          <div class="kr-item"><span class="kr-dot"></span>1P data collection rate across Play and Premium tiers reaches [X]%</div>
+          <div class="kr-item"><span class="kr-dot"></span>Ad-attributable CSAT degradation stays below [X]%</div>
+        </div>
+      </div>
+
+      <div class="goal-divider"><span>Supporting</span></div>
+
+      <div class="support-banner">
+        <span class="support-num">G8</span>
+        <div class="support-body">
+          <div class="support-title">Platform Excellence</div>
+          <div class="support-desc">Speed, reliability and technical excellence across web and app.</div>
+          <div class="support-krs">
+            <div class="support-kr"><span class="support-dot"></span>App crash-free session rate reaches [X]% on both iOS and Android</div>
+            <div class="support-kr"><span class="support-dot"></span>[X]% of web pages score "Good" on Core Web Vitals (LCP, INP, CLS)</div>
+          </div>
+        </div>
+        <div class="support-badge">↕ All teams</div>
+      </div>
+
+    </div><!-- /goals-col -->
 
     <div id="svg-area">
       <svg id="conn-svg"></svg>
     </div>
 
     <div id="teams-col">
-      <div class="team-box" data-team="0" style="border-left-color:#2d4a7a">Gen AI &amp; Conversation</div>
-      <div class="team-box" data-team="1" style="border-left-color:#2d4a7a">Discovery &amp; Personalisation</div>
-      <div class="team-box" data-team="2" style="border-left-color:#6a2fa0">First-Touch Experience</div>
-      <div class="team-box" data-team="3" style="border-left-color:#b01a10">Core App</div>
-      <div class="team-box" data-team="4" style="border-left-color:#0e6b5e">Audio &amp; Video</div>
-      <div class="team-box" data-team="5" style="border-left-color:#444">Digital Ads</div>
+      <div class="team-box" id="t1">Web, Newsletter<br>&amp; GenAI</div>
+      <div class="team-box" id="t2">Discovery &amp;<br>Personalisation</div>
+      <div class="team-box" id="t3">App</div>
+      <div class="team-box" id="t4">Audio &amp; Video</div>
+      <div class="team-box" id="t5">Advertising</div>
     </div>
-  </div>
-</div>
+
+  </div><!-- /diagram -->
+
+</div><!-- /page -->
 
 <script>
 var CONNECTIONS = [
-  [0, 0, "solid"],
-  [0, 1, "solid"],
-  [0, 2, "dashed"],
-  [1, 2, "solid"],
-  [1, 1, "dashed"],
-  [1, 3, "dashed"],
-  [2, 3, "solid"],
-  [2, 1, "solid"],
-  [2, 4, "dashed"],
-  [3, 4, "solid"],
-  [3, 3, "dashed"],
-  [3, 1, "dashed"],
-  [4, 5, "solid"],
-  [4, 2, "dashed"],
-  [5, 3, "solid"],
-  [5, 2, "solid"],
-  [5, 5, "solid"],
-  [5, 0, "dashed"]
+  { goal: 'g1', team: 't1' },
+  { goal: 'g2', team: 't1' },
+  { goal: 'g3', team: 't2' },
+  { goal: 'g4', team: 't2' },
+  { goal: 'g5', team: 't3' },
+  { goal: 'g6', team: 't4' },
+  { goal: 'g7', team: 't5' }
 ];
 
-var GOAL_COLORS = ["#2d4a7a","#6a2fa0","#b01a10","#0e6b5e","#444","#b86d00"];
-
 function draw() {
-  var svg = document.getElementById("conn-svg");
-  var diagram = document.getElementById("diagram");
-  var goalEls = document.querySelectorAll(".goal-box");
-  var teamEls = document.querySelectorAll(".team-box");
-  var svgArea = document.getElementById("svg-area");
+  var svg      = document.getElementById('conn-svg');
+  var diagram  = document.getElementById('diagram');
+  var svgArea  = document.getElementById('svg-area');
+  var teamsCol = document.getElementById('teams-col');
+  var goalsCol = document.getElementById('goals-col');
 
   var diagRect = diagram.getBoundingClientRect();
   var svgRect  = svgArea.getBoundingClientRect();
+  var svgOffX  = svgRect.left - diagRect.left;
 
-  var goalRects = Array.prototype.map.call(goalEls, function(el) {
-    var r = el.getBoundingClientRect();
-    return {
-      right: r.right  - diagRect.left,
-      cy:    (r.top + r.bottom) / 2 - diagRect.top,
-      bottom: r.bottom - diagRect.top
-    };
-  });
-
-  var teamRects = Array.prototype.map.call(teamEls, function(el) {
-    var r = el.getBoundingClientRect();
-    return {
-      left: r.left - diagRect.left,
-      cy:   (r.top + r.bottom) / 2 - diagRect.top,
-      bottom: r.bottom - diagRect.top
-    };
-  });
-
-  var maxH = Math.max(
-    goalRects[goalRects.length - 1].bottom,
-    teamRects[teamRects.length - 1].bottom
-  ) + 10;
-
-  svg.setAttribute("width",  svgRect.width);
-  svg.setAttribute("height", maxH);
-  svgArea.style.height = maxH + "px";
-
-  var svgOffsetX = svgRect.left - diagRect.left;
-
-  var perGoal = {};
-  var perTeam = {};
+  /* 1 — centre-Y of each goal box, relative to diagram top */
+  var goalCY = {};
   CONNECTIONS.forEach(function(c) {
-    var g = c[0], t = c[1];
-    if (!perGoal[g]) perGoal[g] = [];
-    if (!perTeam[t]) perTeam[t] = [];
-    perGoal[g].push(c);
-    perTeam[t].push(c);
+    if (goalCY[c.goal] === undefined) {
+      var r = document.getElementById(c.goal).getBoundingClientRect();
+      goalCY[c.goal] = (r.top + r.bottom) / 2 - diagRect.top;
+    }
   });
-  Object.keys(perGoal).forEach(function(g) { perGoal[g].sort(function(a,b){ return a[1]-b[1]; }); });
-  Object.keys(perTeam).forEach(function(t) { perTeam[t].sort(function(a,b){ return a[0]-b[0]; }); });
 
-  svg.innerHTML = "";
-  var SPACING = 9;
+  /* 2 — target Y for each team = average of connected goal centres */
+  var teamTargetY = {};
+  CONNECTIONS.forEach(function(c) {
+    if (!teamTargetY[c.team]) teamTargetY[c.team] = [];
+    teamTargetY[c.team].push(goalCY[c.goal]);
+  });
 
-  ["dashed","solid"].forEach(function(layer) {
-    CONNECTIONS.forEach(function(conn) {
-      if (conn[2] !== layer) return;
-      var g = conn[0], t = conn[1], type = conn[2];
-      var gGroup = perGoal[g], tGroup = perTeam[t];
-      var gIdx = gGroup.indexOf(conn), tIdx = tGroup.indexOf(conn);
+  /* 3 — position team boxes */
+  var maxBottom = 0;
+  Object.keys(teamTargetY).forEach(function(tid) {
+    var ys  = teamTargetY[tid];
+    var avgY = ys.reduce(function(a, b) { return a + b; }, 0) / ys.length;
+    var el  = document.getElementById(tid);
+    var top = Math.max(0, avgY - el.offsetHeight / 2);
+    el.style.top = top + 'px';
+    maxBottom = Math.max(maxBottom, top + el.offsetHeight);
+  });
 
-      var gy = goalRects[g].cy + (gIdx - (gGroup.length - 1) / 2) * SPACING;
-      var ty = teamRects[t].cy + (tIdx - (tGroup.length - 1) / 2) * SPACING;
+  /* 4 — set column / svg heights */
+  var goalsH  = goalsCol.getBoundingClientRect().height;
+  var totalH  = Math.max(goalsH, maxBottom) + 10;
+  teamsCol.style.height = totalH + 'px';
+  svgArea.style.height  = totalH + 'px';
 
-      var x1 = goalRects[g].right - svgOffsetX;
-      var x2 = teamRects[t].left  - svgOffsetX;
-      var cp = (x2 - x1) * 0.45;
+  /* 5 — draw bezier paths */
+  svg.setAttribute('width',   svgRect.width);
+  svg.setAttribute('height',  totalH);
+  svg.setAttribute('viewBox', '0 0 ' + svgRect.width + ' ' + totalH);
+  svg.innerHTML = '';
 
-      var d = "M " + x1 + " " + gy +
-              " C " + (x1+cp) + " " + gy +
-              ", "  + (x2-cp) + " " + ty +
-              ", "  + x2 + " " + ty;
+  CONNECTIONS.forEach(function(c) {
+    var gEl = document.getElementById(c.goal);
+    var tEl = document.getElementById(c.team);
+    var gr  = gEl.getBoundingClientRect();
 
-      var path = document.createElementNS("http://www.w3.org/2000/svg","path");
-      path.setAttribute("d", d);
-      path.setAttribute("fill", "none");
-      path.setAttribute("stroke", GOAL_COLORS[g]);
-      if (type === "solid") {
-        path.setAttribute("stroke-width", "2.5");
-        path.setAttribute("opacity", "0.9");
-      } else {
-        path.setAttribute("stroke-width", "1.5");
-        path.setAttribute("stroke-dasharray", "5,4");
-        path.setAttribute("opacity", "0.35");
-      }
-      svg.appendChild(path);
-    });
+    var x1  = gr.right - diagRect.left - svgOffX;
+    var y1  = (gr.top + gr.bottom) / 2 - diagRect.top;
+    var x2  = tEl.getBoundingClientRect().left - diagRect.left - svgOffX;
+    var y2  = parseFloat(tEl.style.top) + tEl.offsetHeight / 2;
+    var dx  = (x2 - x1) * 0.5;
+
+    var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d',
+      'M '  + x1        + ' ' + y1 +
+      ' C ' + (x1 + dx) + ' ' + y1 +
+      ', '  + (x2 - dx) + ' ' + y2 +
+      ', '  + x2        + ' ' + y2);
+    path.setAttribute('fill',           'none');
+    path.setAttribute('stroke',         '#E3120B');
+    path.setAttribute('stroke-width',   '1.8');
+    path.setAttribute('opacity',        '0.38');
+    path.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(path);
+
+    /* arrowhead */
+    var aw = 6, ah = 3.5;
+    var arr = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    arr.setAttribute('points',
+      x2 + ',' + y2 + ' ' +
+      (x2 - aw) + ',' + (y2 - ah) + ' ' +
+      (x2 - aw) + ',' + (y2 + ah));
+    arr.setAttribute('fill',    '#E3120B');
+    arr.setAttribute('opacity', '0.55');
+    svg.appendChild(arr);
   });
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", function() { setTimeout(draw, 50); });
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() { setTimeout(draw, 60); });
 } else {
-  setTimeout(draw, 50);
+  setTimeout(draw, 60);
 }
-window.addEventListener("resize", draw);
+window.addEventListener('resize', draw);
 </script>
 </body>
 </html>
