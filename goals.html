@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Engagement Goals</title>
+<title>Engagement Objectives</title>
 <style>
 :root { color-scheme: light; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,383 +19,194 @@ body {
 nav {
   display: flex;
   align-items: center;
-  gap: 0;
   padding: 0 28px;
   background: #fff;
   border-bottom: 1px solid #d4cec4;
   height: 44px;
 }
-
 .nav-brand {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #1a1a1a;
-  margin-right: 24px;
-  text-decoration: none;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: #1a1a1a; margin-right: 24px; text-decoration: none;
 }
-
 .nav-tab {
-  display: inline-flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 16px;
-  font-size: 12px;
-  font-family: inherit;
-  color: #666;
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  transition: color 0.12s, border-color 0.12s;
-  letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; height: 44px; padding: 0 16px;
+  font-size: 12px; font-family: inherit; color: #666; text-decoration: none;
+  border-bottom: 2px solid transparent; transition: color .12s, border-color .12s;
+  letter-spacing: .02em;
 }
 .nav-tab:hover { color: #1a1a1a; }
-.nav-tab.active {
-  color: #E3120B;
-  border-bottom-color: #E3120B;
-  font-weight: 600;
-}
+.nav-tab.active { color: #E3120B; border-bottom-color: #E3120B; font-weight: 600; }
 
 /* ── PAGE ────────────────────────────────────────────────────────── */
-.page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 28px 60px;
-}
+.page { max-width: 1000px; margin: 0 auto; padding: 36px 28px 60px; }
 
-/* ── SECTION LABELS ──────────────────────────────────────────────── */
-.section-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #999;
-  margin-bottom: 28px;
-}
+.page-header { margin-bottom: 24px; }
+.page-header h1 { font-size: 15px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #1a1a1a; }
+.page-header p { font-size: 12px; color: #888; margin-top: 4px; font-style: italic; }
 
-/* ── JOURNEY TIMELINE ────────────────────────────────────────────── */
-.journey-wrap {
+/* ── NORTH STARS ─────────────────────────────────────────────────── */
+.ns-card {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 16px 20px;
   margin-bottom: 8px;
-  position: relative;
-  padding: 0 20px;
-}
-
-.timeline {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  position: relative;
-  margin-bottom: 24px;
+  gap: 20px;
 }
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  top: 32px;
-  left: calc(12.5% + 8px);
-  right: calc(12.5% + 8px);
-  height: 2px;
-  background: #E3120B;
-  z-index: 0;
+.ns-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: #E3120B; white-space: nowrap; padding-top: 2px;
+  display: flex; align-items: center; gap: 5px;
 }
+.ns-sep { width: 1px; height: 32px; background: #333; flex-shrink: 0; margin-top: 2px; }
+.ns-metrics { display: flex; flex-direction: column; gap: 7px; flex: 1; }
+.ns-metric { display: flex; align-items: baseline; gap: 8px; }
+.ns-dot { width: 4px; height: 4px; border-radius: 50%; background: #E3120B; opacity: .7; flex-shrink: 0; position: relative; top: -1px; }
+.ns-text { font-size: 12.5px; color: #ccc; line-height: 1.4; }
+.ns-text strong { color: #fff; font-weight: 500; }
 
-.timeline-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  position: relative;
-  z-index: 1;
-}
+/* ── OBJECTIVES ──────────────────────────────────────────────────── */
+.objectives { display: flex; flex-direction: column; gap: 7px; }
 
-.step-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #999;
-}
-
-.step-circle {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
+.obj-card {
   background: #fff;
-  border: 2px solid #d4cec4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  font-weight: 300;
-  color: #1a1a1a;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-}
-
-/* ── JOURNEY CARDS ───────────────────────────────────────────────── */
-.journey-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.goal-card {
-  background: #fff;
-  border-radius: 8px;
-  border-top: 3px solid #E3120B;
-  padding: 20px 18px 18px;
-  display: flex;
-  flex-direction: column;
-  min-height: 200px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-
-.goal-name {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #E3120B;
-  margin-bottom: 12px;
-}
-
-.goal-desc {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.35;
-  color: #1a1a1a;
-  flex: 1;
-}
-
-.goal-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 18px;
-}
-
-.goal-tag {
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: #f0ece4;
-  color: #555;
-  border: 1px solid #ddd8cc;
-}
-
-/* ── REVENUE LAYER ───────────────────────────────────────────────── */
-.revenue-wrap {
-  margin-bottom: 28px;
-}
-
-.wide-card {
-  background: #fff;
-  border-radius: 8px;
+  border-radius: 7px;
+  border: 1px solid #e5dfd6;
   border-left: 4px solid #E3120B;
-  padding: 20px 24px;
+  overflow: hidden;
+}
+.obj-card.o8 {
+  border-left-color: #aaa;
+  border-style: dashed;
+  border-left-style: dashed;
+}
+
+.obj-header {
+  padding: 13px 16px;
   display: flex;
-  align-items: center;
-  gap: 18px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.obj-header:hover { background: #fafaf8; }
+
+.obj-num {
+  font-size: 9px; font-weight: 700; color: #E3120B;
+  background: #fce8e8; border-radius: 3px; padding: 2px 7px;
+  flex-shrink: 0; margin-top: 3px; letter-spacing: .05em;
+}
+.o8 .obj-num { color: #888; background: #eee; }
+
+.obj-main { flex: 1; min-width: 0; }
+.obj-title { font-size: 13.5px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
+.obj-subtitle { font-size: 11px; color: #aaa; line-height: 1.4; margin-bottom: 9px; }
+
+.kr-list { display: flex; flex-direction: column; gap: 4px; }
+.kr-item { font-size: 11px; color: #555; display: flex; align-items: baseline; gap: 6px; line-height: 1.4; }
+.kr-dot { width: 4px; height: 4px; border-radius: 50%; background: #E3120B; opacity: .5; flex-shrink: 0; position: relative; top: 1px; }
+.o8 .kr-dot { background: #aaa; }
+
+.obj-right {
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 8px; flex-shrink: 0; padding-top: 1px;
+}
+.team-tag {
+  font-size: 10px; color: #666; border: 1px solid #ddd8cc;
+  padding: 3px 9px; border-radius: 20px; white-space: nowrap;
+  background: #f8f4ee;
+}
+.chevron {
+  font-size: 14px; color: #bbb; transition: transform .22s ease;
+  display: block; line-height: 1;
+}
+.obj-card.open .chevron { transform: rotate(180deg); }
+
+/* ── EXPANDED CONTENT ────────────────────────────────────────────── */
+.obj-body { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+.obj-card.open .obj-body { max-height: 1000px; }
+
+.obj-body-inner {
+  border-top: 1px solid #ede8e0;
+  padding: 16px 18px 18px;
+  background: #fdfcfa;
 }
 
-.wide-card .step-num {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #1a1a1a;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 300;
-  flex-shrink: 0;
-}
+.body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; }
 
-.wide-card-body {
-  flex: 1;
-}
+.bsec { }
+.bsec.full { grid-column: 1 / -1; }
 
-.wide-card-body .goal-name {
-  margin-bottom: 4px;
+.sec-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  color: #bbb; margin-bottom: 7px;
 }
+.sec-text { font-size: 12.5px; color: #555; line-height: 1.65; }
 
-.wide-card-body .goal-desc {
-  font-size: 15px;
-}
-
-.wide-card .goal-tags {
-  margin-top: 0;
-  flex-shrink: 0;
-}
-
-/* ── FOUNDATION ──────────────────────────────────────────────────── */
-.foundation-wrap .section-label {
-  color: #aaa;
-}
-
-.foundation-card {
-  background: #1a1a1a;
-  border-radius: 8px;
-  padding: 24px 28px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-}
-
-.foundation-card .step-num {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #3a3a3a;
-  color: #aaa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 300;
-  flex-shrink: 0;
-}
-
-.foundation-card-body {
-  flex: 1;
-}
-
-.foundation-card .goal-name {
-  color: #888;
-  margin-bottom: 4px;
-}
-
-.foundation-card .goal-desc {
-  color: #fff;
-  font-size: 15px;
-}
-
-.foundation-tag {
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: #2e2e2e;
-  color: #aaa;
-  border: 1px solid #3a3a3a;
-}
-
-.foundation-card .goal-tags {
-  margin-top: 0;
-  flex-shrink: 0;
-}
+.strat-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.strat-item { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; color: #555; line-height: 1.5; }
+.sdot { width: 4px; height: 4px; border-radius: 50%; background: #E3120B; opacity: .45; flex-shrink: 0; position: relative; top: 2px; }
+.o8 .sdot { background: #aaa; }
 </style>
 </head>
 <body>
 
 <nav>
   <span class="nav-brand">Engagement</span>
-  <a href="index.html" class="nav-tab">Roadmap</a>
-  <a href="goals.html" class="nav-tab active">Goals</a>
+  <a href="index.html"   class="nav-tab">Roadmap</a>
+  <a href="goals.html"   class="nav-tab active">Objectives</a>
+  <a href="teams.html"   class="nav-tab">Teams</a>
   <a href="mapping.html" class="nav-tab">Goals &amp; Teams</a>
-  <a href="okr.html" class="nav-tab">OKR Map</a>
 </nav>
 
 <div class="page">
 
-  <!-- THE SUBSCRIBER JOURNEY -->
-  <div class="journey-wrap">
-    <div class="section-label">The Subscriber Journey</div>
-
-    <div class="timeline">
-      <div class="timeline-step">
-        <div class="step-label">Reach</div>
-        <div class="step-circle">1</div>
-      </div>
-      <div class="timeline-step">
-        <div class="step-label">Activation</div>
-        <div class="step-circle">2</div>
-      </div>
-      <div class="timeline-step">
-        <div class="step-label">Engagement</div>
-        <div class="step-circle">3</div>
-      </div>
-      <div class="timeline-step">
-        <div class="step-label">Retention</div>
-        <div class="step-circle">4</div>
-      </div>
-    </div>
-
-    <div class="journey-cards">
-
-      <div class="goal-card">
-        <div class="goal-name">Beyond Search</div>
-        <div class="goal-desc">Ensure The Economist thrives as discovery shifts from search to AI and LLMs</div>
-        <div class="goal-tags">
-          <span class="goal-tag">Gen AI &amp; Conversation</span>
-          <span class="goal-tag">Discovery &amp; Personalisation</span>
-        </div>
-      </div>
-
-      <div class="goal-card">
-        <div class="goal-name">First 30 Days</div>
-        <div class="goal-desc">Win the first 30 days and turn new subscribers into engaged, long-term users</div>
-        <div class="goal-tags">
-          <span class="goal-tag">First-Touch Experience</span>
-        </div>
-      </div>
-
-      <div class="goal-card">
-        <div class="goal-name">Deep Habits</div>
-        <div class="goal-desc">Build deep, habitual engagement across all subscriber types</div>
-        <div class="goal-tags">
-          <span class="goal-tag">Core App</span>
-          <span class="goal-tag">Discovery &amp; Personalisation</span>
-        </div>
-      </div>
-
-      <div class="goal-card">
-        <div class="goal-name">Play &amp; Premium</div>
-        <div class="goal-desc">Differentiate The Economist through Play and Premium experiences</div>
-        <div class="goal-tags">
-          <span class="goal-tag">Audio &amp; Video</span>
-        </div>
-      </div>
-
-    </div>
+  <div class="page-header">
+    <h1>Engagement Objectives</h1>
+    <p>8 strategic objectives · click any objective to expand context, challenge and strategy</p>
   </div>
 
-  <!-- REVENUE LAYER -->
-  <div class="revenue-wrap">
-    <div class="section-label">Revenue Layer</div>
-    <div class="wide-card">
-      <div class="step-num">5</div>
-      <div class="wide-card-body">
-        <div class="goal-name">Audience Value</div>
-        <div class="goal-desc">Grow advertising revenue by maximising the value of our premium audience</div>
+  <!-- NORTH STARS -->
+  <div class="ns-card">
+    <div class="ns-label">&#9733; North Stars</div>
+    <div class="ns-sep"></div>
+    <div class="ns-metrics">
+      <div class="ns-metric">
+        <span class="ns-dot"></span>
+        <span class="ns-text"><strong>Average session frequency</strong> across the subscriber base reaches 15 days / month</span>
       </div>
-      <div class="goal-tags">
-        <span class="goal-tag">Digital Ads</span>
+      <div class="ns-metric">
+        <span class="ns-dot"></span>
+        <span class="ns-text"><strong>Share of subscribers with 4+ active days</strong> per month reaches 80%</span>
+      </div>
+      <div class="ns-metric">
+        <span class="ns-dot"></span>
+        <span class="ns-text"><strong>App CSAT</strong> above [X]</span>
       </div>
     </div>
   </div>
 
-  <!-- FOUNDATION -->
-  <div class="foundation-wrap">
-    <div class="section-label">Foundation</div>
-    <div class="foundation-card">
-      <div class="step-num">6</div>
-      <div class="foundation-card-body">
-        <div class="goal-name">Platform Excellence</div>
-        <div class="goal-desc">Deliver a fast, reliable and technically excellent platform across web and app</div>
-      </div>
-      <div class="goal-tags">
-        <span class="foundation-tag">Core App</span>
-        <span class="foundation-tag">First-Touch Experience</span>
-        <span class="foundation-tag">Digital Ads</span>
-      </div>
-    </div>
-  </div>
+  <!-- OBJECTIVES -->
+  <div class="objectives" id="objectives"></div>
 
 </div>
-</body>
-</html>
- 
+
+<script>
+var OBJECTIVES = [
+  {
+    id: 'O1', label: 'Post Search',
+    long: 'The Economist thrives in the "post-search" era and grows its traffic from LLMs',
+    team: 'Web, Newsletter &amp; GenAI',
+    ctx:  'Search has been TE\'s primary top-of-funnel traffic driver. This is changing structurally: users increasingly get answers directly from LLMs — ChatGPT, Perplexity, Gemini — without clicking through to source websites. SEO traffic is declining year-on-year as a result, and this trend will accelerate.',
+    ch:   'SEO alone can no longer sustain our acquisition pipeline. We need to slow its decline while simultaneously building visibility and traffic through LLM platforms — ensuring TE remains discoverable in a world where AI assistants are replacing traditional search as the gateway to content.',
+    st:   ['Develop our LLM Optimisation (LLMO) to increase traffic from AI-powered discovery platforms — not a replacement for SEO, but a meaningful new channel', 'Extend our footprint inside LLMs through MCP-based integrations, adding a new touchpoint early in the acquisition journey', 'Create a more compelling registration proposition that gives prospects more opportunities to sample our content before subscribing', 'Maintain and improve our SEO foundations to limit traffic decline in that channel'],
+    krs:  ['Organic traffic from AI-powered discovery grows [X]% YoY', 'SEO traffic decrease limited to [X]% YoY']
+  },
+  {
+    id: 'O2', label: 'Onboarding &amp; Content Value',
+    long: 'Our customers fully understand the breadth and value of their content proposition',
+    team: 'Web, Newsletter &amp; GenAI',
+    ctx:  'Many subscribers go dormant within the first days of their subscription, churning before they have explored the full value of what they paid for. Research points to three consistent causes: the content proposition lacks clarity, users feel overwhelmed by its volume, and they do not know where to start.',
+    ch:   'New subscribers need to quickly develop a clear, confident understanding of everything available to them — and be guided toward the content most relevant to them. If we fail here, no subsequent engagement strategy can compensate for the value they never discovered.',
+    st:   ['Deliver a focused onboarding (Get Started) that does not surface everything at once, but guides new subscribers toward content that matches their interests and intent', 'Ensure navigation gives new subscribers an immediate, clear pic

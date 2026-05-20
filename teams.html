@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagement Teams</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: #f2ede3;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+/* ── NAV ─────────────────────────────────────────────────────────── */
+nav {
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  background: #fff;
+  border-bottom: 1px solid #d4cec4;
+  height: 44px;
+}
+.nav-brand {
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: #1a1a1a; margin-right: 24px; text-decoration: none;
+}
+.nav-tab {
+  display: inline-flex; align-items: center; height: 44px; padding: 0 16px;
+  font-size: 12px; font-family: inherit; color: #666; text-decoration: none;
+  border-bottom: 2px solid transparent; transition: color .12s, border-color .12s;
+  letter-spacing: .02em;
+}
+.nav-tab:hover { color: #1a1a1a; }
+.nav-tab.active { color: #E3120B; border-bottom-color: #E3120B; font-weight: 600; }
+
+/* ── PAGE ────────────────────────────────────────────────────────── */
+.page { max-width: 1000px; margin: 0 auto; padding: 36px 28px 60px; }
+
+.page-header { margin-bottom: 24px; }
+.page-header h1 { font-size: 15px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #1a1a1a; }
+.page-header p { font-size: 12px; color: #888; margin-top: 4px; font-style: italic; }
+
+/* ── TEAM ROWS ───────────────────────────────────────────────────── */
+.teams { display: flex; flex-direction: column; gap: 6px; }
+
+.team-row {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 0.5px solid #d4cec4;
+}
+
+/* ── HEADER (always visible, navy) ──────────────────────────────── */
+.team-header {
+  background: #1a3a6e;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s;
+}
+.team-header:hover { background: #1e4480; }
+
+.team-name { font-size: 13px; font-weight: 600; color: #fff; flex: 1; }
+
+.obj-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.obj-pill {
+  font-size: 9.5px; font-weight: 500; color: #fff; opacity: .8;
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 1px 8px; border-radius: 20px; white-space: nowrap;
+}
+
+.chevron-t {
+  font-size: 14px; color: rgba(255,255,255,.55);
+  transition: transform .22s ease; flex-shrink: 0; line-height: 1;
+}
+.team-row.open .chevron-t { transform: rotate(180deg); }
+
+/* ── SUMMARY (collapsed body) ────────────────────────────────────── */
+.team-summary {
+  background: #fff;
+  padding: 13px 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+
+.mission-text { font-size: 12px; color: #555; line-height: 1.65; }
+
+.eng-breakdown { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.eng-breakdown-title {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: #bbb; margin-bottom: 3px;
+}
+.eng-tags { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; }
+
+.eng-tag {
+  font-size: 10px; color: #1a3a6e;
+  background: #eef3ff; border: 0.5px solid #9ab0e0;
+  padding: 2px 9px; border-radius: 4px; white-space: nowrap;
+}
+.eng-tag.qa  { background: #f0f8ee; border-color: #a8d4a0; color: #2a6e22; }
+.eng-tag.em  { background: #f5f0ff; border-color: #b8a0e0; color: #4a2a8e; }
+
+/* ── ROSTER (expanded) ───────────────────────────────────────────── */
+.team-roster { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.team-row.open .team-roster { max-height: 1000px; }
+
+.roster-inner {
+  background: #fafaf8;
+  border-top: 0.5px solid #ede8e0;
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Row 1: Product / Design / Delivery */
+.roster-top { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 18px; }
+
+/* Row 2: Engineering — 1, 2 or 3 cols */
+.roster-eng { }
+.eng-section-label {
+  display: inline-block;
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  color: #1a3a6e; background: #eef3ff; border: 0.5px solid #9ab0e0;
+  padding: 3px 10px; border-radius: 4px; margin-bottom: 10px;
+}
+.eng-grid { display: grid; gap: 10px 16px; }
+.eng-grid.cols-1 { grid-template-columns: 1fr; }
+.eng-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.eng-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+.role-col { }
+.role-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  color: #bbb; margin-bottom: 6px; padding-bottom: 4px;
+  border-bottom: 0.5px solid #ede8e0;
+}
+.person {
+  font-size: 11px; color: #555; line-height: 1.45;
+  padding: 3px 0; border-bottom: 0.5px solid #f5f2ee;
+}
+.person:last-child { border-bottom: none; }
+.person .ptitle { font-size: 10px; color: #aaa; display: block; }
+.person.tbd { color: #bbb; font-style: italic; }
+.person.tbd .ptitle { color: #ccc; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Engagement</span>
+  <a href="index.html"   class="nav-tab">Roadmap</a>
+  <a href="goals.html"   class="nav-tab">Objectives</a>
+  <a href="teams.html"   class="nav-tab active">Teams</a>
+  <a href="mapping.html" class="nav-tab">Goals &amp; Teams</a>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <h1>Engagement Teams</h1>
+    <p>6 product teams · click any team to expand the full roster</p>
+  </div>
+
+  <div class="teams" id="teams"></div>
+
+</div>
+
+<script>
+var TEAMS = [
+  {
+    name: 'Web &amp; Newsletters',
+    objs: ['O1', 'O2'],
+    mission: 'Own how new audiences discover and experience The Economist for the first time — driving high-quality traffic, activating new subscribers and maintaining full control over our content exposure.',
+    eng: [
+      { label: 'EM &times;1',       cls: 'em' },
+      { label: 'Web &times;4',      cls: '' }
+    ],
+    top: {
+      'Product':  [{ n: 'Sydnee Watlow',  t: 'PPM — First Touch Platforms' }],
+      'Design':   [{ n: 'Mark Mitchell',  t: 'Principal Product Designer' }],
+      'Delivery': [{ n: 'Ben Parry',      t: 'Delivery Lead' }]
+    },
+    engineers: [
+      { n: 'Kristy Nolan',       t: 'Engineering Manager' },
+      { n: 'Ethan Evans',        t: 'Senior Software Engineer' },
+      { n: 'Kunmi Williams',     t: 'Software Engineer III' },
+      { n: 'Matt Couchman',      t: 'Senior Software Engineer' },
+      { n: 'Simon W. Taylor',    t: 'Senior Software Engineer' }
+    ]
+  },
+  {
+    name: 'GenAI &amp; Conversation',
+    objs: ['O1'],
+    mission: 'Define and scale The Economist\'s presence within leading LLM ecosystems, creating distinctive AI-powered experiences that drive acquisition, extend subscriber value and establish our long-term strategy in this emerging environment.',
+    eng: [
+      { label: 'Web &times;1', cls: '' }
+    ],
+    top: {
+      'Product':  [{ n: 'To be hired (UK / SEA)', t: '', tbd: true }],
+      'Design':   [{ n: '—', t: '' }],
+      'Delivery': [{ n: '—', t: '' }]
+    },
+    engineers: [
+      { n: 'Faiz Azmi Rekatama', t: 'Senior Software Engineer' }
+    ]
+  },
+  {
+    name: 'Discovery &amp; Personalisation',
+    objs: ['O3', 'O4'],
+    mission: 'Help users find and explore The Economist\'s journalism in the most relevant and intelligent ways — through powerful discovery tools and personalised experiences across platforms.',
+    eng: [
+      { label: 'EM &times;1',         cls: 'em' },
+      { label: 'Mobile &times;5',     cls: '' },
+      { label: 'Full-stack &times;4', cls: '' },
+      { label: 'QA &times;2',         cls: 'qa' }
+    ],
+    top: {
+      'Product':  [{ n: 'To be hired (SG)', t: 'Principal PM — Discovery / Search', tbd: true }],
+      'Design':   [
+        { n: 'Agata Yamashiro',      t: 'Senior Designer (Contract)' },
+        { n: 'To be hired (Indonesia)', t: 'Senior Designer', tbd: true }
+      ],
+      'Delivery': [
+        { n: 'Karen Castillo',       t: 'Delivery Lead' },
+        { n: 'To be hired (SG)',     t: 'Delivery Lead', tbd: true }
+      ]
+    },
+    engineers: [
+      { n: 'Bimo Branarto',          t: 'Engineering Manager' },
+      { n: 'Andrys D. Silalahi',     t: 'Senior Software Engineer' },
+      { n: 'Jim Chua',               t: 'Senior Software Engineer' },
+      { n: 'Megha Walia',            t: 'Senior .Net Engineer' },
+      { n: 'Muhammad Ghazali',       t: 'Senior Software Engineer' },
+      { n: 'Akansha',                t: 'Mobile iOS (Technogise)' },
+      { n: 'Sourabh Chandrakar',     t: 'Mobile iOS (Technogise)' },
+      { n: 'Anitan',                 t: 'Mobile Android' },
+      { n: 'Navsheel',               t: 'Mobile Android (Technogise)' },
+      { n: 'Sagar Yadav',            t: 'Mobile Android (Technogise)' },
+      { n: 'Ashraf Iftekhar',        t: 'SDet — QA' },
+      { n: 'Yusif Aliyev',           t: 'QA Engineer' }
+    ]
+  },
+  {
+    name: 'Core App',
+    objs: ['O5'],
+    mission: 'Own and elevate the core Economist app experience — delivering a seamless, high-performing and coherent platform that enables engagement across all subscriber types.',
+    eng: [
+      { label: 'Mobile &times;4',     cls: '' },
+      { label: 'Full-stack &times;4', cls: '' },
+      { label: 'QA &times;4',         cls: 'qa' }
+    ],
+    top: {
+      'Product':  [{ n: 'To be hired (SG)', t: 'Principal PM — App', tbd: true }],
+      'Design':   [{ n: 'Roger Swindale',   t: 'Lead Product Designer' }],
+      'Delivery': [{ n: 'Suresh S Kartigaysu', t: 'Delivery Lead — Mobile' }]
+    },
+    engineers: [
+      { n: 'Irfan Nurhakim',         t: 'Staff Software Engineer' },
+      { n: 'Naresh Kumar',           t: 'Senior iOS Engineer' },
+      { n: 'Endi Irawan',            t: 'Senior Android Engineer' },
+      { n: 'Muhamad Faisal Rahman',  t: 'Senior Software Engineer' },
+      { n: 'Saurabh Satwani',        t: 'Senior Software Engineer' },
+      { n: 'Neil Vinas',             t: 'Mobile Engineer' },
+      { n: "Rendy's backfill",       t: 'Fullstack Engineer' },
+      { n: 'Sarthak Srivastava',     t: 'Mobile (Technogise)' },
+      { n: 'Eka Muliana Arsyad',     t: 'SDeT' },
+      { n: 'Kamal Singh',            t: 'Senior SDeT' },
+      { n: 'TBH',                    t: 'QA Engineer', tbd: true },
+      { n: 'TBH',                    t: 'QA Engineer', tbd: true }
+    ]
+  },
+  {
+    name: 'Audio &amp; Video',
+    objs: ['O6'],
+    mission: 'Elevate The Economist\'s audio and video experiences — delivering premium, engaging and habit-forming formats that strengthen subscription value and attract new audiences.',
+    eng: [
+      { label: 'EM &times;1',         cls: 'em' },
+      { label: 'Mobile &times;8',     cls: '' },
+      { label: 'Full-stack &times;2', cls: '' },
+      { label: 'QA &times;2',         cls: 'qa' }
+    ],
+    top: {
+      'Product':  [
+        { n: 'Diana Babei',            t: 'Principal Product Manager' },
+        { n: 'To be hired (UK/SEA)',   t: 'Senior PM', tbd: true }
+      ],
+      'Design':   [
+        { n: 'Flavia Corsaro',         t: 'Senior Product Designer' },
+        { n: 'Reza Faiz Atta Rahman',  t: 'Senior Product Designer' }
+      ],
+      'Delivery': [{ n: 'Richard Chao', t: 'Delivery Lead — Mobile' }]
+    },
+    engineers: [
+      { n: 'Zufrizal Yordan',        t: 'Engineering Manager' },
+      { n: 'Afief Ramadhana',        t: 'Staff Engineer' },
+      { n: 'Bangun Safutra',         t: 'Senior Software Engineer' },
+      { n: 'Kalpna Mishra',          t: 'Senior iOS Engineer' },
+      { n: 'Teenu Choudhary',        t: 'Mobile Engineer iOS' },
+      { n: 'Devrath A D',            t: 'Mobile Engineer Android' },
+      { n: 'Kharda Ahfa',            t: 'Mobile Senior SE Android' },
+      { n: 'Rajat Marcel Beck',      t: 'Mobile Engineer' },
+      { n: 'Adji Fauzi',             t: 'Mobile Engineer' },
+      { n: 'Steven Lee',             t: 'Mobile Engineer' },
+      { n: 'Teguh Hidayatullah',     t: 'Mobile Engineer' },
+      { n: 'Mayank Khubchandani',    t: 'Senior SDeT' },
+      { n: 'Yayan Kuswara',          t: 'Senior QA Engineer' }
+    ]
+  },
+  {
+    name: 'Advertising',
+    objs: ['O7'],
+    mission: 'Enable sustainable revenue growth through innovative and responsibly targeted advertising experiences that are seamlessly integrated into The Economist\'s premium ecosystem.',
+    eng: [
+      { label: 'Mobile &times;3', cls: '' },
+      { label: 'QA &times;1',     cls: 'qa' }
+    ],
+    top: {
+      'Product':  [
+        { n: 'Purwa Jain (contract)', t: 'Consultant — Ad Strategy' },
+        { n: 'To be hired',           t: 'Head of Advertising', tbd: true }
+      ],
+      'Design':   [{ n: 'To be hired (Indonesia)', t: 'Designer — B2B &amp; Advertising', tbd: true }],
+      'Delivery': [{ n: 'Suresh S Kartigaysu', t: 'Delivery Lead — Mobile' }]
+    },
+    engineers: [
+      { n: 'Ashutosh Salodkar',      t: 'Senior SE Mobile (contract)' },
+      { n: 'Rahul Dhuri',            t: 'Senior SE Mobile (contract)' },
+      { n: 'Sagar Sahasrabuddhe',    t: 'Senior SE Mobile (contract)' },
+      { n: 'Kanupriya Dhawan',       t: 'SDeT (contract)' }
+    ]
+  }
+];
+
+(function () {
+  var container = document.getElementById('teams');
+
+  TEAMS.forEach(function (team) {
+    var row = document.createElement('div');
+    row.className = 'team-row';
+
+    /* ── header ── */
+    var objHtml = team.objs.map(function (o) {
+      return '<span class="obj-pill">' + o + '</span>';
+    }).join('');
+
+    /* ── eng summary tags ── */
+    var engHtml = team.eng.map(function (e) {
+      return '<span class="eng-tag ' + e.cls + '">' + e.label + '</span>';
+    }).join('');
+
+    /* ── top row: Product / Design / Delivery ── */
+    var topHtml = Object.keys(team.top).map(function (role) {
+      var people = team.top[role].map(function (p) {
+        if (p.n === '—') return '<div class="person" style="color:#ddd">—</div>';
+        return '<div class="person' + (p.tbd ? ' tbd' : '') + '">' + p.n +
+               (p.t ? '<span class="ptitle">' + p.t + '</span>' : '') + '</div>';
+      }).join('');
+      return '<div class="role-col"><div class="role-label">' + role + '</div>' + people + '</div>';
+    }).join('');
+
+    /* ── engineering grid ── */
+    var ec   = team.engineers.length;
+    var cols = ec <= 4 ? 1 : ec <= 8 ? 2 : 3;
+    var per  = Math.ceil(ec / cols);
+    var engGridHtml = '';
+    for (var i = 0; i < ec; i += per) {
+      var slice = team.engineers.slice(i, i + per);
+      engGridHtml += '<div class="role-col">' + slice.map(function (p) {
+        return '<div class="person' + (p.tbd ? ' tbd' : '') + '">' + p.n +
+               '<span class="ptitle">' + p.t + '</span></div>';
+      }).join('') + '</div>';
+    }
+
+    row.innerHTML =
+      '<div class="team-header">' +
+        '<span class="team-name">' + team.name + '</span>' +
+        '<div class="obj-row">' + objHtml + '</div>' +
+        '<span class="chevron-t">&#8964;</span>' +
+      '</div>' +
+      '<div class="team-summary">' +
+        '<div class="mission-text">' + team.mission + '</div>' +
+        '<div class="eng-breakdown">' +
+          '<div class="eng-breakdown-title">Engineering</div>' +
+          '<div class="eng-tags">' + engHtml + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="team-roster">' +
+        '<div class="roster-inner">' +
+          '<div class="roster-top">' + topHtml + '</div>' +
+          '<div class="roster-eng">' +
+            '<span class="eng-section-label">Engineering</span>' +
+            '<div class="eng-grid cols-' + cols + '">' + engGridHtml + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    row.querySelector('.team-header').addEventListener('click', function () {
+      row.classList.toggle('open');
+    });
+
+    container.appendChild(row);
+  });
+})();
+</script>
+</body>
+</html>

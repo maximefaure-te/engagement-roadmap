@@ -271,6 +271,8 @@ td.feat-cell:last-child { border-right: none; }
 <nav>
   <span class="nav-brand">Engagement</span>
   <a href="index.html" class="nav-tab active">Roadmap</a>
+  <a href="goals.html" class="nav-tab">Objectives</a>
+  <a href="teams.html" class="nav-tab">Teams</a>
   <a href="mapping.html" class="nav-tab">Goals &amp; Teams</a>
 </nav>
 
@@ -310,93 +312,100 @@ td.feat-cell:last-child { border-right: none; }
 
 <script>
 const DATA = [
-  { f:"MCP App Beta test",                              t:"Web, NL & GenAI",             g:"Post search",         r:"Now",  hi:true },
-  { f:"Get Started MVP - Iterations",                   t:"Web, NL & GenAI",             g:"Early engagement",    r:"Now" },
-  { f:"Voting polls in newsletters",                    t:"Web, NL & GenAI",             g:"Deep habits",         r:"Now" },
-  { f:"Games on web",                                   t:"Web, NL & GenAI",             g:"Premium experiences", r:"Now" },
-  { f:"Business In Brief NL",                           t:"Web, NL & GenAI",             g:"Premium experiences", r:"Now" },
-  { f:"TWIB 2.0 on web",                                t:"Web, NL & GenAI",             g:"Premium experiences", r:"Now" },
-  { f:"AI-native engineering enablers",                 t:"Web, NL & GenAI",             g:"Platform excellence", r:"Now" },
-  { f:"Preview tier",                                   t:"Web, NL & GenAI",             g:"Post search",         r:"Next" },
-  { f:"Rich topic pages update",                        t:"Web, NL & GenAI",             g:"Post search",         r:"Next" },
-  { f:"For You Newsletter v1",                          t:"Web, NL & GenAI",             g:"Deep habits",         r:"Next" },
-  { f:"Pro Newsletter",                                 t:"Web, NL & GenAI",             g:"Premium experiences", r:"Next" },
-  { f:"Preview tier",                                   t:"Web, NL & GenAI",             g:"Post search",         r:"Later" },
-  { f:"For You Newsletter v2",                          t:"Web, NL & GenAI",             g:"Deep habits",         r:"Later" },
-  { f:"Articles onward journeys",                       t:"Web, NL & GenAI",             g:"Post search",         r:"Later" },
-  { f:"Video / animated article headers",               t:"Web, NL & GenAI",             g:"Premium experiences", r:"Later" },
-  { f:"Comment sections on Articles on Web",            t:"Web, NL & GenAI",             g:"Premium experiences", r:"Backlog" },
-  { f:"Personalised Content feed (B2B/B2C)",            t:"Discovery & Personalisation", g:"Deep habits",         r:"Now" },
-  { f:"Collections (Mobile)",                           t:"Discovery & Personalisation", g:"Deep habits",         r:"Now" },
-  { f:"Ask The Economist (B2B)",                        t:"Discovery & Personalisation", g:"Deep habits",         r:"Next" },
-  { f:"Improved For You feed (B2C)",                    t:"Discovery & Personalisation", g:"Deep habits",         r:"Next" },
-  { f:"Reader History",                                 t:"Discovery & Personalisation", g:"Deep habits",         r:"Next" },
-  { f:"B2C first party data (move to Ads?)",            t:"Discovery & Personalisation", g:"Audience value",      r:"Next" },
-  { f:"Sync PUWILO & History",                          t:"Discovery & Personalisation", g:"Platform excellence", r:"Next" },
-  { f:"BFF orchestration for homepages",                t:"Discovery & Personalisation", g:"Platform excellence", r:"Next" },
-  { f:"Sunset Econobot",                                t:"Discovery & Personalisation", g:"Platform excellence", r:"Next" },
-  { f:"Newsletters in app (native)",                    t:"Discovery & Personalisation", g:"Deep habits",         r:"Later" },
-  { f:"Access to Downloads in For You",                 t:"Discovery & Personalisation", g:"Deep habits",         r:"Later" },
-  { f:"Automated topic push notifications",             t:"Discovery & Personalisation", g:"Deep habits",         r:"Later" },
-  { f:"Contextual search in bottom nav (Liquid Glass)", t:"Discovery & Personalisation", g:"Premium experiences", r:"Later" },
-  { f:"Games in the app",                               t:"Core App",                    g:"Premium experiences", r:"Now" },
-  { f:"Games push notifications",                       t:"Core App",                    g:"Deep habits",         r:"Now" },
-  { f:"eReader in the app",                             t:"Core App",                    g:"Audience value",      r:"Now" },
-  { f:"Design system for agentic dev",                  t:"Core App",                    g:"Platform excellence", r:"Now" },
-  { f:"Preview in the app",                             t:"Core App",                    g:"Post search",         r:"Later" },
-  { f:"Get Started in the app",                         t:"Core App",                    g:"Early engagement",    r:"Later" },
-  { f:"Liquid Glass (iOS)",                             t:"Core App",                    g:"Platform excellence", r:"Later" },
-  { f:"Native Newsletters in the app",                  t:"Core App",                    g:"Premium experiences", r:"Later" },
-  { f:"Offline behaviour improvement",                  t:"Core App",                    g:"Platform excellence", r:"Later" },
-  { f:"Review LUCIQ integration",                       t:"Core App",                    g:"Platform excellence", r:"Later" },
-  { f:"Referers tracking in app",                       t:"Core App",                    g:"Platform excellence", r:"Later" },
-  { f:"Weekly selection for Reg",                       t:"Core App",                    g:"Deep habits",         r:"Backlog" },
-  { f:"Comment sections on Articles in the App",        t:"Core App",                    g:"Premium experiences", r:"Backlog" },
-  { f:"iOS / Android widgets",                          t:"Core App",                    g:"Deep habits",         r:"Backlog" },
-  { f:"Play: TWIB component",                           t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"Play: deep linking and push",                    t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"Play: newsletters webview",                      t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"Play: add components to Podcasts tab",           t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"AI Guided Session (iOS only)",                   t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"Play: podcast carousel",                         t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"Play: Continue Listening",                       t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"Vertical video Zephr",                           t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"Podcasts Zephr",                                 t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"New podcast launch: American Apostle",           t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"Featured vertical video on web Home",            t:"Audio & Video",               g:"Premium experiences", r:"Now" },
-  { f:"InsiderxPodcasts: audio player rearch",          t:"Audio & Video",               g:"Premium experiences", r:"Next" },
-  { f:"InsiderxPodcasts: unified player",               t:"Audio & Video",               g:"Premium experiences", r:"Next" },
-  { f:"Vertical video speed controls on web",           t:"Audio & Video",               g:"Premium experiences", r:"Next" },
-  { f:"InsiderxPodcasts: audio player rearch (cont.)",  t:"Audio & Video",               g:"Premium experiences", r:"Later" },
-  { f:"InsiderxPodcasts: unified player (cont.)",       t:"Audio & Video",               g:"Premium experiences", r:"Later" },
-  { f:"Play full launch",                               t:"Audio & Video",               g:"Premium experiences", r:"Later" },
-  { f:"Android Auto",                                   t:"Audio & Video",               g:"Premium experiences", r:"Later" },
-  { f:"Ads on Play Pilot",                              t:"Ad experience",               g:"Audience value",      r:"Now" },
-  { f:"Migration to GAM in newsletters",                t:"Ad experience",               g:"Audience value",      r:"Now" },
-  { f:"B2C First party data",                           t:"Ad experience",               g:"Audience value",      r:"Now" },
-  { f:"Preview Ad experience",                          t:"Ad experience",               g:"Audience value",      r:"Next" },
-  { f:"Play / Video Ad experience",                     t:"Ad experience",               g:"Audience value",      r:"Later" }
+  // Web, Newsletter & GenAI
+  { f:"MCP App Beta test",                              t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Now",  hi:true },
+  { f:"Preview tier",                                   t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Next" },
+  { f:"Rich topic pages update",                        t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Next" },
+  { f:"Preview tier",                                   t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Later" },
+  { f:"Articles onward journeys",                       t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Later" },
+  { f:"Voting polls in newsletters",                    t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now" },
+  { f:"Business In Brief NL",                           t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now" },
+  { f:"TWIB 2.0 on web",                                t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now" },
+  { f:"Games on web",                                   t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now" },
+  { f:"For You Newsletter v1",                          t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Next" },
+  { f:"Pro Newsletter",                                 t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Next" },
+  { f:"For You Newsletter v2",                          t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Later" },
+  { f:"Video / animated article headers",               t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Later" },
+  { f:"Weekly selection for Reg",                       t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Backlog" },
+  { f:"Get Started MVP - Iterations",                   t:"Web, Newsletter & GenAI",     g:"G5 — Habit Forming",            r:"Now" },
+  { f:"Comment sections on Articles on Web",            t:"Web, Newsletter & GenAI",     g:"G5 — Habit Forming",            r:"Backlog" },
+  { f:"AI-native engineering enablers",                 t:"Web, Newsletter & GenAI",     g:"G8 — Platform Excellence",      r:"Now" },
+  // Discovery & Personalisation
+  { f:"Ask The Economist (B2B)",                        t:"Discovery & Personalisation", g:"G3 — Easy Access",              r:"Next" },
+  { f:"Contextual search in bottom nav (Liquid Glass)", t:"Discovery & Personalisation", g:"G3 — Easy Access",              r:"Later" },
+  { f:"Personalised Content feed (B2B/B2C)",            t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Now" },
+  { f:"Collections (Mobile)",                           t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Now" },
+  { f:"Improved For You feed (B2C)",                    t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Next" },
+  { f:"Reader History",                                 t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Next" },
+  { f:"Newsletters in app (native)",                    t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later" },
+  { f:"Access to Downloads in For You",                 t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later" },
+  { f:"Automated topic push notifications",             t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later" },
+  { f:"Sync PUWILO & History",                          t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next" },
+  { f:"BFF orchestration for homepages",                t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next" },
+  { f:"Sunset Econobot",                                t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next" },
+  // App
+  { f:"Games in the app",                               t:"App",                         g:"G5 — Habit Forming",            r:"Now" },
+  { f:"Games push notifications",                       t:"App",                         g:"G5 — Habit Forming",            r:"Now" },
+  { f:"Get Started in the app",                         t:"App",                         g:"G5 — Habit Forming",            r:"Later" },
+  { f:"iOS / Android widgets",                          t:"App",                         g:"G5 — Habit Forming",            r:"Backlog" },
+  { f:"Comment sections on Articles in the App",        t:"App",                         g:"G5 — Habit Forming",            r:"Backlog" },
+  { f:"eReader in the app",                             t:"App",                         g:"G2 — Content Value",            r:"Now" },
+  { f:"Native Newsletters in the app",                  t:"App",                         g:"G2 — Content Value",            r:"Later" },
+  { f:"Preview in the app",                             t:"App",                         g:"G1 — Post Search",              r:"Later" },
+  { f:"Design system for agentic dev",                  t:"App",                         g:"G8 — Platform Excellence",      r:"Now" },
+  { f:"Liquid Glass (iOS)",                             t:"App",                         g:"G8 — Platform Excellence",      r:"Later" },
+  { f:"Offline behaviour improvement",                  t:"App",                         g:"G8 — Platform Excellence",      r:"Later" },
+  { f:"Review LUCIQ integration",                       t:"App",                         g:"G8 — Platform Excellence",      r:"Later" },
+  { f:"Referers tracking in app",                       t:"App",                         g:"G8 — Platform Excellence",      r:"Later" },
+  // Audio & Video
+  { f:"Play: TWIB component",                           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Play: deep linking and push",                    t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Play: newsletters webview",                      t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Play: add components to Podcasts tab",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"AI Guided Session (iOS only)",                   t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Play: podcast carousel",                         t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Play: Continue Listening",                       t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Vertical video Zephr",                           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Podcasts Zephr",                                 t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"New podcast launch: American Apostle",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Featured vertical video on web Home",            t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"InsiderxPodcasts: audio player rearch",          t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next" },
+  { f:"InsiderxPodcasts: unified player",               t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next" },
+  { f:"Vertical video speed controls on web",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next" },
+  { f:"InsiderxPodcasts: audio player rearch (cont.)",  t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later" },
+  { f:"InsiderxPodcasts: unified player (cont.)",       t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later" },
+  { f:"Play full launch",                               t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later" },
+  { f:"Android Auto",                                   t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later" },
+  // Advertising
+  { f:"Ads on Play Pilot",                              t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now" },
+  { f:"Migration to GAM in newsletters",                t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now" },
+  { f:"B2C First party data",                           t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now" },
+  { f:"B2C first party data (moved from Disco)",        t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Next" },
+  { f:"Preview Ad experience",                          t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Next" },
+  { f:"Play / Video Ad experience",                     t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Later" }
 ];
 
-const GOALS = ["Post search","Early engagement","Deep habits","Premium experiences","Audience value","Platform excellence"];
-const TEAMS = ["Web, NL & GenAI","Discovery & Personalisation","Core App","Audio & Video","Ad experience"];
+const GOALS = ["G1 — Post Search","G2 — Content Value","G3 — Easy Access","G4 — Personalisation","G5 — Habit Forming","G6 — New Formats & Features","G7 — Advertising Experience","G8 — Platform Excellence"];
+const TEAMS = ["Web, Newsletter & GenAI","Discovery & Personalisation","App","Audio & Video","Advertising"];
 const HNOW  = ["Now","Next","Later"];
 
 const TEAM_PILL = {
-  "Web, NL & GenAI":            ["pill-web",  "Web"],
+  "Web, Newsletter & GenAI":    ["pill-web",  "Web"],
   "Discovery & Personalisation":["pill-disc", "D&P"],
-  "Core App":                   ["pill-core", "Core App"],
+  "App":                        ["pill-core", "App"],
   "Audio & Video":              ["pill-av",   "A&V"],
-  "Ad experience":              ["pill-ads",  "Ads"]
+  "Advertising":                ["pill-ads",  "Advertising"]
 };
 
 const GOAL_PILL = {
-  "Post search":         ["pill-g-post",  "Post search"],
-  "Early engagement":    ["pill-g-early", "Early eng."],
-  "Deep habits":         ["pill-g-deep",  "Deep habits"],
-  "Premium experiences": ["pill-g-prem",  "Premium"],
-  "Audience value":      ["pill-g-aud",   "Audience"],
-  "Platform excellence": ["pill-g-plat",  "Platform"]
+  "G1 — Post Search":            ["pill-g-post",   "Post Search"],
+  "G2 — Content Value":          ["pill-g-early",  "Content Val."],
+  "G3 — Easy Access":            ["pill-g-access", "Easy Access"],
+  "G4 — Personalisation":        ["pill-g-perso",  "Personalisation"],
+  "G5 — Habit Forming":          ["pill-g-deep",   "Habit Forming"],
+  "G6 — New Formats & Features": ["pill-g-prem",   "New Formats"],
+  "G7 — Advertising Experience": ["pill-g-aud",    "Advertising"],
+  "G8 — Platform Excellence":    ["pill-g-plat",   "Platform"]
 };
 
 const H_CLASS = { Now:"h-now", Next:"h-next", Later:"h-later", Backlog:"h-backlog" };
