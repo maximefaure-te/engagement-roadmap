@@ -7,151 +7,56 @@
 <style>
 :root { color-scheme: light; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
-  background: #f2ede3;
-  color: #1a1a1a;
-  min-height: 100vh;
-}
-
-/* ── NAV ─────────────────────────────────────────────────────────── */
-nav {
-  display: flex;
-  align-items: center;
-  padding: 0 28px;
-  background: #fff;
-  border-bottom: 1px solid #d4cec4;
-  height: 44px;
-}
-.nav-brand {
-  font-size: 11px; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; color: #1a1a1a; margin-right: 24px; text-decoration: none;
-}
-.nav-tab {
-  display: inline-flex; align-items: center; height: 44px; padding: 0 16px;
-  font-size: 12px; font-family: inherit; color: #666; text-decoration: none;
-  border-bottom: 2px solid transparent; transition: color .12s, border-color .12s;
-  letter-spacing: .02em;
-}
-.nav-tab:hover { color: #1a1a1a; }
-.nav-tab.active { color: #E3120B; border-bottom-color: #E3120B; font-weight: 600; }
-
-/* ── PAGE ────────────────────────────────────────────────────────── */
-.page { max-width: 1000px; margin: 0 auto; padding: 36px 28px 60px; }
-
-.page-header { margin-bottom: 24px; }
-.page-header h1 { font-size: 15px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #1a1a1a; }
-.page-header p { font-size: 12px; color: #888; margin-top: 4px; font-style: italic; }
-
-/* ── NORTH STARS ─────────────────────────────────────────────────── */
-.ns-card {
-  background: #1a1a1a;
-  border-radius: 8px;
-  padding: 16px 20px;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-}
-.ns-label {
-  font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  color: #E3120B; white-space: nowrap; padding-top: 2px;
-  display: flex; align-items: center; gap: 5px;
-}
-.ns-sep { width: 1px; height: 32px; background: #333; flex-shrink: 0; margin-top: 2px; }
-.ns-metrics { display: flex; flex-direction: column; gap: 7px; flex: 1; }
-.ns-metric { display: flex; align-items: baseline; gap: 8px; }
-.ns-dot { width: 4px; height: 4px; border-radius: 50%; background: #E3120B; opacity: .7; flex-shrink: 0; position: relative; top: -1px; }
-.ns-text { font-size: 12.5px; color: #ccc; line-height: 1.4; }
-.ns-text strong { color: #fff; font-weight: 500; }
-
-/* ── OBJECTIVES ──────────────────────────────────────────────────── */
-.objectives { display: flex; flex-direction: column; gap: 7px; }
-
-.obj-card {
-  background: #fff;
-  border-radius: 7px;
-  border: 1px solid #e5dfd6;
-  border-left: 4px solid #E3120B;
-  overflow: hidden;
-}
-.obj-card.o8 {
-  border-left-color: #aaa;
-  border-style: dashed;
-  border-left-style: dashed;
-}
-
-.obj-header {
-  padding: 13px 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-}
-.obj-header:hover { background: #fafaf8; }
-
-.obj-num {
-  font-size: 9px; font-weight: 700; color: #E3120B;
-  background: #fce8e8; border-radius: 3px; padding: 2px 7px;
-  flex-shrink: 0; margin-top: 3px; letter-spacing: .05em;
-}
-.o8 .obj-num { color: #888; background: #eee; }
-
-.obj-main { flex: 1; min-width: 0; }
-.obj-title { font-size: 13.5px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
-.obj-subtitle { font-size: 11px; color: #aaa; line-height: 1.4; margin-bottom: 9px; }
-
-.kr-list { display: flex; flex-direction: column; gap: 4px; }
-.kr-item { font-size: 11px; color: #555; display: flex; align-items: baseline; gap: 6px; line-height: 1.4; }
-.kr-dot { width: 4px; height: 4px; border-radius: 50%; background: #E3120B; opacity: .5; flex-shrink: 0; position: relative; top: 1px; }
-.o8 .kr-dot { background: #aaa; }
-
-.obj-right {
-  display: flex; flex-direction: column; align-items: flex-end;
-  gap: 8px; flex-shrink: 0; padding-top: 1px;
-}
-.team-tag {
-  font-size: 10px; color: #666; border: 1px solid #ddd8cc;
-  padding: 3px 9px; border-radius: 20px; white-space: nowrap;
-  background: #f8f4ee;
-}
-.chevron {
-  font-size: 14px; color: #bbb; transition: transform .22s ease;
-  display: block; line-height: 1;
-}
-.obj-card.open .chevron { transform: rotate(180deg); }
-
-/* ── EXPANDED CONTENT ────────────────────────────────────────────── */
-.obj-body { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
-.obj-card.open .obj-body { max-height: 1000px; }
-
-.obj-body-inner {
-  border-top: 1px solid #ede8e0;
-  padding: 16px 18px 18px;
-  background: #fdfcfa;
-}
-
-.body-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; }
-
-.bsec { }
-.bsec.full { grid-column: 1 / -1; }
-
-.sec-label {
-  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
-  color: #bbb; margin-bottom: 7px;
-}
-.sec-text { font-size: 12.5px; color: #555; line-height: 1.65; }
-
-.strat-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-.strat-item { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; color: #555; line-height: 1.5; }
-.sdot { width: 4px; height: 4px; border-radius: 50%; background: #E3120B; opacity: .45; flex-shrink: 0; position: relative; top: 2px; }
-.o8 .sdot { background: #aaa; }
+body { font-family: 'Inter','Segoe UI',system-ui,-apple-system,Arial,sans-serif; background:#f2ede3; color:#1a1a1a; min-height:100vh; }
+nav { display:flex; align-items:center; padding:0 28px; background:#fff; border-bottom:1px solid #d4cec4; height:44px; }
+.nav-brand { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#1a1a1a; margin-right:24px; text-decoration:none; }
+.nav-tab { display:inline-flex; align-items:center; height:44px; padding:0 16px; font-size:12px; font-family:inherit; color:#666; text-decoration:none; border-bottom:2px solid transparent; transition:color .12s,border-color .12s; letter-spacing:.02em; }
+.nav-tab:hover { color:#1a1a1a; }
+.nav-tab.active { color:#E3120B; border-bottom-color:#E3120B; font-weight:600; }
+.page { max-width:1000px; margin:0 auto; padding:36px 28px 60px; }
+.page-header { margin-bottom:24px; }
+.page-header h1 { font-size:15px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:#1a1a1a; }
+.page-header p { font-size:12px; color:#888; margin-top:4px; font-style:italic; }
+.ns-card { background:#1a1a1a; border-radius:8px; padding:16px 20px; margin-bottom:8px; display:flex; align-items:flex-start; gap:20px; }
+.ns-label { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#E3120B; white-space:nowrap; padding-top:2px; display:flex; align-items:center; gap:5px; }
+.ns-sep { width:1px; height:32px; background:#333; flex-shrink:0; margin-top:2px; }
+.ns-metrics { display:flex; flex-direction:column; gap:7px; flex:1; }
+.ns-metric { display:flex; align-items:baseline; gap:8px; }
+.ns-dot { width:4px; height:4px; border-radius:50%; background:#E3120B; opacity:.7; flex-shrink:0; position:relative; top:-1px; }
+.ns-text { font-size:12.5px; color:#ccc; line-height:1.4; }
+.ns-text strong { color:#fff; font-weight:500; }
+.objectives { display:flex; flex-direction:column; gap:7px; }
+.obj-card { background:#fff; border-radius:7px; border:1px solid #e5dfd6; border-left:4px solid #E3120B; overflow:hidden; }
+.obj-card.o8 { border-left-color:#aaa; border-style:dashed; border-left-style:dashed; }
+.obj-header { padding:13px 16px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; user-select:none; }
+.obj-header:hover { background:#fafaf8; }
+.obj-num { font-size:9px; font-weight:700; color:#E3120B; background:#fce8e8; border-radius:3px; padding:2px 7px; flex-shrink:0; margin-top:3px; letter-spacing:.05em; }
+.o8 .obj-num { color:#888; background:#eee; }
+.obj-main { flex:1; min-width:0; }
+.obj-title { font-size:13.5px; font-weight:700; color:#1a1a1a; margin-bottom:2px; }
+.obj-subtitle { font-size:11px; color:#aaa; line-height:1.4; margin-bottom:9px; }
+.kr-list { display:flex; flex-direction:column; gap:4px; }
+.kr-item { font-size:11px; color:#555; display:flex; align-items:baseline; gap:6px; line-height:1.4; }
+.kr-dot { width:4px; height:4px; border-radius:50%; background:#E3120B; opacity:.5; flex-shrink:0; position:relative; top:1px; }
+.o8 .kr-dot { background:#aaa; }
+.obj-right { display:flex; flex-direction:column; align-items:flex-end; gap:8px; flex-shrink:0; padding-top:1px; }
+.team-tag { font-size:10px; color:#666; border:1px solid #ddd8cc; padding:3px 9px; border-radius:20px; white-space:nowrap; background:#f8f4ee; }
+.chevron { font-size:14px; color:#bbb; transition:transform .22s ease; display:block; line-height:1; }
+.obj-card.open .chevron { transform:rotate(180deg); }
+.obj-body { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+.obj-card.open .obj-body { max-height:1000px; }
+.obj-body-inner { border-top:1px solid #ede8e0; padding:16px 18px 18px; background:#fdfcfa; }
+.body-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 28px; }
+.bsec.full { grid-column:1 / -1; }
+.sec-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#bbb; margin-bottom:7px; }
+.sec-text { font-size:12.5px; color:#555; line-height:1.65; }
+.strat-list { list-style:none; display:flex; flex-direction:column; gap:6px; }
+.strat-item { display:flex; align-items:baseline; gap:8px; font-size:12.5px; color:#555; line-height:1.5; }
+.sdot { width:4px; height:4px; border-radius:50%; background:#E3120B; opacity:.45; flex-shrink:0; position:relative; top:2px; }
+.o8 .sdot { background:#aaa; }
 </style>
 </head>
 <body>
-
 <nav>
   <span class="nav-brand">Engagement</span>
   <a href="index.html"   class="nav-tab">Roadmap</a>
@@ -159,54 +64,95 @@ nav {
   <a href="teams.html"   class="nav-tab">Teams</a>
   <a href="mapping.html" class="nav-tab">Goals &amp; Teams</a>
 </nav>
-
 <div class="page">
-
   <div class="page-header">
     <h1>Engagement Objectives</h1>
-    <p>8 strategic objectives · click any objective to expand context, challenge and strategy</p>
+    <p>8 strategic objectives &middot; click any objective to expand context, challenge and strategy</p>
   </div>
-
-  <!-- NORTH STARS -->
   <div class="ns-card">
     <div class="ns-label">&#9733; North Stars</div>
     <div class="ns-sep"></div>
     <div class="ns-metrics">
-      <div class="ns-metric">
-        <span class="ns-dot"></span>
-        <span class="ns-text"><strong>Average session frequency</strong> across the subscriber base reaches 15 days / month</span>
-      </div>
-      <div class="ns-metric">
-        <span class="ns-dot"></span>
-        <span class="ns-text"><strong>Share of subscribers with 4+ active days</strong> per month reaches 80%</span>
-      </div>
-      <div class="ns-metric">
-        <span class="ns-dot"></span>
-        <span class="ns-text"><strong>App CSAT</strong> above [X]</span>
-      </div>
+      <div class="ns-metric"><span class="ns-dot"></span><span class="ns-text"><strong>Average session frequency</strong> across the subscriber base reaches 15 days / month</span></div>
+      <div class="ns-metric"><span class="ns-dot"></span><span class="ns-text"><strong>Share of subscribers with 4+ active days</strong> per month reaches 80%</span></div>
+      <div class="ns-metric"><span class="ns-dot"></span><span class="ns-text"><strong>App CSAT</strong> above [X]</span></div>
     </div>
   </div>
-
-  <!-- OBJECTIVES -->
   <div class="objectives" id="objectives"></div>
-
 </div>
-
 <script>
-var OBJECTIVES = [
-  {
-    id: 'O1', label: 'Post Search',
-    long: 'The Economist thrives in the "post-search" era and grows its traffic from LLMs',
-    team: 'Web, Newsletter &amp; GenAI',
-    ctx:  'Search has been TE\'s primary top-of-funnel traffic driver. This is changing structurally: users increasingly get answers directly from LLMs — ChatGPT, Perplexity, Gemini — without clicking through to source websites. SEO traffic is declining year-on-year as a result, and this trend will accelerate.',
-    ch:   'SEO alone can no longer sustain our acquisition pipeline. We need to slow its decline while simultaneously building visibility and traffic through LLM platforms — ensuring TE remains discoverable in a world where AI assistants are replacing traditional search as the gateway to content.',
-    st:   ['Develop our LLM Optimisation (LLMO) to increase traffic from AI-powered discovery platforms — not a replacement for SEO, but a meaningful new channel', 'Extend our footprint inside LLMs through MCP-based integrations, adding a new touchpoint early in the acquisition journey', 'Create a more compelling registration proposition that gives prospects more opportunities to sample our content before subscribing', 'Maintain and improve our SEO foundations to limit traffic decline in that channel'],
-    krs:  ['Organic traffic from AI-powered discovery grows [X]% YoY', 'SEO traffic decrease limited to [X]% YoY']
-  },
-  {
-    id: 'O2', label: 'Onboarding &amp; Content Value',
-    long: 'Our customers fully understand the breadth and value of their content proposition',
-    team: 'Web, Newsletter &amp; GenAI',
-    ctx:  'Many subscribers go dormant within the first days of their subscription, churning before they have explored the full value of what they paid for. Research points to three consistent causes: the content proposition lacks clarity, users feel overwhelmed by its volume, and they do not know where to start.',
-    ch:   'New subscribers need to quickly develop a clear, confident understanding of everything available to them — and be guided toward the content most relevant to them. If we fail here, no subsequent engagement strategy can compensate for the value they never discovered.',
-    st:   ['Deliver a focused onboarding (Get Started) that does not surface everything at once, but guides new subscribers toward content that matches their interests and intent', 'Ensure navigation gives new subscribers an immediate, clear pic
+var OBJ = [
+  { id:'O1', label:'Post Search', long:'The Economist thrives in the “post-search” era and grows its traffic from LLMs', team:'Web, Newsletter &amp; GenAI',
+    ctx:'Search has been TE’s primary top-of-funnel traffic driver. This is changing structurally: users increasingly get answers directly from LLMs — ChatGPT, Perplexity, Gemini — without clicking through to source websites. SEO traffic is declining year-on-year as a result, and this trend will accelerate.',
+    ch:'SEO alone can no longer sustain our acquisition pipeline. We need to slow its decline while simultaneously building visibility and traffic through LLM platforms — ensuring TE remains discoverable in a world where AI assistants are replacing traditional search as the gateway to content.',
+    st:['Develop our LLM Optimisation (LLMO) to increase traffic from AI-powered discovery platforms — not a replacement for SEO, but a meaningful new channel','Extend our footprint inside LLMs through MCP-based integrations, adding a new touchpoint early in the acquisition journey','Create a more compelling registration proposition that gives prospects more opportunities to sample our content before subscribing','Maintain and improve our SEO foundations to limit traffic decline in that channel'],
+    krs:['Organic traffic from AI-powered discovery grows [X]% YoY','SEO traffic decrease limited to [X]% YoY'] },
+  { id:'O2', label:'Onboarding &amp; Content Value', long:'Our customers fully understand the breadth and value of their content proposition', team:'Web, Newsletter &amp; GenAI',
+    ctx:'Many subscribers go dormant within the first days of their subscription, churning before they have explored the full value of what they paid for. Research points to three consistent causes: the content proposition lacks clarity, users feel overwhelmed by its volume, and they do not know where to start.',
+    ch:'New subscribers need to quickly develop a clear, confident understanding of everything available to them — and be guided toward the content most relevant to them. If we fail here, no subsequent engagement strategy can compensate for the value they never discovered.',
+    st:['Deliver a focused onboarding (Get Started) that does not surface everything at once, but guides new subscribers toward content that matches their interests and intent','Ensure navigation gives new subscribers an immediate, clear picture of all they can read, watch and listen to','Use in-app and on-site messaging — tooltips, tours and contextual prompts — to progressively introduce key sections and features across the first 30 days','Promote the app at every opportunity as the environment where the full content proposition is best experienced'],
+    krs:['[X]% of active subscribers engage with 2+ content types in a rolling 30-day window','% of active subscribers opted into at least one newsletter reaches [X]%'] },
+  { id:'O3', label:'Search &amp; Access', long:'Despite the volume, subscribers have easy, fast and intuitive access to the content they want, at any time, on any device', team:'Discovery &amp; Personalisation',
+    ctx:'Research shows that subscribers disengage when they cannot find what they are looking for. A common pattern: a user sees a push notification or social post, intends to read it later, and cannot locate it when they return. Friction in finding content erodes the perceived value of the subscription.',
+    ch:'What erodes subscriber confidence is not the volume itself, but the friction of failing to find something specific when they want it. The challenge is to ensure they can always reach the right piece of content quickly, and explore any topic as deeply as they choose.',
+    st:['Improve search fundamentals: relevance and coverage across all content formats','Introduce advanced search capabilities that reduce the distance between a query and the right answer, including conversational search via Ask The Economist','Explore deeper content interaction — NotebookLM-style experiences where users can curate collections and query them to navigate a topic on their own terms'],
+    krs:['Search success rate (search ending in a content click within 60s) reaches [X]%','Ask The Economist monthly adoption rate reaches [X]% of active subscribers'] },
+  { id:'O4', label:'Personalisation', long:'We complement Editorial curation with “the right content for you right now” so that customers do not feel overwhelmed', team:'Discovery &amp; Personalisation',
+    ctx:'The feeling of missed value is a slow but reliable driver of churn. It happens when subscribers sense that topics they care about, formats they would enjoy, and articles they would have read are passing them by. A smarter experience — one that surfaces what matters to each subscriber before they have to go looking for it — is the answer.',
+    ch:'Our personalisation offering is still limited. The For You section exists but under-delivers on relevance and self-service. Subscribers have little ability to shape their experience, and we underuse the behavioural signals they generate every day. We need to close this gap — personalisation should be a primary reason to stay, not an afterthought.',
+    st:['Give subscribers explicit control over their experience: expand Follows (topics, shows) and build self-service tools so they can actively shape what they see','Make better use of implicit signals — reading habits, listening patterns, time of day — to make recommendations progressively more relevant without requiring user effort','Introduce serendipity into recommendations to surface unexpected content that broadens subscriber interests, avoiding filter bubbles','Surface personalised content and collections on the Home screen in ways that complement rather than displace Editorial curation','Develop format personalisation through features like Guided Session, helping subscribers fit TE content into their daily routines'],
+    krs:['[X]% of active subscribers engage with at least one personalised recommendation per week','[X]% of subscribers have set at least one explicit preference in their profile'] },
+  { id:'O5', label:'Habit Forming', long:'The digital experience we offer forms habits and maintains them over time', team:'App',
+    ctx:'Passive churn is one major risk in our subscription model. Subscribers disengage gradually and silently — not cancelling, just stopping. By the time they receive their renewal notification, the habit is already gone, and what should be a routine payment becomes a prompt to cancel.',
+    ch:'We currently have limited tools to detect disengagement early or act on it before it becomes churn. We need to build mechanisms that keep The Economist present in subscribers’ daily routines — and that identify and recover those who are drifting before they reach their renewal moment.',
+    st:['Build opt-in rates for push notifications and emails by designing habit-forming loops around regular content — the Edition, shows and games — so subscribers always have a reason to return','Develop a preference centre with smart logic (deduplication, priority rules, format choices) so subscribers receive only alerts that are relevant to them','Use in-app messaging and badging to make every visit feel valuable, surfacing what is new and relevant for that user at that moment','Build a Games strategy that creates its own daily habit loop within the product','Implement re-engagement mechanics that detect disengagement patterns early and trigger the right message — in the right format — to bring subscribers back before they reach renewal','Develop home screen widgets that integrate TE into subscribers’ existing smartphone routines'],
+    krs:['% of subscribers engaging with Games at least once per week reaches [X]%','Push notification opt-in rate reaches [X]% across iOS and Android','% of subscribers inactive for 7+ days who return to active within 30 days reaches [X]%'] },
+  { id:'O6', label:'New Formats &amp; Features', long:'We launch new content formats and features that constantly add value to our subscription and attract new subscribers', team:'Audio &amp; Video',
+    ctx:'TE’s core subscriber base is ageing, creating pressure to attract younger audiences before the gap becomes structural. Separately, we are seeking greater price power in our Premium tier, which requires continuously adding perceived value to the proposition. New experiences around audio and video formats are the most direct lever for both, in line with the Editorial strategy — Insider has already demonstrated that video drives retention, and podcasts are a proven format with younger audiences.',
+    ch:'We need to develop compelling audio and video experiences that attract and retain younger subscribers and justify a higher price point for Premium. The Play subscription tier is the clearest opportunity to deliver on both.',
+    st:['Launch a Play tier built around the Podcasts × Insider proposition being defined by the Editorial team for 2027, positioning TE as a destination for younger audiences','Integrate Play fully into the Premium tier to increase its perceived value and strengthen the case for renewal','Continue developing audio narration and the audio queue as a core Premium format — one of the most-used and highest-retention features among existing subscribers'],
+    krs:['Weekly engagement rate among Play subscribers (active / total) reaches [X]%','Share of Premium subscribers engaging with shows every month above [X]%'] },
+  { id:'O7', label:'Advertising Experience', long:'The advertising experience we propose optimises monetisation for all our tiers', team:'Advertising',
+    ctx:'Advertising is a significant revenue stream for TE. Our audience — educated, affluent, influential — commands premium rates and is highly attractive to premium brands. This makes advertising both a commercial priority and a product responsibility: the quality of the ad experience directly affects subscriber satisfaction.',
+    ch:'The tension is constant: every ad position adds revenue but risks degrading the experience subscribers are paying for. We need to grow advertising revenue without compromising the trust and satisfaction of our subscriber base — and ideally, develop ad formats that feel consistent with, rather than at odds with, a premium product.',
+    st:['Develop premium and interactive ad formats — contextual, elegant, relevant — that command higher CPMs and sit comfortably within a premium product experience','Build our 1P data strategy: begin with Job Title and Industry data at registration, extend collection progressively through the experience, and explore third-party data partnerships (e.g. Liveramp) to enrich targeting','Develop audio and video ad formats in line with our expanding Podcasts and Insider proposition','Adapt ad formats and volumes to each subscription tier, ensuring the experience is appropriate to what each subscriber is paying for','Maintain best-in-class privacy compliance across all regions we operate in'],
+    krs:['Total addressable digital ad inventory grows [X]% YoY','Average CPM on premium ad formats reaches [X]','Ad-attributable CSAT degradation stays below [X]%'] },
+  { id:'O8', label:'Platform Excellence', long:'The quality of the product experience adds up to the content value', team:'All teams &amp; Engineering',
+    ctx:'Even the best features fail to deliver value if the product experience is not perfect — slow, unreliable or broken. Subscribers do not grade our app against other news products — they compare it to the best apps on their phone: Netflix, Spotify, Instagram. That is the bar we are measured against.',
+    ch:'Meeting that bar requires two things. First, consistent technical performance across speed, reliability and feature quality on both web and app — the foundation of subscriber satisfaction and usage. Second, a modern architecture that allows core tools and third-party solutions to work as intended, without the over-customisation that slows delivery and prevents these tools from operating off the shelf.',
+    st:['Improve app and web performance to meet the speed and fluidity standards subscribers expect, benchmarked against best-in-class consumer apps','Ensure reliability and feature completeness: offline mode works without failure, synced content is available across all platforms, and every feature behaves as expected','Build full observability into our platform so we can monitor, diagnose and resolve issues faster','Modernise our data and tracking architecture so that core tools — Amplitude, Airship, Sourcepoint — work off the shelf, reducing implementation complexity and freeing engineering capacity for product work','Reduce time to market by investing in the technical foundations that allow teams to ship faster and with greater confidence'],
+    krs:['App crash-free session rate reaches [X]% on both iOS and Android','[X]% of web pages score “Good” on Core Web Vitals (LCP, INP, CLS)'] }
+];
+(function(){
+  var c=document.getElementById('objectives');
+  OBJ.forEach(function(o){
+    var isO8=o.id==='O8';
+    var card=document.createElement('div');
+    card.className='obj-card'+(isO8?' o8':'');
+    var krsHtml=o.krs.map(function(k){return '<div class="kr-item"><span class="kr-dot"></span>'+k+'</div>';}).join('');
+    var stHtml=o.st.map(function(s){return '<li class="strat-item"><span class="sdot"></span><span>'+s+'</span></li>';}).join('');
+    card.innerHTML=
+      '<div class="obj-header">'+
+        '<div class="obj-num">'+o.id+'</div>'+
+        '<div class="obj-main">'+
+          '<div class="obj-title">'+o.label+'</div>'+
+          '<div class="obj-subtitle">'+o.long+'</div>'+
+          '<div class="kr-list">'+krsHtml+'</div>'+
+        '</div>'+
+        '<div class="obj-right">'+
+          '<div class="team-tag">'+o.team+'</div>'+
+          '<span class="chevron">&#8964;</span>'+
+        '</div>'+
+      '</div>'+
+      '<div class="obj-body"><div class="obj-body-inner"><div class="body-grid">'+
+        '<div class="bsec"><div class="sec-label">Context</div><div class="sec-text">'+o.ctx+'</div></div>'+
+        '<div class="bsec"><div class="sec-label">Challenge</div><div class="sec-text">'+o.ch+'</div></div>'+
+        '<div class="bsec full"><div class="sec-label">Strategy</div><ul class="strat-list">'+stHtml+'</ul></div>'+
+      '</div></div></div>';
+    card.querySelector('.obj-header').addEventListener('click',function(){card.classList.toggle('open');});
+    c.appendChild(card);
+  });
+})();
+</script>
+</body>
+</html>
