@@ -264,6 +264,57 @@ td.feat-cell:last-child { border-right: none; }
   font-style: italic;
   font-size: 13px;
 }
+
+/* Refresh button */
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
+  background: #fff;
+  border: 1px solid #c8c0b0;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #555;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.refresh-btn:hover:not(:disabled) { background: #f5f0e8; color: #1a1a1a; }
+.refresh-btn:disabled { opacity: 0.6; cursor: default; }
+.refresh-btn.success { border-color: #2f7a2f; color: #2f7a2f; }
+.refresh-btn.error   { border-color: #E3120B; color: #E3120B; }
+.refresh-icon { font-size: 13px; line-height: 1; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* KR tooltip */
+.feat[data-kr] { cursor: default; }
+
+#kr-tooltip {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  max-width: 280px;
+  background: #1a1a1a;
+  color: #f5f0e8;
+  font-size: 11px;
+  line-height: 1.5;
+  padding: 8px 11px;
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+}
+#kr-tooltip::before {
+  content: "KR";
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #E3120B;
+  margin-bottom: 3px;
+}
 </style>
 </head>
 <body>
@@ -303,86 +354,91 @@ td.feat-cell:last-child { border-right: none; }
     </select>
   </div>
 
+  <button class="refresh-btn" id="refresh-btn" onclick="refreshFromSheet()">
+    <span class="refresh-icon">↻</span> Refresh
+  </button>
+
   <label class="backlog-toggle">
     <input type="checkbox" id="show-backlog"> Show Backlog
   </label>
 </div>
 
 <div class="table-wrap" id="table-wrap"></div>
+<div id="kr-tooltip"></div>
 
 <script>
 const DATA = [
   // Web, Newsletter & GenAI
-  { f:"MCP App Beta test",                              t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Now",  hi:true },
-  { f:"Preview tier",                                   t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Next" },
-  { f:"Rich topic pages update",                        t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Next" },
-  { f:"Preview tier",                                   t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Later" },
-  { f:"Articles onward journeys",                       t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Later" },
-  { f:"Voting polls in newsletters",                    t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now" },
-  { f:"Business In Brief NL",                           t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now" },
-  { f:"TWIB 2.0 on web",                                t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now" },
-  { f:"Games on web",                                   t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now" },
-  { f:"For You Newsletter v1",                          t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Next" },
-  { f:"Pro Newsletter",                                 t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Next" },
-  { f:"For You Newsletter v2",                          t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Later" },
-  { f:"Video / animated article headers",               t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Later" },
-  { f:"Weekly selection for Reg",                       t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Backlog" },
-  { f:"Get Started MVP - Iterations",                   t:"Web, Newsletter & GenAI",     g:"G5 — Habit Forming",            r:"Now" },
-  { f:"Comment sections on Articles on Web",            t:"Web, Newsletter & GenAI",     g:"G5 — Habit Forming",            r:"Backlog" },
-  { f:"AI-native engineering enablers",                 t:"Web, Newsletter & GenAI",     g:"G8 — Platform Excellence",      r:"Now" },
+  { f:"MCP App Beta test",                              t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Now",     hi:true, kr:"Organic AI traffic grows [X]% YoY" },
+  { f:"Preview tier",                                   t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Next",            kr:"Organic AI traffic grows [X]% YoY" },
+  { f:"Rich topic pages update",                        t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Next",            kr:"SEO traffic decrease limited to [X]% YoY" },
+  { f:"Preview tier",                                   t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Later",           kr:"Organic AI traffic grows [X]% YoY" },
+  { f:"Articles onward journeys",                       t:"Web, Newsletter & GenAI",     g:"G1 — Post Search",              r:"Later",           kr:"SEO traffic decrease limited to [X]% YoY" },
+  { f:"Voting polls in newsletters",                    t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now",             kr:"% opted into at least one newsletter [X]%" },
+  { f:"Business In Brief NL",                           t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now",             kr:"% opted into at least one newsletter [X]%" },
+  { f:"TWIB 2.0 on web",                                t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now",             kr:"% opted into at least one newsletter [X]%" },
+  { f:"Games on web",                                   t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now",             kr:"[X]% engage with 2+ content types in 30 days" },
+  { f:"For You Newsletter v1",                          t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Next",            kr:"% opted into at least one newsletter [X]%" },
+  { f:"Pro Newsletter",                                 t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Next",            kr:"% opted into at least one newsletter [X]%" },
+  { f:"For You Newsletter v2",                          t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Later",           kr:"% opted into at least one newsletter [X]%" },
+  { f:"Video / animated article headers",               t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Later",           kr:"[X]% engage with 2+ content types in 30 days" },
+  { f:"Weekly selection for Reg",                       t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Backlog",         kr:"[X]% engage with 2+ content types in 30 days" },
+  { f:"Get Started MVP - Iterations",                   t:"Web, Newsletter & GenAI",     g:"G2 — Content Value",            r:"Now",             kr:"Push notification opt-in rate [X]%" },
+  { f:"Comment sections on Articles on Web",            t:"Web, Newsletter & GenAI",     g:"G5 — Habit Forming",            r:"Backlog",         kr:"% inactive 7+ days returning within 30 days [X]%" },
+  { f:"AI-native engineering enablers",                 t:"Web, Newsletter & GenAI",     g:"G8 — Platform Excellence",      r:"Now",             kr:"[X]% web pages score \"Good\" on Core Web Vitals" },
   // Discovery & Personalisation
-  { f:"Ask The Economist (B2B)",                        t:"Discovery & Personalisation", g:"G3 — Easy Access",              r:"Next" },
-  { f:"Contextual search in bottom nav (Liquid Glass)", t:"Discovery & Personalisation", g:"G3 — Easy Access",              r:"Later" },
-  { f:"Personalised Content feed (B2B/B2C)",            t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Now" },
-  { f:"Collections (Mobile)",                           t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Now" },
-  { f:"Improved For You feed (B2C)",                    t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Next" },
-  { f:"Reader History",                                 t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Next" },
-  { f:"Newsletters in app (native)",                    t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later" },
-  { f:"Access to Downloads in For You",                 t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later" },
-  { f:"Automated topic push notifications",             t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later" },
-  { f:"Sync PUWILO & History",                          t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next" },
-  { f:"BFF orchestration for homepages",                t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next" },
-  { f:"Sunset Econobot",                                t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next" },
+  { f:"Ask The Economist (B2B)",                        t:"Discovery & Personalisation", g:"G3 — Easy Access",              r:"Next",            kr:"Ask TE monthly adoption rate [X]%" },
+  { f:"Contextual search in bottom nav (Liquid Glass)", t:"Discovery & Personalisation", g:"G3 — Easy Access",              r:"Later",           kr:"Search success rate reaches [X]%" },
+  { f:"Personalised Content feed (B2B/B2C)",            t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Now",             kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Collections (Mobile)",                           t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Now",             kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Improved For You feed (B2C)",                    t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Next",            kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Reader History",                                 t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Next",            kr:"[X]% subscribers with at least one explicit preference" },
+  { f:"Newsletters in app (native)",                    t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later",           kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Access to Downloads in For You",                 t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later",           kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Automated topic push notifications",             t:"Discovery & Personalisation", g:"G4 — Personalisation",          r:"Later",           kr:"[X]% subscribers with at least one explicit preference" },
+  { f:"Sync PUWILO & History",                          t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next",            kr:"App crash-free session rate [X]%" },
+  { f:"BFF orchestration for homepages",                t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next",            kr:"[X]% web pages score \"Good\" on Core Web Vitals" },
+  { f:"Sunset Econobot",                                t:"Discovery & Personalisation", g:"G8 — Platform Excellence",      r:"Next",            kr:"[X]% web pages score \"Good\" on Core Web Vitals" },
   // App
-  { f:"Games in the app",                               t:"App",                         g:"G5 — Habit Forming",            r:"Now" },
-  { f:"Games push notifications",                       t:"App",                         g:"G5 — Habit Forming",            r:"Now" },
-  { f:"Get Started in the app",                         t:"App",                         g:"G5 — Habit Forming",            r:"Later" },
-  { f:"iOS / Android widgets",                          t:"App",                         g:"G5 — Habit Forming",            r:"Backlog" },
-  { f:"Comment sections on Articles in the App",        t:"App",                         g:"G5 — Habit Forming",            r:"Backlog" },
-  { f:"eReader in the app",                             t:"App",                         g:"G2 — Content Value",            r:"Now" },
-  { f:"Native Newsletters in the app",                  t:"App",                         g:"G2 — Content Value",            r:"Later" },
-  { f:"Preview in the app",                             t:"App",                         g:"G1 — Post Search",              r:"Later" },
-  { f:"Design system for agentic dev",                  t:"App",                         g:"G8 — Platform Excellence",      r:"Now" },
-  { f:"Liquid Glass (iOS)",                             t:"App",                         g:"G8 — Platform Excellence",      r:"Later" },
-  { f:"Offline behaviour improvement",                  t:"App",                         g:"G8 — Platform Excellence",      r:"Later" },
-  { f:"Review LUCIQ integration",                       t:"App",                         g:"G8 — Platform Excellence",      r:"Later" },
-  { f:"Referers tracking in app",                       t:"App",                         g:"G8 — Platform Excellence",      r:"Later" },
+  { f:"Games in the app",                               t:"App",                         g:"G5 — Habit Forming",            r:"Now",             kr:"% subscribers engaging with Games weekly [X]%" },
+  { f:"Games push notifications",                       t:"App",                         g:"G5 — Habit Forming",            r:"Now",             kr:"% subscribers engaging with Games weekly [X]%" },
+  { f:"Get Started in the app",                         t:"App",                         g:"G2 — Content Value",            r:"Later",           kr:"Push notification opt-in rate [X]%" },
+  { f:"iOS / Android widgets",                          t:"App",                         g:"G5 — Habit Forming",            r:"Backlog",         kr:"Push notification opt-in rate [X]%" },
+  { f:"Comment sections on Articles in the App",        t:"App",                         g:"G5 — Habit Forming",            r:"Backlog",         kr:"% inactive 7+ days returning within 30 days [X]%" },
+  { f:"eReader in the app",                             t:"App",                         g:"G7 — Advertising Experience",   r:"Now",             kr:"[X]% engage with 2+ content types in 30 days" },
+  { f:"Native Newsletters in the app",                  t:"App",                         g:"G5 — Habit Forming",            r:"Later",           kr:"% opted into at least one newsletter [X]%" },
+  { f:"Preview in the app",                             t:"App",                         g:"G2 — Content Value",            r:"Later",           kr:"Organic AI traffic grows [X]% YoY" },
+  { f:"Design system for agentic dev",                  t:"App",                         g:"G8 — Platform Excellence",      r:"Now",             kr:"App crash-free session rate [X]%" },
+  { f:"Liquid Glass (iOS)",                             t:"App",                         g:"G8 — Platform Excellence",      r:"Later",           kr:"App crash-free session rate [X]%" },
+  { f:"Offline behaviour improvement",                  t:"App",                         g:"G8 — Platform Excellence",      r:"Later",           kr:"App crash-free session rate [X]%" },
+  { f:"Review LUCIQ integration",                       t:"App",                         g:"G8 — Platform Excellence",      r:"Later",           kr:"App crash-free session rate [X]%" },
+  { f:"Referers tracking in app",                       t:"App",                         g:"G8 — Platform Excellence",      r:"Later",           kr:"App crash-free session rate [X]%" },
   // Audio & Video
-  { f:"Play: TWIB component",                           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"Play: deep linking and push",                    t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"Play: newsletters webview",                      t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"Play: add components to Podcasts tab",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"AI Guided Session (iOS only)",                   t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"Play: podcast carousel",                         t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"Play: Continue Listening",                       t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
+  { f:"Play: TWIB component",                           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: deep linking and push",                    t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: newsletters webview",                      t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: add components to Podcasts tab",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Play weekly engagement rate [X]%" },
+  { f:"AI Guided Session (iOS only)",                   t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Premium subscribers engaging with shows [X]%/month" },
+  { f:"Play: podcast carousel",                         t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: Continue Listening",                       t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Play weekly engagement rate [X]%" },
   { f:"Vertical video Zephr",                           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
   { f:"Podcasts Zephr",                                 t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"New podcast launch: American Apostle",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"Featured vertical video on web Home",            t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now" },
-  { f:"InsiderxPodcasts: audio player rearch",          t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next" },
-  { f:"InsiderxPodcasts: unified player",               t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next" },
-  { f:"Vertical video speed controls on web",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next" },
-  { f:"InsiderxPodcasts: audio player rearch (cont.)",  t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later" },
-  { f:"InsiderxPodcasts: unified player (cont.)",       t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later" },
-  { f:"Play full launch",                               t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later" },
-  { f:"Android Auto",                                   t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later" },
+  { f:"New podcast launch: American Apostle",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Premium subscribers engaging with shows [X]%/month" },
+  { f:"Featured vertical video on web Home",            t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Now",             kr:"Premium subscribers engaging with shows [X]%/month" },
+  { f:"InsiderxPodcasts: audio player rearch",          t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next",            kr:"Play weekly engagement rate [X]%" },
+  { f:"InsiderxPodcasts: unified player",               t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next",            kr:"Play weekly engagement rate [X]%" },
+  { f:"Vertical video speed controls on web",           t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Next",            kr:"Play weekly engagement rate [X]%" },
+  { f:"InsiderxPodcasts: audio player rearch (cont.)",  t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later",           kr:"Play weekly engagement rate [X]%" },
+  { f:"InsiderxPodcasts: unified player (cont.)",       t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later",           kr:"Play weekly engagement rate [X]%" },
+  { f:"Play full launch",                               t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later",           kr:"Play weekly engagement rate [X]%" },
+  { f:"Android Auto",                                   t:"Audio & Video",               g:"G6 — New Formats & Features",   r:"Later",           kr:"Play weekly engagement rate [X]%" },
   // Advertising
-  { f:"Ads on Play Pilot",                              t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now" },
-  { f:"Migration to GAM in newsletters",                t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now" },
-  { f:"B2C First party data",                           t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now" },
-  { f:"B2C first party data (moved from Disco)",        t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Next" },
-  { f:"Preview Ad experience",                          t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Next" },
-  { f:"Play / Video Ad experience",                     t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Later" }
+  { f:"Ads on Play Pilot",                              t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now",             kr:"Total addressable ad inventory grows [X]% YoY" },
+  { f:"Migration to GAM in newsletters",                t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now",             kr:"Total addressable ad inventory grows [X]% YoY" },
+  { f:"B2C First party data",                           t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Now",             kr:"Average CPM on premium ad formats reaches [X]" },
+  { f:"B2C first party data (moved from Disco)",        t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Next",            kr:"Average CPM on premium ad formats reaches [X]" },
+  { f:"Preview Ad experience",                          t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Next",            kr:"Total addressable ad inventory grows [X]% YoY" },
+  { f:"Play / Video Ad experience",                     t:"Advertising",                 g:"G7 — Advertising Experience",   r:"Later",           kr:"Total addressable ad inventory grows [X]% YoY" }
 ];
 
 const GOALS = ["G1 — Post Search","G2 — Content Value","G3 — Easy Access","G4 — Personalisation","G5 — Habit Forming","G6 — New Formats & Features","G7 — Advertising Experience","G8 — Platform Excellence"];
@@ -512,7 +568,8 @@ function render() {
           var lbl = pillData[1];
           pill = "<span class=\"tag-pill " + cls + "\">" + lbl + "</span>";
         }
-        return "<div class=\"feat" + hi + "\">" + pill + item.f + "</div>";
+        var krAttr = item.kr ? " data-kr=\"" + item.kr.replace(/"/g, "&quot;") + "\"" : "";
+        return "<div class=\"feat" + hi + "\"" + krAttr + ">" + pill + item.f + "</div>";
       }).join("");
       return "<td class=\"feat-cell\">" + feats + "</td>";
     }).join("");
@@ -529,7 +586,149 @@ function render() {
     "<table>" + colgroup + "<thead>" + headerRow + "</thead><tbody>" + bodyRows + "</tbody></table>";
 }
 
+// ── Live refresh from Google Sheets ──────────────────────────────────────────
+const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2Z4pvtCAFT1_kdQZ0c_jG8rqY3yqTzKF7epjj119z6xm0LbagvOyjyDHX-OdECCwZ-jwJOnS3JMUA/pub?gid=0&single=true&output=csv";
+
+const TEAM_MAP = {
+  "web, nl, genai":                "Web, Newsletter & GenAI",
+  "web, newsletter and genai":     "Web, Newsletter & GenAI",
+  "web, newsletter & genai":       "Web, Newsletter & GenAI",
+  "discovery & personalisation":   "Discovery & Personalisation",
+  "core app":                      "App",
+  "audio & video":                 "Audio & Video",
+  "advertising":                   "Advertising",
+  "ad experience":                 "Advertising"
+};
+
+const GOAL_MAP = {
+  "o1": "G1 — Post Search",
+  "o2": "G2 — Content Value",
+  "o3": "G3 — Easy Access",
+  "o4": "G4 — Personalisation",
+  "o5": "G5 — Habit Forming",
+  "o6": "G6 — New Formats & Features",
+  "o7": "G7 — Advertising Experience",
+  "o8": "G8 — Platform Excellence"
+};
+
+// Proper RFC-4180 CSV parser (handles quoted fields with commas/newlines)
+function parseCSV(text) {
+  var rows = [], row = [], field = "", inQ = false;
+  for (var i = 0; i < text.length; i++) {
+    var c = text[i], n = text[i + 1];
+    if (inQ) {
+      if (c === '"' && n === '"') { field += '"'; i++; }
+      else if (c === '"') { inQ = false; }
+      else { field += c; }
+    } else {
+      if (c === '"') { inQ = true; }
+      else if (c === ',') { row.push(field); field = ""; }
+      else if (c === '\r' || c === '\n') {
+        row.push(field); field = "";
+        if (row.some(function(v){ return v.trim(); })) rows.push(row);
+        row = [];
+        if (c === '\r' && n === '\n') i++;
+      } else { field += c; }
+    }
+  }
+  if (field || row.length) { row.push(field); if (row.some(function(v){ return v.trim(); })) rows.push(row); }
+  return rows;
+}
+
+function refreshFromSheet() {
+  var btn = document.getElementById("refresh-btn");
+  btn.disabled = true;
+  btn.className = "refresh-btn";
+  btn.innerHTML = "<span class=\"refresh-icon\" style=\"display:inline-block;animation:spin 0.8s linear infinite\">↻</span> Refreshing…";
+
+  fetch(SHEET_CSV)
+    .then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.text();
+    })
+    .then(function(csv) {
+      var rows = parseCSV(csv);
+      var newData = [];
+      var VALID_HORIZONS = { "Now":1, "Next":1, "Later":1, "Backlog":1 };
+
+      // Row 0 is the header — skip it
+      for (var i = 1; i < rows.length; i++) {
+        var row = rows[i];
+        if (row.length < 7) continue;
+        var name    = row[2].trim();
+        var teamRaw = row[4].trim();
+        var objRaw  = row[5].trim();
+        var horizon = row[6].trim();
+        var kr      = row[7] ? row[7].trim() : "";
+
+        if (!name || !VALID_HORIZONS[horizon]) continue;
+
+        var team = TEAM_MAP[teamRaw.toLowerCase()];
+        if (!team) continue;
+
+        var objMatch = objRaw.match(/^O(\d+)/i);
+        if (!objMatch) continue;
+        var goal = GOAL_MAP["o" + objMatch[1]];
+        if (!goal) continue;
+
+        var item = { f: name, t: team, g: goal, r: horizon };
+        if (kr && kr !== "-") item.kr = kr;
+        newData.push(item);
+      }
+
+      if (newData.length === 0) throw new Error("No rows parsed");
+
+      // Hot-swap DATA in place (const array — mutate, don't reassign)
+      DATA.length = 0;
+      newData.forEach(function(d) { DATA.push(d); });
+      render();
+
+      btn.innerHTML = "<span class=\"refresh-icon\">✓</span> Refreshed";
+      btn.className = "refresh-btn success";
+      setTimeout(function() {
+        btn.innerHTML = "<span class=\"refresh-icon\">↻</span> Refresh";
+        btn.className = "refresh-btn";
+        btn.disabled = false;
+      }, 2000);
+    })
+    .catch(function(err) {
+      console.error("Refresh failed:", err);
+      btn.innerHTML = "<span class=\"refresh-icon\">!</span> Error — retry";
+      btn.className = "refresh-btn error";
+      btn.disabled = false;
+    });
+}
+
 render();
+
+// KR tooltip
+(function() {
+  var tip = document.getElementById("kr-tooltip");
+  var OFFSET = 12;
+
+  document.getElementById("table-wrap").addEventListener("mouseover", function(e) {
+    var el = e.target.closest(".feat[data-kr]");
+    if (!el) return;
+    tip.textContent = el.dataset.kr;
+    tip.style.display = "block";
+  });
+
+  document.getElementById("table-wrap").addEventListener("mousemove", function(e) {
+    var el = e.target.closest(".feat[data-kr]");
+    if (!el) { tip.style.display = "none"; return; }
+    var x = e.clientX + OFFSET;
+    var y = e.clientY + OFFSET;
+    // Keep tooltip within viewport
+    if (x + 290 > window.innerWidth)  x = e.clientX - 290 - OFFSET;
+    if (y + 60  > window.innerHeight) y = e.clientY - 60  - OFFSET;
+    tip.style.left = x + "px";
+    tip.style.top  = y + "px";
+  });
+
+  document.getElementById("table-wrap").addEventListener("mouseleave", function() {
+    tip.style.display = "none";
+  });
+})();
 </script>
 </div>
 </body>
