@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagement Timeline</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+nav {
+  display: flex; align-items: center;
+  padding: 0 28px; background: #fff;
+  border-bottom: 1px solid #d4cec4; height: 44px;
+}
+.nav-brand {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #1a1a1a;
+  margin-right: 24px; text-decoration: none;
+}
+.nav-tab {
+  display: inline-flex; align-items: center; height: 44px;
+  padding: 0 16px; font-size: 12px; font-family: inherit;
+  color: #666; text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.12s, border-color 0.12s; letter-spacing: 0.02em;
+}
+.nav-tab:hover { color: #1a1a1a; }
+.nav-tab.active { color: #E3120B; border-bottom-color: #E3120B; font-weight: 600; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: #f2ede3; color: #1a1a1a; min-height: 100vh; font-size: 14px;
+}
+.page-content { padding: 24px 28px; }
+.page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+h1 { font-size: 15px; font-weight: bold; letter-spacing: 0.07em; text-transform: uppercase; }
+.subtitle { font-size: 12px; color: #888; font-style: italic; }
+
+/* ── Gantt shell ─────────────────────────────────────── */
+.gantt-wrap { overflow-x: auto; border: 1px solid #c8c0b0; border-radius: 2px; background: #faf7f0; }
+
+/* Every row (header + data) is a flex container sharing the same two-zone layout */
+.g-row { display: flex; align-items: stretch; min-height: 34px; }
+
+.g-label {
+  width: 200px; min-width: 200px;
+  padding: 7px 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  color: #555; background: #f2ede3;
+  border-right: 1px solid #c8c0b0;
+  display: flex; align-items: flex-start; padding-top: 9px;
+}
+.g-timeline {
+  flex: 1; display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-auto-rows: 28px;
+  gap: 2px; padding: 3px 4px;
+  min-width: 560px;
+  background: #fff;
+}
+
+/* Month header row */
+.g-month-header { border-bottom: 2px solid #c8c0b0; background: #f2ede3; }
+.g-month-header .g-label { color: transparent; border-right: 1px solid #c8c0b0; }
+.g-month-header .g-timeline {
+  grid-auto-rows: 34px; gap: 0; padding: 0; background: #f2ede3;
+}
+.month-cell {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #888;
+  border-right: 1px solid #ddd8cc;
+}
+.month-cell:last-child { border-right: none; }
+
+/* Section header rows */
+.g-section { min-height: 30px; }
+.g-section .g-label {
+  color: #fff; font-size: 10px; letter-spacing: 0.12em;
+  align-items: center; padding-top: 0;
+}
+.g-section .g-timeline { grid-auto-rows: 30px; padding: 0; }
+.g-section-band { grid-column: 1 / 9; align-self: stretch; }
+
+.s-strategic .g-label,
+.s-strategic .g-section-band { background: #E3120B; }
+.s-operational .g-label,
+.s-operational .g-section-band { background: #1a4a8a; }
+.s-enterprise .g-label,
+.s-enterprise .g-section-band { background: #1e6b3a; }
+
+/* Data row separator */
+.g-data-row { border-bottom: 1px dashed #d8d0c4; }
+.g-data-row:last-child { border-bottom: none; }
+
+/* Faint column shading (alternating months for readability) */
+.g-timeline .col-shade {
+  grid-row: 1 / -1; pointer-events: none;
+  background: rgba(0,0,0,0.02);
+}
+
+/* Feature bars */
+.feat-bar {
+  font-size: 9.5px; line-height: 1.3;
+  padding: 2px 6px; border-radius: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  cursor: default; align-self: center; color: #fff;
+}
+.feat-bar[data-kr] { cursor: pointer; }
+
+.bar-now        { background: #2f7a2f; }
+.bar-monitoring { background: transparent; color: #888; border: 1px dashed #aaa; font-style: italic; }
+.bar-next       { background: #b86d00; }
+.bar-later      { background: #777; }
+
+/* Column spans */
+.span-now        { grid-column: 1 / 3; }
+.span-monitoring { grid-column: 1 / 3; }
+.span-next       { grid-column: 3 / 5; }
+.span-later      { grid-column: 5 / 9; }
+
+/* Legend */
+.legend {
+  display: flex; gap: 18px; align-items: center;
+  margin-bottom: 14px; flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #555; }
+.legend-dot {
+  width: 24px; height: 10px; border-radius: 2px; flex-shrink: 0;
+}
+
+/* KR tooltip */
+#kr-tooltip {
+  position: fixed; z-index: 9999; pointer-events: none; display: none;
+  max-width: 280px; background: #1a1a1a; color: #f5f0e8;
+  font-size: 11px; line-height: 1.5; padding: 8px 11px;
+  border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+}
+#kr-tooltip::before {
+  content: "KR"; display: block; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #E3120B; margin-bottom: 3px;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Engagement</span>
+  <a href="index.html"    class="nav-tab">Roadmap</a>
+  <a href="goals.html"    class="nav-tab">Objectives</a>
+  <a href="teams.html"    class="nav-tab">Teams</a>
+  
+  <a href="timeline.html" class="nav-tab active">Timeline</a>
+</nav>
+
+<div class="page-content">
+
+<div class="page-header">
+  <h1>Business Goals — Timeline</h1>
+  <span class="subtitle">FY27 · May — Dec 2026</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#2f7a2f"></div>Now (May–Jun)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b86d00"></div>Next (Jul–Aug)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#777"></div>Later (Sep–Dec)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:transparent;border:1px dashed #aaa"></div>Monitoring</div>
+</div>
+
+<div class="gantt-wrap" id="gantt"></div>
+<div id="kr-tooltip"></div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+// r: Now | Next | Later | Monitoring | Backlog
+// g: objective key used to group into rows
+
+const DATA = [
+  // O1 — POST SEARCH STRATEGY
+  { f:"Rich topic pages update",                g:"O1", r:"Now",        kr:"SEO traffic decrease limited to [X]% YoY" },
+  { f:"MCP App Beta test",                      g:"O1", r:"Monitoring", kr:"Organic AI traffic grows [X]% YoY" },
+  { f:"Preview tier (web)",                     g:"O1", r:"Next",       kr:"Organic AI traffic grows [X]% YoY" },
+  { f:"Add Appsflyer smart banner",             g:"O1", r:"Next" },
+  { f:"Preview tier (web) — cont.",             g:"O1", r:"Later",      kr:"Organic AI traffic grows [X]% YoY" },
+  { f:"Articles onward journeys",               g:"O1", r:"Later",      kr:"SEO traffic decrease limited to [X]% YoY" },
+  { f:"Page speed optimisation",                g:"O1", r:"Later",      kr:"SEO traffic decrease limited to [X]% YoY" },
+  { f:"Optimize Video pages",                   g:"O1", r:"Later",      kr:"SEO traffic decrease limited to [X]% YoY" },
+  { f:"Allow LLMs to crawl content",            g:"O1", r:"Later",      kr:"Organic AI traffic grows [X]% YoY" },
+
+  // O2 — ONBOARDING & EARLY VALUE
+  { f:"Voting polls in newsletters",            g:"O2", r:"Now" },
+  { f:"Business In Brief NL",                   g:"O2", r:"Now",        kr:"% opted into at least one newsletter [X]%" },
+  { f:"TWIB 2.0 on web",                        g:"O2", r:"Now" },
+  { f:"For You Newsletter v1",                  g:"O2", r:"Now",        kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Pro Newsletter",                         g:"O2", r:"Now",        kr:"% opted into at least one newsletter [X]%" },
+  { f:"Games on web",                           g:"O2", r:"Now",        kr:"10% subscribers engaging with Games weekly" },
+  { f:"Get Started MVP — Iterations",           g:"O2", r:"Now",        kr:"[X]% engage with 2+ content types in 30 days" },
+  { f:"For You Newsletter v2",                  g:"O2", r:"Next",       kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Video / animated article headers",       g:"O2", r:"Later",      kr:"[X]% engage with 2+ content types in 30 days" },
+  { f:"Get Started in the app",                 g:"O2", r:"Later",      kr:"Push notification opt-in rate above 70%" },
+  { f:"Preview in the app",                     g:"O2", r:"Later" },
+
+  // O3 — SEARCH & DISCOVERY
+  { f:"Ask The Economist (B2B)",                g:"O3", r:"Next",       kr:"Ask TE monthly adoption rate above 5%" },
+  { f:"Short video in search",                  g:"O3", r:"Later" },
+  { f:"Insider UI treatment in search",         g:"O3", r:"Later" },
+  { f:"Relevancy & Recency in search",          g:"O3", r:"Later" },
+  { f:"Filters in search results",              g:"O3", r:"Later" },
+  { f:"Contextual search in bottom nav",        g:"O3", r:"Later",      kr:"Search adoption above 10%" },
+
+  // O4 — PERSONALISATION
+  { f:"Personalised Content feed",              g:"O4", r:"Monitoring", kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Collections (Mobile)",                   g:"O4", r:"Now",        kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Access to Downloads in For You",         g:"O4", r:"Now" },
+  { f:"Improved For You feed (B2C)",            g:"O4", r:"Next",       kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Reader History",                         g:"O4", r:"Next" },
+  { f:"Sync PUWILO & History",                  g:"O4", r:"Next",       kr:"[X]% engage with personalised recommendation/week" },
+  { f:"Newsletters in app (native)",            g:"O4", r:"Later",      kr:"% opted into at least one newsletter [X]%" },
+  { f:"Automated topic push notifs",            g:"O4", r:"Later",      kr:"[X]% engage with personalised recommendation/week" },
+
+  // O5 — HABIT FORMING
+  { f:"Games push notifications (auto)",        g:"O5", r:"Now",        kr:"% subscribers engaging with Games weekly [X]%" },
+  { f:"Games in the app",                       g:"O5", r:"Now",        kr:"% subscribers engaging with Games weekly [X]%" },
+  { f:"iOS / Android widgets",                  g:"O5", r:"Later",      kr:"Push notification opt-in rate [X]%" },
+  { f:"Native Newsletters in the app",          g:"O5", r:"Later",      kr:"% opted into at least one newsletter [X]%" },
+
+  // O6 — AUDIO & VIDEO
+  { f:"Play: TWIB component",                   g:"O6", r:"Now",        kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: deep linking and push",            g:"O6", r:"Now",        kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: newsletters webview",              g:"O6", r:"Now",        kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: add components to Podcasts",       g:"O6", r:"Now",        kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: podcast carousel",                 g:"O6", r:"Now",        kr:"Play weekly engagement rate [X]%" },
+  { f:"Play: Continue Listening",               g:"O6", r:"Now",        kr:"Play weekly engagement rate [X]%" },
+  { f:"AI Guided Session (iOS only)",           g:"O6", r:"Now" },
+  { f:"Vertical video Zephr",                   g:"O6", r:"Now" },
+  { f:"Podcasts Zephr",                         g:"O6", r:"Now" },
+  { f:"New podcast: American Apostle",          g:"O6", r:"Now",        kr:"Premium subscribers engaging with shows [X]%/month" },
+  { f:"Featured vertical video on Home",        g:"O6", r:"Now",        kr:"Play weekly engagement rate [X]%" },
+  { f:"InsiderxPodcasts: audio player rearch",  g:"O6", r:"Next",       kr:"Play weekly engagement rate [X]%" },
+  { f:"InsiderxPodcasts: unified player",       g:"O6", r:"Next",       kr:"Play weekly engagement rate [X]%" },
+  { f:"Vertical video speed controls",          g:"O6", r:"Next",       kr:"Play weekly engagement rate [X]%" },
+  { f:"InsiderxPodcasts: audio (cont.)",        g:"O6", r:"Later",      kr:"Play weekly engagement rate [X]%" },
+  { f:"InsiderxPodcasts: player (cont.)",       g:"O6", r:"Later",      kr:"Play weekly engagement rate [X]%" },
+  { f:"Play full launch",                       g:"O6", r:"Later",      kr:"Play weekly engagement rate [X]%" },
+  { f:"Android Auto",                           g:"O6", r:"Later",      kr:"Premium subscribers engaging with shows [X]%/month" },
+
+  // O8a — AI POWERED CYCLES
+  { f:"AI-native engineering enablers",         g:"O8a", r:"Now",       kr:"Gen AI readiness" },
+  { f:"Design system for agentic dev",          g:"O8a", r:"Now",       kr:"Gen AI readiness" },
+
+  // O8b — PLATFORM EXCELLENCE
+  { f:"Investigate + fix offline analytics",    g:"O8b", r:"Now" },
+  { f:"BFF orchestration for homepages",        g:"O8b", r:"Next",      kr:"App performance / crash-free session rate >99.9%" },
+  { f:"Sunset Econobot",                        g:"O8b", r:"Next" },
+  { f:"Liquid Glass (iOS)",                     g:"O8b", r:"Next" },
+  { f:"Offline behaviour improvement",          g:"O8b", r:"Next",      kr:"App performance / crash-free session rate >99.9%" },
+  { f:"Review LUCIQ integration",               g:"O8b", r:"Later",     kr:"App performance / crash-free session rate >99.9%" },
+  { f:"Referers tracking in app",               g:"O8b", r:"Later",     kr:"App performance / crash-free session rate >99.9%" },
+
+  // O7 — ADVERTISING EXPERIENCE
+  { f:"Ads on Play Pilot",                      g:"O7", r:"Now",        kr:"Total addressable ad inventory grows [X]% YoY" },
+  { f:"Migration to GAM in newsletters",        g:"O7", r:"Now",        kr:"Average CPM on premium ad formats reaches [X]" },
+  { f:"B2C First party data",                   g:"O7", r:"Now",        kr:"Average CPM on premium ad formats reaches [X]" },
+  { f:"eReader in the app",                     g:"O7", r:"Now",        kr:"Total addressable ad inventory grows [X]% YoY" },
+  { f:"B2C first party data (Disco)",           g:"O7", r:"Next",       kr:"Average CPM on premium ad formats reaches [X]" },
+  { f:"Preview Ad experience",                  g:"O7", r:"Next",       kr:"Total addressable ad inventory grows [X]% YoY" },
+  { f:"Play / Video Ad experience",             g:"O7", r:"Later",      kr:"Total addressable ad inventory grows [X]% YoY" },
+];
+
+// ── Row / section structure ───────────────────────────────────────────────────
+const SECTIONS = [
+  {
+    key: "strategic", label: "STRATEGIC INITIATIVES", cls: "s-strategic",
+    rows: [
+      { label: "PREVIEW",              g: null },
+      { label: "PREMIUM / INSIDER",    g: null },
+      { label: "PLAY MVP / PLAY VISION",g: null },
+      { label: "GUIDED SESSIONS",      g: null },
+      { label: "PRO FEATURES",         g: null },
+    ]
+  },
+  {
+    key: "operational", label: "OPERATIONAL GOALS", cls: "s-operational",
+    rows: [
+      { label: "POST SEARCH STRATEGY",    g: "O1" },
+      { label: "ONBOARDING & EARLY VALUE",g: "O2" },
+      { label: "SEARCH & DISCOVERY",      g: "O3" },
+      { label: "PERSONALISATION",         g: "O4" },
+      { label: "HABIT FORMING",           g: "O5" },
+      { label: "AUDIO & VIDEO",           g: "O6" },
+      { label: "AI POWERED CYCLES",       g: "O8a" },
+      { label: "PLATFORM EXCELLENCE",     g: "O8b" },
+    ]
+  },
+  {
+    key: "enterprise", label: "ENTERPRISE", cls: "s-enterprise",
+    rows: [
+      { label: "ADVERTISING EXPERIENCE",  g: "O7" },
+    ]
+  }
+];
+
+const SPAN_CLASS = {
+  Now:        "span-now",
+  Monitoring: "span-monitoring",
+  Next:       "span-next",
+  Later:      "span-later",
+};
+const BAR_CLASS = {
+  Now:        "bar-now",
+  Monitoring: "bar-monitoring",
+  Next:       "bar-next",
+  Later:      "bar-later",
+};
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  var gantt = document.getElementById("gantt");
+  var html  = "";
+
+  // Month header
+  html += "<div class=\"g-row g-month-header\">";
+  html += "<div class=\"g-label\"></div>";
+  html += "<div class=\"g-timeline\">";
+  ["MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"].forEach(function(m) {
+    html += "<div class=\"month-cell\">" + m + "</div>";
+  });
+  html += "</div></div>";
+
+  // Sections
+  SECTIONS.forEach(function(section) {
+    // Section header
+    html += "<div class=\"g-row g-section " + section.cls + "\">";
+    html += "<div class=\"g-label\">" + section.label + "</div>";
+    html += "<div class=\"g-timeline\"><div class=\"g-section-band\"></div></div>";
+    html += "</div>";
+
+    // Rows
+    section.rows.forEach(function(row) {
+      var features = row.g
+        ? DATA.filter(function(d) { return d.g === row.g && d.r !== "Backlog"; })
+        : [];
+
+      html += "<div class=\"g-row g-data-row\">";
+      html += "<div class=\"g-label\">" + row.label + "</div>";
+      html += "<div class=\"g-timeline\">";
+
+      if (features.length === 0) {
+        // Empty row — still needs at least one row height
+        html += "<div style=\"grid-column:1/9;height:28px\"></div>";
+      } else {
+        features.forEach(function(f) {
+          var spanCls = SPAN_CLASS[f.r] || "span-now";
+          var barCls  = BAR_CLASS[f.r]  || "bar-now";
+          var krAttr  = f.kr ? " data-kr=\"" + f.kr.replace(/"/g, "&quot;") + "\"" : "";
+          html += "<div class=\"feat-bar " + barCls + " " + spanCls + "\"" + krAttr + ">" + f.f + "</div>";
+        });
+      }
+
+      html += "</div></div>";
+    });
+  });
+
+  gantt.innerHTML = html;
+}
+
+render();
+
+// ── KR tooltip ────────────────────────────────────────────────────────────────
+(function() {
+  var tip    = document.getElementById("kr-tooltip");
+  var OFFSET = 12;
+  var gantt  = document.getElementById("gantt");
+
+  gantt.addEventListener("mouseover", function(e) {
+    var el = e.target.closest(".feat-bar[data-kr]");
+    if (!el) return;
+    tip.textContent = el.dataset.kr;
+    tip.style.display = "block";
+  });
+  gantt.addEventListener("mousemove", function(e) {
+    var el = e.target.closest(".feat-bar[data-kr]");
+    if (!el) { tip.style.display = "none"; return; }
+    var x = e.clientX + OFFSET, y = e.clientY + OFFSET;
+    if (x + 290 > window.innerWidth)  x = e.clientX - 290 - OFFSET;
+    if (y + 60  > window.innerHeight) y = e.clientY - 60  - OFFSET;
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  });
+  gantt.addEventListener("mouseleave", function() { tip.style.display = "none"; });
+})();
+</script>
+</div>
+</body>
+</html>
