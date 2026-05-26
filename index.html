@@ -298,6 +298,58 @@ td.feat-cell:last-child { border-right: none; }
   line-height: 1.45;
   font-style: italic;
 }
+
+/* ── Date + RAG pills — inline in rows ─────────────────────────── */
+.feat-date-pill {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 9px;
+  margin-left: 5px;
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: middle;
+  background: #1565C0;
+  color: #fff;
+}
+.feat-rag-pill {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 9px;
+  margin-left: 3px;
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: middle;
+  color: #fff;
+}
+.feat-rag-Green { background: #2e7d32; }
+.feat-rag-Amber { background: #e65100; }
+.feat-rag-Red   { background: #c62828; }
+.feat-rag-Done  { background: #757575; }
+.nipjd { font-size:9px; color:#bbb; margin-left:4px; vertical-align:middle; font-weight:normal; cursor:default; }
+
+/* ── Date + RAG pills — hover card ─────────────────────────────── */
+.feat-card-pills {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.fc-date-pill, .fc-rag-pill {
+  display: inline-block;
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #fff;
+}
+.fc-date-pill      { background: #1565C0; }
+.fc-rag-pill.fc-rag-green { background: #2e7d32; }
+.fc-rag-pill.fc-rag-amber { background: #e65100; }
+.fc-rag-pill.fc-rag-red   { background: #c62828; }
+.fc-rag-pill.fc-rag-done  { background: #757575; }
 </style>
 </head>
 <body>
@@ -358,142 +410,21 @@ td.feat-cell:last-child { border-right: none; }
 </div>
 
 <div class="table-wrap" id="table-wrap"></div>
-<div id="feat-card"><div class="feat-card-body"><div class="feat-card-name"></div><div class="feat-card-summary"></div><div class="feat-card-kr" style="display:none"><div class="feat-card-kr-label">Key Result</div><div class="feat-card-kr-text"></div></div><div class="feat-card-comment" style="display:none"><div class="feat-card-comment-label">Note</div><div class="feat-card-comment-text"></div></div></div></div>
+<div id="feat-card"><div class="feat-card-body"><div class="feat-card-pills" style="display:none"><span class="fc-date-pill" style="display:none"></span><span class="fc-rag-pill" style="display:none"></span></div><div class="feat-card-name"></div><div class="feat-card-summary"></div><div class="feat-card-kr" style="display:none"><div class="feat-card-kr-label">Key Result</div><div class="feat-card-kr-text"></div></div><div class="feat-card-comment" style="display:none"><div class="feat-card-comment-label">Note</div><div class="feat-card-comment-text"></div></div></div></div>
 
 <script>
-// ─── DATA ──────────────────────────────────────────────────────────────────
-// zone: STRATEGIC | OPERATIONAL | ENTERPRISE
-// lane: swimlane name within zone
-// t: team (for pill)
-// r: Now | Next | Later | Backlog  (Monitoring items folded into Now)
-// kr: key result text (shown on hover)
+// ─── JIRA DATA ────────────────────────────────────────────────────────────
+// Keyed by exact feature name. rag: "Green"|"Amber"|"Red"|"Done"
+// date: ISO "YYYY-MM-DD"
 
-const DATA = [
 
-  // ── STRATEGIC / PREVIEW ─────────────────────────────────────────────────
-  { zone:"STRATEGIC", lane:"PREVIEW",            t:"Web, NL, GenAI",   f:"Preview tier on Web (discovery)",              r:"Now",   kr:"" , s:"Introduces a Preview tier on the website, allowing registered users to access a curated selection of content before subscribing. Expected to grow monthly active registered users by ~58% in Year 1 and unlock a new addressable ad audience." , c:"Ad: £100k/m in Y1 | +58% monthly active Reg in Y1 (from 0.24m to 0.38m)" },
-  { zone:"STRATEGIC", lane:"PREVIEW",            t:"Core App",          f:"Preview in the app (discovery)",               r:"Now",   kr:"" , s:"Designs and defines the Preview experience for the mobile app, allowing registered users to access limited content before subscribing. Sets the foundation for the Preview tier's app delivery phase and supports subscriber acquisition." },
-  { zone:"STRATEGIC", lane:"PREVIEW",            t:"Web, NL, GenAI",   f:"Preview tier on Web (delivery)",               r:"Next",  kr:"" , s:"Delivers the full Preview tier on web following the discovery phase, making the experience live for registered users. Drives paid subscription conversion by giving prospects a meaningful taste of the content proposition." },
-  { zone:"STRATEGIC", lane:"PREVIEW",            t:"Core App",          f:"Preview in the app (delivery)",                r:"Next",  kr:"" },
-  { zone:"STRATEGIC", lane:"PREVIEW",            t:"Advertising",       f:"Preview Ad experience",                        r:"Next",  kr:"Total addressable ad inventory grows [X]% YoY" , s:"Develops proof-of-concept ad formats (video, rich media, audio, interstitials) for the new free registration tier in-app to test high-impact formats at scale. Tests whether premium ad formats can bridge the revenue gap from the registration tier without disrupting subscription conversion." },
+function fmtDate(iso) {
+  var M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var p = iso.split("-");
+  return parseInt(p[2], 10) + " " + M[parseInt(p[1], 10) - 1] + " " + p[0];
+}
 
-  // ── STRATEGIC / PLAY ─────────────────────────────────────────────────────
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Web, NL, GenAI",   f:"Web Onboarding for Play",                      r:"Now",   kr:"" , s:"Creates a dedicated web onboarding journey for the Play tier with updated copy, imagery, and App Store CTAs. Establishes a clear acquisition and onboarding path for new Play subscribers from the website." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[Play] TWIB component",                        r:"Now",   kr:"Play weekly engagement rate [X]%" , s:"Builds a dedicated TWIB podcast component for the Play Home screen, featuring the latest World in Brief episode with a rotating title, duration, and play controls. Supports the daily content habit at the heart of the Play proposition and is expected to increase Play weekly engagement." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[Play] deep linking and push",                 r:"Now",   kr:"Play weekly engagement rate [X]%" , s:"Enables deep links to podcast show pages and routes Play subscribers to device-level push notification settings for simplified notification management. Improves podcast marketing campaign effectiveness and reduces user confusion around push controls." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[Play] newsletters webview",                   r:"Now",   kr:"Play weekly engagement rate [X]%" , s:"Adds a nested newsletters sub-tab within For You, loading the newsletter management page as a webview so users can sign up and manage subscriptions in-app. Makes it easier for Play subscribers to discover and engage with newsletters, driving multi-format engagement." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[Play] add components to Podcasts tab",        r:"Now",   kr:"Play weekly engagement rate [X]%" , s:"Consolidates the Podcasts tab data into a single API feed, replacing multiple data sources and establishing a clean infrastructure foundation for the Play and Insider merge. Reduces maintenance complexity and prepares the tab architecture for future content unification." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[Play] podcast carousel",                      r:"Now",   kr:"Play weekly engagement rate [X]%" },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[Play] Continue Listening",                    r:"Now",   kr:"Play weekly engagement rate [X]%" , s:"Adds a Continue Listening section to the Play Home screen, surfacing episodes with listening progress so subscribers can easily resume where they left off. Addresses a top subscriber request and is expected to increase multi-session listening frequency." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[InsiderxPodcasts] audio player rearch (Discovery)", r:"Now", kr:"Play weekly engagement rate [X]%" , s:"Redesigns the iOS video player architecture to decouple playback, UI, and analytics logic, addressing known memory leaks and improving reusability across surfaces. Provides a stable technical foundation for delivering the unified Podcast × Insider player experience." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[InsiderxPodcasts] unified player (Discovery)", r:"Now",  kr:"Play weekly engagement rate [X]%" , s:"Defines the architecture for a unified audio and video player that allows subscribers to move seamlessly between Podcast and Insider video content. Positions The Economist to match industry trends in converging audio/video consumption and deepens subscriber engagement with Play." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Advertising",       f:"Ads on Play (MVP)",                            r:"Now",   kr:"Total addressable ad inventory grows [X]% YoY" , s:"Implements an ad experience on the Play Home screen at MVP launch that matches the Core Home ad logic, ensuring Play launches with appropriate ad inventory from day one. Establishes the advertising baseline for the Play tier and ensures consistent monetisation as the audience scales." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[InsiderxPodcasts] audio player rearch (Delivery)", r:"Next", kr:"Play weekly engagement rate [X]%" , s:"Delivers the audio player re-architecture in the Marvels team scope, implementing the new decoupled architecture for the mobile podcast player. Reduces technical debt and enables the unified Podcast × Insider experience to be built on a stable, testable foundation." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Audio & Video",     f:"[InsiderxPodcasts] unified player (Delivery)", r:"Next",  kr:"Play weekly engagement rate [X]%" , s:"Builds the core metadata, playback, and controls layer for the unified AV player on iOS and Android, establishing the foundation for audio and video content to play from a single player. Enables future layering of advanced functionality such as format switching and playlist management." },
-  { zone:"STRATEGIC", lane:"PLAY",               t:"Advertising",       f:"Play / Video Ad experience",                   r:"Later", kr:"Total addressable ad inventory grows [X]% YoY" },
-
-  // ── STRATEGIC / AI GUIDED SESSIONS ───────────────────────────────────────
-  { zone:"STRATEGIC", lane:"AI GUIDED SESSIONS", t:"Audio & Video",     f:"AI Guided Session (iOS only)",                 r:"Now",   kr:"" },
-
-  // ── STRATEGIC / INSIDER ──────────────────────────────────────────────────
-  { zone:"STRATEGIC", lane:"INSIDER",            t:"Audio & Video",     f:"Airplay / Chromecast for Insider",             r:"Now",   kr:"" , s:"Adds Airplay and Chromecast casting controls directly on the Insider episode page player so subscribers can easily cast video to their TV. Addresses a consistently requested feature and expected to increase Insider engagement and satisfaction among video viewers." },
-
-  // ── OPERATIONAL / POST SEARCH STRATEGY (O1) ──────────────────────────────
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"Content Protection",                           r:"Now",   kr:"" , s:"Fixes a security vulnerability where User-Agent spoofing was being used to bypass the paywall, and establishes clearer rules for webview exceptions in the app. Protects content revenue and reduces the risk of future circumvention." },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"Rich topic pages update",                      r:"Now",   kr:"SEO traffic decrease limited to [X]% YoY" , s:"Rebuilds topic pages to match the homepage grid, ad slot structure, and richer collection layout, with load-more pagination and improved SEO foundations. Expected to increase ad impressions, improve search visibility, and lift editorial engagement on topic-led content." },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"Add Appsflyer smart banner",                   r:"Now",   kr:"Conversion: 0.6% CVR on non iOS devices" , c:"0.6% CVR on non iOS devices" },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"MCP App (Beta test)",                          r:"Now",   kr:"Organic AI traffic grows [X]% YoY" , c:"Footprint on MCP — learnings" },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"MCP App v2",                                   r:"Next",  kr:"" , s:"Extends the MCP integration beyond the initial ChatGPT Trump tracker use case, exploring new AI assistant features based on early learnings. Aimed at growing organic traffic from AI-powered discovery platforms." },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"Articles — Recommendations modules",           r:"Next",  kr:"SEO traffic decrease limited to [X]% YoY" },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"Page speed optimisation",                      r:"Next",  kr:"SEO traffic decrease limited to [X]% YoY" },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"Allow LLMs to crawl non-paywall content",      r:"Later", kr:"Organic AI traffic grows [X]% YoY" , c:"0.70% brand visibility gain" },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Audio & Video",   f:"Optimize Video pages for SEO",                 r:"Later", kr:"SEO traffic decrease limited to [X]% YoY" , c:"10k visits and 6 starts per month" },
-  { zone:"OPERATIONAL", lane:"POST SEARCH STRATEGY",       t:"Web, NL, GenAI",  f:"Add gifting to Interactives",                  r:"Later", kr:"" , s:"Enables gifting functionality for bespoke interactive articles, closing a gap with standard articles and removing a security workaround used by editorial staff. Supports acquisition by allowing interactives to require account creation as part of the gifting flow." },
-
-  // ── OPERATIONAL / ONBOARDING & EARLY VALUE (O2) ───────────────────────────
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Pro Newsletter",                               r:"Now",   kr:"% opted into at least one newsletter [X]%" , s:"Launches an exclusive weekly newsletter for B2B Pro subscribers, featuring curated professional coverage, a themed essay, a data point, and curated story recommendations. Aims to increase newsletter opt-in rates among Pro users and deepen engagement with the Pro proposition." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Business In Brief NL",                         r:"Now",   kr:"% opted into at least one newsletter [X]%" , s:"Launches a new daily business newsletter to extend The Economist's newsletter portfolio with a concise briefing format for business-focused readers. Targets growth in newsletter subscribers and an increase in the share of users opted into at least one newsletter." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"TWIB 2.0 on web",                              r:"Now",   kr:"" , s:"Rebuilds The World in Brief on the web to align with the upgraded TWIB 2.0 experience already live on the app. Brings cross-platform consistency and improves engagement with one of the most-read daily editorial formats." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Refresh Weekly Edition",                       r:"Now",   kr:"" , s:"Refreshes the Weekly Edition page on web with regional covers, updated layout, new breadcrumbs, and content identity improvements to match the app experience. Addresses early subscriber feedback about discovering new content and strengthens the weekly reading habit." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Get Started Iterations on web",                r:"Now",   kr:"[X]% engage with 2+ content types in 30 days" , s:"Extends the Get Started onboarding flow with a backend store for user preferences, enabling them to power email personalisation and the For You feed. Expected to increase the share of subscribers who engage with two or more content types within 30 days." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"For You Newsletter v1",                        r:"Now",   kr:"[X]% engage with personalised recommendation/week" , s:"Launches the first phase of an AI-generated personalised newsletter that tailors article selection to each subscriber's reading history and interests. Expected to increase the share of subscribers engaging with at least one personalised recommendation per week." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Voting polls in newsletters",                  r:"Now",   kr:"" , c:"140K votes on Insider, with 34% CTR to Insider section" },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Games on web",                                 r:"Now",   kr:"10% subscribers engaging with Games weekly" , s:"Embeds third-party games (via Puzzlr) into The Economist website using iFrames, launching with a pilot of three games for three months. Expected to drive weekly subscriber engagement with games and establish a new habitual usage pattern." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"For You Newsletter v2",                        r:"Next",  kr:"[X]% engage with personalised recommendation/week" , s:"Extends the For You Newsletter with AI-generated article teasers, further personalising content selection in Phase 2. Builds on Phase 1 learnings to deepen personalisation quality and increase repeat newsletter engagement." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Masthead — Weekly Edition promotion",          r:"Next",  kr:"" , s:"Adds a weekly edition promo featuring regional cover art and a link to the archive to the website masthead. Addresses a key early subscriber need around discovering fresh content and supports the print-to-digital engagement bridge." , c:"Ad: £100k/m in Y1 | +58% monthly active Reg in Y1 (from 0.24m to 0.38m)" },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Interactive headers (Video / Image)",          r:"Next",  kr:"" , s:"Adds support for video and animated image headers in CUE-based articles, giving editorial teams richer visual storytelling tools without relying on the bespoke framework. Improves article presentation quality and widens the types of editorial formats that can be self-served." },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Core App",        f:"Get Started in the app",                       r:"Later", kr:"" , s:"Extends the Get Started onboarding flow from web to the mobile app, capturing user intent and preferences to personalise content and drive push notification opt-in. Expected to increase push opt-in rates above 70% and improve early engagement with the app." , c:"Based on web: Boost Follow and Push" },
-  { zone:"OPERATIONAL", lane:"ONBOARDING & EARLY VALUE",   t:"Web, NL, GenAI",  f:"Weekly selection for Reg",                     r:"Later", kr:"[X]% engage with 2+ content types in 30 days" , c:"Hyp: Build weekly habit, increase CVR" },
-
-  // ── OPERATIONAL / SEARCH & DISCOVERY (O3) ────────────────────────────────
-  { zone:"OPERATIONAL", lane:"SEARCH & DISCOVERY",         t:"Discovery & Personalisation", f:"Ask The Economist (B2B) MVP",    r:"Now",   kr:"Ask TE monthly adoption rate above 5%" , s:"Delivers an internal MVP of Ask The Economist, an AI-powered conversational interface for Economist Pro users, initially for editorial testing. Targets a monthly adoption rate above 5% of active B2B subscribers." },
-  { zone:"OPERATIONAL", lane:"SEARCH & DISCOVERY",         t:"Discovery & Personalisation", f:"Insider UI treatment in search", r:"Next",  kr:"" },
-  { zone:"OPERATIONAL", lane:"SEARCH & DISCOVERY",         t:"Core App",        f:"Liquid Glass (iOS)",                           r:"Next",  kr:"" , s:"Adopts Apple's Liquid Glass design language for the iOS app to align with the latest iOS system design conventions and visual standards. Ensures the app maintains a premium, native look and feel consistent with platform expectations." },
-  { zone:"OPERATIONAL", lane:"SEARCH & DISCOVERY",         t:"Discovery & Personalisation", f:"Short video in search",          r:"Later", kr:"" },
-  { zone:"OPERATIONAL", lane:"SEARCH & DISCOVERY",         t:"Discovery & Personalisation", f:"Relevancy and Recency in search",r:"Later", kr:"" },
-  { zone:"OPERATIONAL", lane:"SEARCH & DISCOVERY",         t:"Discovery & Personalisation", f:"Filters in search results",      r:"Later", kr:"" },
-  { zone:"OPERATIONAL", lane:"SEARCH & DISCOVERY",         t:"Discovery & Personalisation", f:"Contextual search in bottom nav",r:"Later", kr:"Search adoption above 10%" , c:"Grow search usage — needs new nav" },
-
-  // ── OPERATIONAL / PERSONALISATION (O4) ───────────────────────────────────
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Collections (Mobile)",           r:"Now",   kr:"[X]% engage with personalised recommendation/week" , s:"Builds a native bookmarking and collections feature in the mobile app, enabling users to organise saved stories into structured folders. Supports B2B users who use content for research and reference, and increases engagement with the saved content experience." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Access to Downloads in For You", r:"Now",   kr:"" , s:"Adds a dedicated Downloads sub-tab within the For You section of the app, surfacing all downloaded weekly editions and podcasts in one place. Reduces friction in accessing offline content and consolidates the subscriber's personal content library." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Popular In Your Role (B2B, Web)",r:"Now",   kr:"" , s:"Introduces job-title-based content recommendations for B2B users on the web, surfacing articles that colleagues with similar roles are reading via an in-feed input. Improves the relevance of the For You feed for professional readers and supports B2B retention." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Serendipity (B2C, Web)",         r:"Now",   kr:"" , s:"Adds an Unexpected Reads module to the B2C For You feed, surfacing content that is adjacent but non-overlapping with a subscriber's dominant reading patterns. Broadens reader perspectives, reduces recommendation fatigue, and improves long-term engagement quality." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Show Reader History (Web)",      r:"Now",   kr:"" , s:"Displays a subscriber's reading history across web and app in one place within For You, enabling them to revisit and share previously read articles. Supports content rediscovery and reinforces the cross-platform continuity of the TE experience." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Vertical video URL support",     r:"Now",   kr:"" , s:"Adds individual video deep link support in the app so users can access specific vertical videos from external sources. Increases video discoverability and drives traffic from off-platform sources such as emails and social media." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Personalised Content feed",      r:"Now",   kr:"[X]% engage with personalised recommendation/week" , s:"Delivers an MVP of the B2C personalised content recommendation feed within For You, using behavioural signals to surface the most relevant articles and drive cross-format engagement. Expected to increase content consumption per session and contribute to subscriber retention." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Popular In Your Role (B2B, App)",r:"Next",  kr:"" , s:"Extends the Popular in Your Role recommendations to iOS and Android, mirroring the web experience for B2B users within the native For You feed. Completes the cross-platform Pro personalisation offering and makes professional recommendations available on mobile." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Insider Video B2C Feed (App)",   r:"Next",  kr:"" },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Insider Video B2C Feed (Web)",   r:"Next",  kr:"" , s:"Introduces Insider video recommendations into the B2C For You feed on web, surfacing relevant video content alongside personalised article recommendations. Increases Insider engagement by exposing it to subscribers through their personalised discovery feed." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Podcast Recommendations For You",r:"Next",  kr:"" , s:"Surfaces relevant podcast recommendations in the For You feed, helping subscribers overcome choice paralysis and guiding them from occasional listening to habitual engagement. Targets increased podcast uptake and improved early retention from Week 0 to Week 1." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Downweighting Ignored Recommendations", r:"Next", kr:"" , s:"Improves the B2C For You feed by automatically reducing the weight of content that users repeatedly skip, using impression signals to reduce fatigue and increase relevance. Expected to improve click-through rates on recommendations and subscriber satisfaction with the feed." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Your Next Episode (Podcast Tab)",r:"Next",  kr:"" , s:"Automatically surfaces the most relevant next podcast episode in the Continue Listening context based on recent listening behaviour. Reduces friction in answering 'what should I listen to next?' and builds consistent podcast listening habits." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Serendipity (B2C, App)",         r:"Next",  kr:"" , s:"Extends the Unexpected Reads serendipity feature from web to the mobile app, surfacing content adjacent to but non-overlapping with the subscriber's established reading patterns. Broadens engagement across platforms by making serendipitous discovery available on mobile." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Show Reader History (App)",      r:"Later", kr:"" , s:"Brings reader history to the mobile app, giving subscribers access to their reading activity across web and app in a single view. Enables article rediscovery and reinforces the cross-platform continuity of the TE reading experience." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Short Video Recommendations (B2C, Web)", r:"Later", kr:"" , s:"Expands the B2C For You feed to include short-form video recommendations alongside articles, catering to mobile-first and time-limited subscribers. Increases short video discoverability and diversifies the formats surfaced in personalised feeds." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Switch Data Source (GA to Amplitude)", r:"Later", kr:"" , s:"Migrates the recommendation models from Google Analytics 4 to Amplitude as the primary behavioural data source for all future models. Improves data quality for personalisation and reduces long-term dependency on GA4." },
-  { zone:"OPERATIONAL", lane:"PERSONALISATION",            t:"Discovery & Personalisation", f:"Extend Experience to Podcast Subscribers", r:"Later", kr:"" , s:"Extends the personalised For You experience to podcast-only subscribers, giving this audience access to the recommendation feed. Broadens the addressable audience for personalisation and increases perceived value for podcast subscribers." },
-
-  // ── OPERATIONAL / HABIT FORMING (O5) ─────────────────────────────────────
-  { zone:"OPERATIONAL", lane:"HABIT FORMING",              t:"Core App",        f:"Games in the app",                             r:"Now",   kr:"% subscribers engaging with Games weekly [X]%" , s:"Integrates third-party games (via Puzzlr) into the iOS and Android apps as a native habitual content type alongside articles and audio. Expected to drive weekly game engagement and contribute to subscriber retention." },
-  { zone:"OPERATIONAL", lane:"HABIT FORMING",              t:"Core App",        f:"Games push notifications (automated)",         r:"Next",  kr:"% subscribers engaging with Games weekly [X]%" , s:"Enables automated push notifications for newly published games, allowing subscribers to opt in to per-game alerts from the preferences centre. Creates a habitual daily engagement loop by surfacing new games at publication time." },
-  { zone:"OPERATIONAL", lane:"HABIT FORMING",              t:"Core App",        f:"Automated Topics push notifications",          r:"Later", kr:"[X]% engage with personalised recommendation/week" },
-  { zone:"OPERATIONAL", lane:"HABIT FORMING",              t:"Web, NL, GenAI",  f:"Comment sections on Articles (Web)",           r:"Later", kr:"% inactive 7+ days returning within 30 days [X]%" },
-  { zone:"OPERATIONAL", lane:"HABIT FORMING",              t:"Core App",        f:"New collections for Games",                    r:"Later", kr:"" , s:"Builds a dedicated native collection component optimised for displaying games within the app and topic pages, replacing the reused manual collection component. Improves games discoverability and visual presentation for subscribers." },
-  { zone:"OPERATIONAL", lane:"HABIT FORMING",              t:"Core App",        f:"iOS / Android homescreen widgets",             r:"Later", kr:"Push notification opt-in rate [X]%" , s:"Builds homescreen and lockscreen widgets that surface The Economist's latest content on subscribers' device home screens, viewed an estimated 96 times per day. Expected to increase push notification opt-in rates and daily active usage by embedding TE into existing smartphone routines." },
-  { zone:"OPERATIONAL", lane:"HABIT FORMING",              t:"Core App",        f:"Native Newsletters in the app",                r:"Later", kr:"% opted into at least one newsletter [X]%" , s:"Rebuilds the newsletter sign-up screen in the app as a fully native interface where subscribers can browse, sign up to, and manage all newsletters directly. Expected to increase newsletter opt-in rates among app users." },
-
-  // ── OPERATIONAL / AUDIO & VIDEO (O6 – operational items only) ─────────────
-  { zone:"OPERATIONAL", lane:"AUDIO & VIDEO",              t:"Audio & Video",   f:"Vertical video paywall (Zephr)",               r:"Now",   kr:"" , s:"Migrates vertical video paywall management from hardcoded rules to Zephr, enabling paywall rules and copy to be updated without code releases. Reduces engineering overhead for paywall changes and prepares the vertical video product for the tiered access launch." },
-  { zone:"OPERATIONAL", lane:"AUDIO & VIDEO",              t:"Audio & Video",   f:"Podcasts paywall (Zephr)",                     r:"Now",   kr:"" , s:"Migrates podcast show page paywall logic to Zephr so that entitlement rules and messaging can be updated without code deployments. Reduces release dependencies and aligns podcast access management with the broader Zephr-based paywall strategy." },
-  { zone:"OPERATIONAL", lane:"AUDIO & VIDEO",              t:"Audio & Video",   f:"Headphone controls on podcasts",               r:"Now",   kr:"Premium subscribers engaging with shows [X]%/month" , s:"Changes the headphone triple-tap control from 'skip track' to 'skip forward/back 10 seconds' to align with the on-screen player controls. Resolves subscriber complaints and creates a consistent, intuitive audio navigation experience." },
-  { zone:"OPERATIONAL", lane:"AUDIO & VIDEO",              t:"Audio & Video",   f:"New podcast: American Apostle",                r:"Now",   kr:"Premium subscribers engaging with shows [X]%/month" , s:"Launches the American Apostle podcast with a trailer in May 2026 and full series from 28 May 2026, expanding the Economist podcast portfolio. Expected to increase Premium subscriber show engagement rates." },
-  { zone:"OPERATIONAL", lane:"AUDIO & VIDEO",              t:"Audio & Video",   f:"Featured vertical video on web Home",          r:"Now",   kr:"Play weekly engagement rate [X]%" , s:"Adds the ability to feature a single vertical video prominently on the web homepage, giving editorial teams a flexible format for timely video-led stories. Increases video content discoverability and engagement for web subscribers." },
-  { zone:"OPERATIONAL", lane:"AUDIO & VIDEO",              t:"Audio & Video",   f:"Android Auto",                                 r:"Later", kr:"Premium subscribers engaging with shows [X]%/month" , s:"Builds a CarPlay and Android Auto experience that allows subscribers to access TE audio safely while driving, targeting the US market where ~50% of subscribers are based. Expected to increase listening sessions and plays per subscriber and improve satisfaction among commuter audiences." },
-  { zone:"OPERATIONAL", lane:"AUDIO & VIDEO",              t:"Core App",        f:"Support video headers and embeds",             r:"Later", kr:"" , s:"Adds support in CUE for video headers and in-body video embeds within standard articles, removing editorial dependency on the bespoke framework for video-led content. Empowers more editorial teams to self-serve video content and ensures subscribers can access it offline via the app." },
-
-  // ── OPERATIONAL / AI POWERED CYCLES (O8 – Capability AI Deployment) ───────
-  { zone:"OPERATIONAL", lane:"AI POWERED CYCLES",          t:"Web, NL, GenAI",  f:"AI-native engineering enablers",               r:"Now",   kr:"Gen AI readiness" , s:"Builds code prototypes that integrate AI and design tooling into the web engineering workflow, based on the Design/AI integration proposal. Enables the team to ship AI-assisted and AI-powered product features faster with a shared technical foundation." },
-  { zone:"OPERATIONAL", lane:"AI POWERED CYCLES",          t:"Core App",        f:"Design system for agentic dev",                r:"Now",   kr:"Gen AI readiness" , s:"Builds the Marber-aligned design system and visual language update for the GenAI discovery loop within the app. Creates a consistent design foundation for agentic and AI-driven product features, enabling faster and higher-quality AI feature development." },
-
-  // ── OPERATIONAL / PLATFORM EXCELLENCE (O8 – Platform) ────────────────────
-  { zone:"OPERATIONAL", lane:"PLATFORM EXCELLENCE",        t:"Core App",        f:"Investigate + fix offline analytics",          r:"Now",   kr:"" , s:"Audits and fixes how offline analytics events are tracked in the app, resolving a significant discrepancy between legacy data (10% offline) and current measurements (5% offline). Produces reliable offline usage data to inform whether to invest further in improving the offline subscriber experience." },
-  { zone:"OPERATIONAL", lane:"PLATFORM EXCELLENCE",        t:"Core App",        f:"Offline behaviour improvement",                r:"Later", kr:"App crash-free session rate >99.9%" , s:"Investigates and resolves issues with offline content access in the app, addressing subscriber feedback about not being able to access content while commuting or flying. Improves the offline subscriber experience and ensures accurate measurement of offline usage patterns." },
-  { zone:"OPERATIONAL", lane:"PLATFORM EXCELLENCE",        t:"Core App",        f:"Review LUCIQ integration",                     r:"Later", kr:"App crash-free session rate >99.9%" },
-  { zone:"OPERATIONAL", lane:"PLATFORM EXCELLENCE",        t:"Core App",        f:"Referers tracking in app",                     r:"Later", kr:"App crash-free session rate >99.9%" },
-
-  // ── OPERATIONAL / ADVERTISING (O7 – operational) ─────────────────────────
-  { zone:"OPERATIONAL", lane:"ADVERTISING",                t:"Advertising",     f:"Ad architecture revamp",                       r:"Now",   kr:"Total addressable ad inventory grows [X]% YoY" , s:"Redesigns the in-app advertising architecture with a clean, layered separation between business logic, UI, analytics, and third-party integrations. Expected to achieve 70%+ test coverage on business-critical code, reduce regressions, and enable faster addition of new ad formats and partners." },
-
-  // ── ENTERPRISE / ADVERTISING EXPERIENCE ──────────────────────────────────
-  { zone:"ENTERPRISE",  lane:"ADVERTISING EXPERIENCE",     t:"Core App",        f:"eReader in the app",                           r:"Now",   kr:"Total addressable ad inventory grows [X]% YoY" , s:"Integrates an ePaper edition into the app via Twipe, delivering a magazine-format digital reading experience for print-oriented subscribers. Expected to convert more print-loyal subscribers to active app users and increase digital ad fulfilment opportunities." },
-  { zone:"ENTERPRISE",  lane:"ADVERTISING EXPERIENCE",     t:"Advertising",     f:"DoubleVerify on Home / Topics",                r:"Now",   kr:"Average CPM on premium ad formats reaches [X]" , s:"Implements DoubleVerify Brand Suitability across Home, Topic, and TWIB pages to classify inventory for premium brand-safe advertising. Unlocks additional demand from brand-safety-sensitive advertisers and expected to improve CPM on premium ad formats." },
-  { zone:"ENTERPRISE",  lane:"ADVERTISING EXPERIENCE",     t:"Advertising",     f:"Product/Account type to GAM",                  r:"Now",   kr:"Average CPM on premium ad formats reaches [X]" , s:"Sends subscriber product and account type as a user_type signal to GAM and Permutive on every page load, enabling accurate user classification for ad targeting across web and app. Ensures ad calls are correctly targeted by subscription tier and supports the first-party data strategy." },
-  { zone:"ENTERPRISE",  lane:"ADVERTISING EXPERIENCE",     t:"Advertising",     f:"Migration to GAM in newsletters",              r:"Now",   kr:"Average CPM on premium ad formats reaches [X]" },
-  { zone:"ENTERPRISE",  lane:"ADVERTISING EXPERIENCE",     t:"Advertising",     f:"B2C first party data (moved from Disco)",      r:"Next",  kr:"Average CPM on premium ad formats reaches [X]" },
-  { zone:"ENTERPRISE",  lane:"ADVERTISING EXPERIENCE",     t:"Advertising",     f:"Contextual cohorts on Permutive",              r:"Next",  kr:"Average CPM on premium ad formats reaches [X]" , s:"Implements contextual data collection via the Permutive SDK on iOS and Android, aligning mobile contextual signals with the web implementation. Expected to increase mobile ad yield by enabling contextual targeting campaigns previously only available on web." },
-
-];
+var DATA = [];
 
 // ─── ZONE DEFINITIONS ─────────────────────────────────────────────────────
 const ZONES = [
@@ -569,7 +500,6 @@ function render() {
     var zoneRows = "";
 
     zone.lanes.forEach(function(lane) {
-      // If objective filter is active and this lane doesn't match, skip entirely
       if (selObj && lane !== selObj) return;
 
       var cells = horizons.map(function(h) {
@@ -592,12 +522,19 @@ function render() {
             var pd = TEAM_PILL[item.t] || ["", item.t];
             pill = "<span class=\"tag-pill " + pd[0] + "\">" + pd[1] + "</span>";
           }
-          var krAttr  = item.kr ? " data-kr=\""  + item.kr.replace(/"/g, "&quot;") + "\"" : "";
-          var sumAttr = item.s  ? " data-s=\""   + item.s.replace(/"/g, "&quot;")  + "\"" : "";
-          var cAttr   = item.c  ? " data-c=\""   + item.c.replace(/"/g, "&quot;")  + "\"" : "";
-          var zAttr   = " data-zone=\"" + zone.key.toLowerCase() + "\"";
+          var iDate    = item.date || "";
+          var iRag     = item.rag  || "";
+          var krAttr   = item.kr ? " data-kr=\""   + item.kr.replace(/"/g, "&quot;") + "\"" : "";
+          var sumAttr  = item.s  ? " data-s=\""    + item.s.replace(/"/g,  "&quot;") + "\"" : "";
+          var cAttr    = item.c  ? " data-c=\""    + item.c.replace(/"/g,  "&quot;") + "\"" : "";
+          var zAttr    = " data-zone=\"" + zone.key.toLowerCase() + "\"";
           var nameAttr = " data-name=\"" + item.f.replace(/"/g, "&quot;") + "\"";
-          return "<div class=\"feat\"" + krAttr + sumAttr + cAttr + zAttr + nameAttr + ">" + pill + item.f + "</div>";
+          var dateAttr = iDate ? " data-date=\"" + iDate + "\"" : "";
+          var ragAttr  = iRag  ? " data-rag=\""  + iRag  + "\"" : "";
+          var datePill = iDate ? "<span class=\"feat-date-pill\">" + fmtDate(iDate) + "</span>" : "";
+          var ragPill  = iRag  ? "<span class=\"feat-rag-pill feat-rag-" + iRag + "\">RAG</span>" : "";
+          var nipjd    = item.notInJPD ? "<span class=\"nipjd\" title=\"Not tracked in JPD\">∅</span>" : "";
+          return "<div class=\"feat\"" + krAttr + sumAttr + cAttr + zAttr + nameAttr + dateAttr + ragAttr + ">" + pill + item.f + datePill + ragPill + nipjd + "</div>";
         }).join("");
         return "<td class=\"feat-cell\">" + feats + "</td>";
       }).join("");
@@ -606,7 +543,6 @@ function render() {
         lane + "<span class=\"lane-count\">" + total + "</span></td>" + tds + "</tr>";
     });
 
-    // Only render zone header if it has visible lanes
     if (zoneRows) {
       bodyRows += "<tr><td class=\"zone-header " + zone.cls + "\" colspan=\"" +
         (horizons.length + 1) + "\">" + zone.label + "</td></tr>";
@@ -624,20 +560,32 @@ function render() {
     "<table>" + colgroup + "<thead>" + headerRow + "</thead><tbody>" + bodyRows + "</tbody></table>";
 }
 
-document.getElementById("team-select").addEventListener("change", render);
-document.getElementById("obj-select").addEventListener("change", render);
-render();
+fetch('roadmap_data.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    DATA = data;
+    document.getElementById("team-select").addEventListener("change", render);
+    document.getElementById("obj-select").addEventListener("change", render);
+    render();
+  })
+  .catch(function(err) {
+    document.getElementById("table-wrap").innerHTML =
+      '<p style="padding:40px;color:#c00">Failed to load roadmap_data.json: ' + err + '</p>';
+  });
 
 // ─── FEATURE HOVER CARD ───────────────────────────────────────────────────
 (function() {
-  var card   = document.getElementById("feat-card");
-  var elName = card.querySelector(".feat-card-name");
-  var elSum  = card.querySelector(".feat-card-summary");
-  var elKrWrap = card.querySelector(".feat-card-kr");
-  var elKr   = card.querySelector(".feat-card-kr-text");
+  var card       = document.getElementById("feat-card");
+  var elPills    = card.querySelector(".feat-card-pills");
+  var elDatePill = card.querySelector(".fc-date-pill");
+  var elRagPill  = card.querySelector(".fc-rag-pill");
+  var elName     = card.querySelector(".feat-card-name");
+  var elSum      = card.querySelector(".feat-card-summary");
+  var elKrWrap   = card.querySelector(".feat-card-kr");
+  var elKr       = card.querySelector(".feat-card-kr-text");
   var OFFSET = 14;
   var CARD_W = 318;
-  var CARD_H = 140; // approximate
+  var CARD_H = 140;
 
   function showCard(e, el) {
     var name  = el.dataset.name || "";
@@ -645,8 +593,29 @@ render();
     var kr    = el.dataset.kr  || "";
     var com   = el.dataset.c   || "";
     var zone  = el.dataset.zone || "";
+    var date  = el.dataset.date || "";
+    var rag   = el.dataset.rag  || "";
 
-    if (!sum && !kr && !com) { card.style.display = "none"; return; }
+    if (!sum && !kr && !com && !date && !rag) { card.style.display = "none"; return; }
+
+    if (date || rag) {
+      if (date) {
+        elDatePill.textContent = fmtDate(date);
+        elDatePill.style.display = "";
+      } else {
+        elDatePill.style.display = "none";
+      }
+      if (rag) {
+        elRagPill.textContent = "RAG";
+        elRagPill.className = "fc-rag-pill fc-rag-" + rag.toLowerCase();
+        elRagPill.style.display = "";
+      } else {
+        elRagPill.style.display = "none";
+      }
+      elPills.style.display = "";
+    } else {
+      elPills.style.display = "none";
+    }
 
     elName.textContent = name;
     elSum.textContent  = sum || "";
