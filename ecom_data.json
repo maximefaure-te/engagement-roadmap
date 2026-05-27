@@ -1,0 +1,731 @@
+[
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Zephr AI Dynamic Paywalls",
+    "ticket": "REG-3010",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Google Pay in Checkout — Technical Integration",
+    "ticket": "SMA-1482",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Google Pay in Checkout — Eventing, Feature-Flagging, QA & Release",
+    "ticket": "SMA-2712",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Extend passwordless checkout to Digital+Print",
+    "ticket": "SMA-2722",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Conversion Rate Investigation & Actions",
+    "ticket": "SMA-2839",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Enable Apple Pay Express Checkout from Banners",
+    "ticket": "SMA-2915",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Enable Apple Pay Express Checkout from Paywalls",
+    "ticket": "SMA-2916",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Registered User Onboarding Journey",
+    "ticket": "SMA-2919",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Update Article Limit Wall for Registered Users",
+    "ticket": "SMA-2920",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Apps",
+    "r": "Next",
+    "f": "Test Annual Billed Monthly (Minimum Term) [iOS]",
+    "ticket": "SD-3635",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Apps",
+    "r": "Next",
+    "f": "Mandatory Account Creation",
+    "ticket": "SD-3636",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Apps",
+    "r": "Next",
+    "f": "A/B Testing from Acquisition Paywall",
+    "ticket": "SD-3638",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Next",
+    "f": "Implement eligibility checks (Gift & Renew in SPC)",
+    "ticket": "SMA-108",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Next",
+    "f": "SPC — Gift subscription purchase journey",
+    "ticket": "SMA-1632",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Next",
+    "f": "/Subscribe consolidation: Flexible landing pages",
+    "ticket": "SMA-2552",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Next",
+    "f": "/Subscribe consolidation: Multi-year landing pages",
+    "ticket": "SMA-2554",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Next",
+    "f": "Passwordless Registration for Gift Article Recipients",
+    "ticket": "SMA-2882",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Next",
+    "f": "Support Test: Remove/Reduce Billing Address Step in Checkout",
+    "ticket": "SMA-2917",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Next",
+    "f": "Refresh Basket Summary Component in Checkout",
+    "ticket": "SMA-2918",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "In-life",
+    "r": "Next",
+    "f": "LinkedIn Lead Generation for New Starts",
+    "ticket": "ILF-1751",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Later",
+    "f": "Support Test: Email Capture > Plan Selection in SPC",
+    "ticket": "SMA-2484",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Later",
+    "f": "/Subscribe consolidation: Student Offers Page",
+    "ticket": "SMA-1862",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Later",
+    "f": "/Subscribe consolidation: Academic offers page",
+    "ticket": "SMA-1863",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Later",
+    "f": "/Subscribe consolidation: Gift offers page",
+    "ticket": "SMA-1864",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Later",
+    "f": "Support Test: Loqate Email Validation",
+    "ticket": "SMA-2470",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Later",
+    "f": "Support passwordless login from within SPC",
+    "ticket": "SMA-2624",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Later",
+    "f": "Annual Billed Monthly (Minimum Term Offer)",
+    "ticket": "SMA-2921",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Improve CVR (web/app)",
+    "t": "Growth",
+    "r": "Later",
+    "f": "Roll out passwordless regwall across interactive content",
+    "ticket": "SMA-2938",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Identity & Access",
+    "r": "Now",
+    "f": "Tiering: Entitlements",
+    "ticket": "REG-3334",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Identity & Access",
+    "r": "Now",
+    "f": "Tiering: Paywall Gateway to AWS",
+    "ticket": "REG-3336",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Tiering: Paywalls & Banners",
+    "ticket": "REG-3340",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Identity & Access",
+    "r": "Now",
+    "f": "Tiering: Metering Service",
+    "ticket": "REG-3350",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Apps",
+    "r": "Now",
+    "f": "Group Level Entitlements for Mobile",
+    "ticket": "SD-3246",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Apps",
+    "r": "Now",
+    "f": "Play — Subscriptions and transactional journeys",
+    "ticket": "SD-3380",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Apps",
+    "r": "Now",
+    "f": "Play Tier e2e testing + bug fixing",
+    "ticket": "SD-3386",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Apps",
+    "r": "Now",
+    "f": "Rename Core/Digital to Premium",
+    "ticket": "SD-3542",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Tiering: Enablers for Launch",
+    "ticket": "SMA-2791",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Tiering: /subscribe Good, Better, Best Hero and Below the Fold",
+    "ticket": "SMA-2413",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Tiering: Premium Renaming",
+    "ticket": "SMA-2714",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Tiering: Checkout Plan Section Comparison Table",
+    "ticket": "SMA-2777",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Tiering: Checkout and Confirmation Page Support",
+    "ticket": "SMA-2787",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Growth",
+    "r": "Now",
+    "f": "Tiering: Support comparison-table purchase flow in SPC",
+    "ticket": "SMA-2891",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Tiering — Play product set up and SKU",
+    "ticket": "OTC-1328",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Rename Core/Digital to Premium (Commerce Ops)",
+    "ticket": "OTC-1389",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Entitlements in Salesforce Changes to support Play",
+    "ticket": "ILF-1644",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Customer Service Changes for Tiered Proposition",
+    "ticket": "ILF-1759",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Play tier — product set-up to support acquisition",
+    "ticket": "ILF-2107",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Deprecate SF Entitlements",
+    "ticket": "ILF-2207",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Tiering",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Subscriptions Support for Tiered Proposition (incl. CSR)",
+    "ticket": "ILF-1594",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Surface Salesforce in Services for Reimagined My Account",
+    "ticket": "ILF-895",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Cancellation Journey (Global)",
+    "ticket": "ILF-2177",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "Commerce Platforms",
+    "r": "Next",
+    "f": "[ILF] Next Best Offer Engine",
+    "ticket": "REG-3685",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Switch Offer Management: Configurability",
+    "ticket": "ILF-1595",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Cancellation Journey Changes for Tiered Proposition",
+    "ticket": "ILF-1642",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Switch Journey Changes for Tiered Proposition",
+    "ticket": "ILF-1643",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Reimagined Winback Journey for Lapsed Subs",
+    "ticket": "ILF-1779",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "In-life",
+    "r": "Next",
+    "f": "RMA — Pending Restart",
+    "ticket": "ILF-2253",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Reduce churn through personalisation",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Cancellation — Product and term change",
+    "ticket": "ILF-2373",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Involuntary Churn",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Slicker: Smart Payment Retries (AI)",
+    "ticket": "OTC-1367",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Involuntary Churn",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Change Magic Date Retry After First Payment Failure",
+    "ticket": "OTC-1368",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Involuntary Churn",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Change Retry Batch Timings",
+    "ticket": "OTC-1369",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Involuntary Churn",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Optimise Payment Failure Notifications",
+    "ticket": "ILF-1596",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Price Rise FY27 — Compliance (Commerce Ops)",
+    "ticket": "OTC-1248",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Renewal — Enable Payment Gateway Fallback",
+    "ticket": "OTC-1276",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Migrating Payment Processing from Cybersource to Adyen and Stripe",
+    "ticket": "OTC-1370",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "Commerce Ops",
+    "r": "Now",
+    "f": "Zuora Price Rise Pear-Shaped Plan",
+    "ticket": "OTC-1390",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Reimagined My Account Home",
+    "ticket": "ILF-897",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Price Rise FY27 — Compliance (In-life)",
+    "ticket": "ILF-1995",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Data Retention",
+    "ticket": "ILF-1250",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Winback Journey Changes for Tiered Proposition",
+    "ticket": "ILF-1756",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Price Rise Compliance (In-life platform)",
+    "ticket": "ILF-1769",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Help Page Redesign (Revenue Retained)",
+    "ticket": "ILF-1850",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Revenue Retained",
+    "t": "In-life",
+    "r": "Later",
+    "f": "Trad Renewal Journey rebuild",
+    "ticket": "ILF-2372",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Limio Replacement",
+    "t": "In-life",
+    "r": "Now",
+    "f": "Limio alternative",
+    "ticket": "ILF-2095",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Limio Replacement",
+    "t": "Identity & Access",
+    "r": "Next",
+    "f": "Audit usage of data in Salesforce ID token",
+    "ticket": "REG-3482",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Limio Replacement",
+    "t": "Identity & Access",
+    "r": "Next",
+    "f": "Salesforce Connected App consolidation plan",
+    "ticket": "REG-3483",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Limio Replacement",
+    "t": "Commerce Platforms",
+    "r": "Next",
+    "f": "Commerce Services Decomposition",
+    "ticket": "REG-3585",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Drive Platform Excellence",
+    "t": "Apps",
+    "r": "Next",
+    "f": "DNA BAU [iOS]",
+    "ticket": "SD-1943",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Drive Platform Excellence",
+    "t": "Apps",
+    "r": "Next",
+    "f": "Espresso BAU (Android)",
+    "ticket": "SD-2233",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Drive Platform Excellence",
+    "t": "In-life",
+    "r": "Next",
+    "f": "New Relic & Salesforce Data Visualisation for Key Metrics",
+    "ticket": "ILF-315",
+    "rag": "",
+    "date": ""
+  },
+  {
+    "lane": "Drive Greater Self-Service Adoption",
+    "t": "In-life",
+    "r": "Next",
+    "f": "Help Page Redesign",
+    "ticket": "ILF-1849",
+    "rag": "",
+    "date": ""
+  }
+]
