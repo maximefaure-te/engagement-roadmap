@@ -314,6 +314,43 @@ h1 {
 
 .empty { font-size: 11px; color: #bbb; padding: 3px 2px; }
 
+/* ── Change tracking ───────────────────────────────────────── */
+.change-badge {
+  display: none;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+  line-height: 1.6;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+#rm.show-changes .feature .change-badge { display: inline-block; }
+.cb-new        { background: #d4edda; color: #1a6b2a; }
+.cb-moved-up   { background: #fff3cd; color: #7a5800; }
+.cb-moved-back { background: #f0f0f0; color: #666; }
+.cb-risk       { background: #fde8e8; color: #a02020; }
+.cb-delivered  { background: #e8f0fe; color: #1a56b0; }
+
+.change-bar {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #e0dbd3;
+  border-radius: 5px;
+  padding: 8px 14px;
+  margin-bottom: 16px;
+  font-size: 11px;
+  color: #666;
+  flex-wrap: wrap;
+}
+.change-bar.visible { display: flex; }
+.change-bar .cb-since { font-weight: 600; color: #1a1a1a; margin-right: 8px; }
+.change-bar .cb-sep { color: #ccc; }
+.change-bar .cb-stat { display: inline-flex; align-items: center; gap: 4px; }
+.change-bar .cb-stat span { font-weight: 600; color: #1a1a1a; }
+
 /* ── Hover tooltip ─────────────────────────────────────────── */
 #tooltip {
   display: none;
@@ -408,14 +445,23 @@ h1 {
     </div>
   </div>
 
-  <button class="delivered-toggle" id="delivered-toggle" onclick="toggleDelivered()">
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
-      <path d="M3.5 6l2 2 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span id="delivered-label">Show Delivered</span>
-  </button>
+  <div style="display:flex; gap:10px; align-items:center; margin-bottom:0;">
+    <button class="delivered-toggle" id="delivered-toggle" onclick="toggleDelivered()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M3.5 6l2 2 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span id="delivered-label">Show Delivered</span>
+    </button>
+    <button class="delivered-toggle" id="changes-toggle" onclick="toggleChanges()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span id="changes-label">Show changes</span>
+    </button>
+  </div>
 
+  <div id="change-bar" class="change-bar"></div>
   <div id="rm"></div>
 </div>
 
@@ -472,99 +518,200 @@ let active = new Set(['A&V', 'Perso', 'Web', 'App', 'Ads']);
 let selectedLane = '';
 
 
-// ── ROADMAP DATA — updated by skill on 2026-06-10 ──
+// ── ROADMAP DATA — updated by skill on 2026-06-26 ──
 const DATA = [
-  {"zone":"STRATEGIC","lane":"AI Guided Sessions","t":"Perso","r":"Now","f":"[App] AI Session Beta (iOS)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-29","wt":"Both","st":"Delivery","dn":"2 Jun - Development in flight, planned for late June release","ticket":"TEPRODUCT-8421","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Insider","t":"A&V","r":"Now","f":"[App] Airplay/Chrome cast (Insider page player and Audio player)","kr":"-","s":"","c":"","rag":"Green","date":"","wt":"Both","st":"Delivery","dn":"","ticket":"TEPRODUCT-8289","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] TWIB Podcast component (Play & Core Home)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"2 Jun - Development and QA testing complete. In E2E play testing.","ticket":"TEPRODUCT-6195","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Add Continue Listening section to Play Home","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Delivery","st":"Done","dn":"2 Jun - In E2E play testing.","ticket":"TEPRODUCT-7724","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App][Fast follow] Manage Newsletters in-app (webview)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-15","wt":"Both","st":"Delivery","dn":"2 Jun - In UAT review.","ticket":"TEPRODUCT-7761","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Featured Podcast carousel (Play & Core Home)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-15","wt":"Delivery","st":"Done","dn":"2 Jun - In E2E play testing.","ticket":"TEPRODUCT-7980","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Play: Push & Deeplinking support","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"2 Jun - Development and QA testing complete. In E2E play testing.","ticket":"TEPRODUCT-8196","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Add Play components to Podcasts tab ","kr":"-","s":"","c":"","rag":"Red","date":"","wt":"Both","st":"Delivery","dn":"2 Jun - To be replanned in light of team restructure.","ticket":"TEPRODUCT-8338","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Video player re-arch on iOS","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"2 Jun - Undergoing technical discovery to confirm on scope of work","ticket":"TEPRODUCT-8568","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[Web][App] Play: Unified Player Architecture Phase 1","kr":"-","s":"","c":"","rag":"Amber","date":"2026-07-31","wt":"Delivery","st":"Discovery","dn":"3 Jun - Tech discovery in progress. Engineering identified the need to build out player architecture/foundations adding additional 3 sprints to the size.","ticket":"TEPRODUCT-8577","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Play: Unified AV player Page, Switch, Metadata and Playback Controls","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"2 Jun - Ballpark sizing completed. Will need unified player POC and designs completed/approved before we can start implementation","ticket":"TEPRODUCT-8407","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Unified AV Player: Sleep Timer & Speed Control","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"2 Jun - Ballpark sizing completed. Will need unified player POC and designs completed/approved before we can start implementation","ticket":"TEPRODUCT-8602","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Unified AV Player: Lock screen/OS notification","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"2 Jun - To be ballpark sized.","ticket":"TEPRODUCT-8649","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Podcast pages consolidation tech discovery","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Both","st":"Delivery","dn":"2 Jun - New JPD. Team will need to review and size.","ticket":"TEPRODUCT-8720","notInJPD":false},
-  {"zone":"STRATEGIC","lane":"Play","t":"Ads","r":"Later","f":"Play / Video Ad experience","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"STRATEGIC","lane":"AI Guided Sessions","t":"Perso","r":"Now","f":"[App] AI Session Beta (iOS)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-07","wt":"Both","st":"Delivery","dn":"21 Jun - Release Planned for 7th July.","ticket":"TEPRODUCT-8421","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] TWIB Podcast component (Play & Core Home)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"24 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-6195","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Add Continue Listening section to Play Home","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Delivery","st":"Done","dn":"24 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-7724","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"App","r":"Now","f":"[App][Fast follow] Manage Newsletters in-app (webview)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-15","wt":"Delivery","st":"Delivery","dn":"23 Jun - Due for release to Premium 15 Jun and Play 1 July","ticket":"TEPRODUCT-7761","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Featured Podcast carousel (Play & Core Home)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Delivery","st":"Done","dn":"24 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-7980","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Play: Push & Deeplinking support","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"24 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-8196","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Play: Unified AV player Page, Switch, Metadata and Playback Controls","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"Delivery","dn":"","ticket":"TEPRODUCT-8407","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[Web][App] Play: Unified Player Foundations/Architecture Phase 1","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"24 Jun - Development on unified player foundations in progress.","ticket":"TEPRODUCT-8577","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Unified AV Player: Lock screen/OS notification","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Delivery","dn":"","ticket":"TEPRODUCT-8649","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Play: Unified AV Player Video-only Controls for Inline & Full Screen","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Delivery","dn":"","ticket":"TEPRODUCT-8600","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Unified AV Player: Compact Player and PiP in-app/outside of app","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Discovery","dn":"","ticket":"TEPRODUCT-8601","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Unified AV Player: Sleep Timer & Speed Control","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Discovery","dn":"","ticket":"TEPRODUCT-8602","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Play: Unified AV Player Page AV queue management","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"Discovery","dn":"","ticket":"TEPRODUCT-8647","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Consolidating /podcasts & /audio/podcasts pages","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"24 Jun - In technical discovery to understand scope of work before team can size.","ticket":"TEPRODUCT-8720","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Play: Audio-only podcast carousel","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Delivery","st":"Parking lot","dn":"","ticket":"TEPRODUCT-8734","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Unified Show Page","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Delivery","st":"Parking lot","dn":"24 Jun - Dependent on design discovery before team can review and size.","ticket":"TEPRODUCT-8740","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Unified Episode Page","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Parking lot","dn":"24 Jun - Dependent on design discovery before team can review and size.","ticket":"TEPRODUCT-8741","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Unified AV Portfolio page","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Delivery","st":"Parking lot","dn":"24 Jun - Dependent on design discovery before team can review and size.","ticket":"TEPRODUCT-8742","notInJPD":false},
   {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Later","f":"InsiderxPodcasts (January launch)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
-  {"zone":"STRATEGIC","lane":"Preview","t":"Web","r":"Now","f":"WEB 'Preview' [placeholder - Start July]","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"On Roadmap","dn":"28 Apr - NEW in Draft roadmap for July (reserved tbc)","ticket":"TEPRODUCT-8569","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"App","r":"Now","f":"ePaper Edition","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Both","st":"Discovery","dn":"2 Jun - Tech specs in progress. Development will start post-Games (June) with release date planned for late July.","ticket":"TEPRODUCT-8121","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"Ads","r":"Now","f":"Web & Core App: Pass Amplitude ID to GAM to enable Ad impression/PV tracking","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-16","wt":"Both","st":"Delivery","dn":"2 Jun - Web - Done, App will deliver by end Jun","ticket":"TEPRODUCT-8144","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"Ads","r":"Later","f":"Play / Video Ad experience","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"STRATEGIC","lane":"Preview","t":"Web","r":"Now","f":"Preview Tiering - User Research and Discovery","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"Parking lot","dn":"18 Jun - On track - User testing playback completed. Option 1 prototype selected as design direction. Design refinement underway; early variant due next week and clearer scope by end June. October launch remains on track.","ticket":"TEPRODUCT-8811","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Preview","t":"Ads","r":"Next","f":"[App][Web] Ads for Core App: Preview tier","kr":"-","s":"","c":"","rag":"","date":"2026-10-31","wt":"Both","st":"Discovery","dn":"19 Jun - Building Ads Assets (Unrelated to the experience in the Web or Apps) to enable insertion based off final design decision can commence early in July","ticket":"TEPRODUCT-7919","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Preview","t":"Web","r":"Next","f":"[Web] Preview in the web","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"Discovery","dn":"24 Jun - Need Final Design Confirmed before confirming Implementation plans","ticket":"TEPRODUCT-8569","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Preview","t":"App","r":"Next","f":"[App] Preview in the app","kr":"-","s":"","c":"","rag":"Amber","date":"2026-11-30","wt":"Both","st":"Discovery","dn":"23 Jun - End Oct 2026 Release Candidate (iOS/Android)","ticket":"TEPRODUCT-8673","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Preview","t":"Ads","r":"Next","f":"[App][Web] Vertical Video Ads in Video Carousel","kr":"-","s":"","c":"","rag":"","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"","ticket":"TEPRODUCT-8877","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"App","r":"Now","f":"[App] ePaper Edition","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Both","st":"Delivery","dn":"23 Jun - Development Work Commenced and on schedule for July Release","ticket":"TEPRODUCT-8121","notInJPD":false},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"Ads","r":"Later","f":"LT: Develop 1P data strategy","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"Ads","r":"Later","f":"LT: Interactive / Contextual ad formats","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"Ads","r":"Later","f":"LT: Review SourcePoint implementation","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Vertical Video Carousel: use Zephr to manage paywalls","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-02","wt":"Delivery","st":"Delivery","dn":"2 Jun - Ready for Production launch. Waiting for paywall designs from Growth team.","ticket":"TEPRODUCT-2563","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Podcasts: Use Zephr to manage paywalls","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-02","wt":"Delivery","st":"Delivery","dn":"25 May - Ready for development. Development may be delayed due to team re-structure and new Podcast launch.","ticket":"TEPRODUCT-2619","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Featured Vertical Video on Web Home","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-16","wt":"Delivery","st":"Delivery","dn":"2 Jun - In UAT review.","ticket":"TEPRODUCT-5062","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[App] Improve headphone controls","kr":"-","s":"","c":"","rag":"Green","date":"","wt":"Delivery","st":"Delivery","dn":"2 Jun - New JPD. Team will need to review and size.","ticket":"TEPRODUCT-7444","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web][App] New Podcast Launch: Tocqueville Road Trip","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-11","wt":"Delivery","st":"Delivery","dn":"2 Jun - New podcast name finalized. Targeting Jun. 11 trailer and episodes release.","ticket":"TEPRODUCT-8471","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[App] Hide TTS setting","kr":"-","s":"","c":"","rag":"Green","date":"","wt":"Delivery","st":"Delivery","dn":"2 Jun - New JPD. Team will need to review and size.","ticket":"TEPRODUCT-8762","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Next","f":"[App] Play/add to queue from Teaser and Articles","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"2 Jun - Carry-over from Marvels team. Team will need to review requirement and confirm sizing.","ticket":"TEPRODUCT-1958","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Next","f":"[Web] Watch playlist from Featured Vertical Video","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Delivery","st":"Delivery","dn":"2 Jun - New JPD. Team will need to review and size.","ticket":"TEPRODUCT-6917","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Next","f":"[Web] Vertical video - sharing/gifting","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"3 Jun - Stretch goal - team will prioritize play experience first.","ticket":"TEPRODUCT-7456","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Podcasts: Use Zephr to manage paywalls","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Delivery","st":"Delivery","dn":"24 Jun - Development planned to start this sprint.","ticket":"TEPRODUCT-2619","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Featured Vertical Video on Web Home","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Delivery","st":"Delivery","dn":"24 Jun - In UAT review - aiming for launch to Prod this week.","ticket":"TEPRODUCT-5062","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Allow Users to Watch more than 1 Video from Featured Vertical Video","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-14","wt":"Delivery","st":"Delivery","dn":"24 Jun - In technical refinement. Planning to start development this sprint.","ticket":"TEPRODUCT-6917","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[App] Improve headphone controls","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Delivery","st":"Delivery","dn":"24 Jun - Will be deprioritized to support building out unified player.","ticket":"TEPRODUCT-7444","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Vertical video - sharing/gifting","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-28","wt":"Delivery","st":"Delivery","dn":"24 Jun - In technical refinement.. Planning to start development this sprint.","ticket":"TEPRODUCT-7456","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[App] Hide TTS setting","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Delivery","st":"Delivery","dn":"24 Jun - Will be deprioritized to support building out unified player.","ticket":"TEPRODUCT-8762","notInJPD":false},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Later","f":"Review the Queue experience","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"App","r":"Later","f":"Support video headers and embeds in articles","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-6460","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Later","f":"Android Auto","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-7511","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"[App] Access to downloads ('For You' Utilities) (Core & Play)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-13","wt":"Delivery","st":"Delivery","dn":"26 May - In progress","ticket":"TEPRODUCT-3807","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"[App] Vertical video URL support in app + share button","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-08","wt":"Delivery","st":"Delivery","dn":"2 Jun - Planned for release w/s 8 Jun","ticket":"TEPRODUCT-5100","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"[For you] Show Reader History (B2C & B2B Web)","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Both","st":"On Roadmap","dn":"26 May - ARM completed. To be refined and estimated","ticket":"TEPRODUCT-7041","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Popular In Your Role Content Recommendations (Pro, Web)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-30","wt":"Both","st":"Delivery","dn":"2 Jun - E2E Testing completed. Due to the level of duplication across PIYO/PIYI and PIYR, exploring merging all three into 1 content collection. Designs being finalised before re-estimating","ticket":"TEPRODUCT-7917","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Extend 'For You' Experience to Reg Access Users (B2C, Web)","kr":"-","s":"","c":"","rag":"Red","date":"2026-06-30","wt":"Both","st":"Delivery","dn":"2 Jun - finalising release details with the Web team; targeting mid-June for release","ticket":"TEPRODUCT-8027","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"[App] Organise bookmarks in collections","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"On Roadmap","dn":"26 May - Designs for app experience to be started in the next sprint","ticket":"TEPRODUCT-8386","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Enable Bookmarking & For You Bookmarks for Play Tier Users (Web) ","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Delivery","dn":"2 Jun - On track for Play launch","ticket":"TEPRODUCT-8585","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"Podcast Recommendations in For You (B2C, Web) ","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-7260","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"[App] Access to downloads ('For You' Utilities) (Core & Play)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-13","wt":"Delivery","st":"Delivery","dn":"22 Jun - In progress for iOS and Android","ticket":"TEPRODUCT-3807","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Topics Feed Ordering A/B Test & Amplitude Experimentation Integration","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-26","wt":"Both","st":"Delivery","dn":"22 Jun - Swarm testing in progress for planned release this week.","ticket":"TEPRODUCT-7495","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Extend 'For You' Experience to Reg Access Users (B2C, Web)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-09-30","wt":"Both","st":"Delivery","dn":"22 Jun - Designs for merged carousel completed. The implementation has been paused to prioritise Ask TE.","ticket":"TEPRODUCT-8027","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Web","r":"Now","f":"📧 [NL] Launch \"For You\" Newsletter (Phase 1: No teasers)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-21","wt":"Both","st":"Delivery","dn":"22 Jun - In participant research underway, end of July target date which will lead to Phase 2 (full AI based offering).","ticket":"TEPRODUCT-8139","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"[App] Organise bookmarks in collections","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"On Roadmap","dn":"22 Jun - Designs for app experience in progress","ticket":"TEPRODUCT-8386","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Enable Bookmarking & For You Bookmarks for Play Tier Users (Web) ","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Delivery","dn":"22 Jun - Whitelisting access in progress","ticket":"TEPRODUCT-8585","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Web","r":"Next","f":"📧 [NL] \"For You\" Newsletter (Phase 2: AI teasers)","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"Parking lot","dn":"22 Jun - Once Participant Research completes (End June) - AI Teasers + Topic selector work is released as A/B Test","ticket":"TEPRODUCT-4169","notInJPD":false},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"B2C Personalised Content Feed (Insider Video) (Web)","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"24 Apr - Decision pending on whether to combine \"insider and video into a new content type”","ticket":"TEPRODUCT-7265","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"Popular In Your Role Content Recommendations (Pro, Web)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-30","wt":"Both","st":"Delivery","dn":"2 Jun - E2E Testing completed. Due to the level of duplication across PIYO/PIYI and PIYR, exploring merging all three into 1 content collection. Designs being finalised before re-estimating","ticket":"TEPRODUCT-7917","notInJPD":false},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"Popular In Your Role Content Recommendations (Pro, App)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-8583","notInJPD":false},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"[App] Serendipity \"Unexpected Reads\" Content Recommendations (B2C, App)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-8584","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Short video in search (web and app)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Relevancy and Recency in search (app only)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Filters (topic, date, section) in search results","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Contextual search in bottom nav","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Filters (topic, date, section) in search results","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Relevancy and Recency in search (app only)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Short video in search (web and app)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Smart collections","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Short Video Recommendations (B2C, Web)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-8015","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Switch Data Source (GA to Amplitude)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-8023","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Extend Experience to Podcast Subscribers (B2C, Web, App)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-8026","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"App","r":"Now","f":"[Editorial] Ability to support more Games (App & Web)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-16","wt":"Delivery","st":"Delivery","dn":"2 Jun - Working through high number of bug fixes, aiming for 4.92.0 release (w/s 15 June).","ticket":"TEPRODUCT-4760","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Now","f":"📧 [NL] New daily “Business in Brief” newsletter launch","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-22","wt":"Both","st":"On Roadmap","dn":"10 Jun - On track . Copy received this week, planning for 22nd go-live.","ticket":"TEPRODUCT-7740","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Now","f":"Update Topic pages for SEO and ads","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-14","wt":"Both","st":"Delivery","dn":"10 Jun - Pending scheduled start.","ticket":"TEPRODUCT-8133","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Now","f":"📧 [NL] Launch \"For You\" Newsletter (Phase 1: No teasers)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Both","st":"Delivery","dn":"10 Jun -  On track ILF dependency expected to be satisfied this week for Topic of Interest > SF picker","ticket":"TEPRODUCT-8139","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Now","f":"🌟 Pro Newsletter","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-15","wt":"Delivery","st":"Discovery","dn":"26 May - Editorial resource confirmed for July/ August launch. Full scope to be agreed.","ticket":"TEPRODUCT-8336","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Next","f":"📧 [NL] \"For You\" Newsletter (Phase 2: AI teasers)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-08-31","wt":"Both","st":"Parking lot","dn":"30 Apr - Teasers were shared with Zanny, Josh, Liz at Review meeting on Fri 24 Apr. Positive response, so Snippets will be a candidate for new AI initiatives. VS will work out timelines with Ludwig (will be post Phase 1 - ETA end July)","ticket":"TEPRODUCT-4169","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Now","f":"Update Topic pages for SEO and ads","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-14","wt":"Both","st":"Delivery","dn":"21 Jun - On track. Web work planned to finish this sprint, CTD deferred a sprint whilst component list is refined.","ticket":"TEPRODUCT-8133","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"A&V","r":"Now","f":"[Web] Surfacing vertical videos in search (SEO)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Delivery","st":"Delivery","dn":"24 Jun - Aiming to release this week to Production.","ticket":"TEPRODUCT-8721","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Next","f":"Page performance optimisations (SEO)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Later","f":"Allow LLMs to crawl non-paywall content","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"A&V","r":"Later","f":"Optimize Video pages for SEO","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Later","f":"Articles - Recommendations modules","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-7017","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Masthead - weekly edition promo","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Delivery","st":"On Roadmap","dn":"26 May - On track. ","ticket":"TEPRODUCT-3707","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Refresh Weekly edition (app alignment)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-03","wt":"Delivery","st":"Delivery","dn":"10 Jun - Confirm release date with Kirsty","ticket":"TEPRODUCT-6778","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Get Started: Phase II (Store preferences)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Both","st":"On Roadmap","dn":"10 Jun - On track. Fully refined this week, development has started.","ticket":"TEPRODUCT-7701","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Add TWIB 2.0 to the web","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-10","wt":"Delivery","st":"Delivery","dn":"10 Jun - Last job to do is to remove the legacy endpoint.","ticket":"TEPRODUCT-8034","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Perso","r":"Now","f":"🌟 Economist Pro: Ask The Economist- Internal MVP for Editorial testing","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"Discovery","dn":"2 Jun - Editorial review and Solution Design meetings scheduled for the next week to inform sequencing and estimation","ticket":"TEPRODUCT-8498","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Now","f":"Automated push notifications for Games","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-30","wt":"Delivery","st":"Discovery","dn":"2 Jun - Still to be refined; queued behind Games.","ticket":"TEPRODUCT-8597","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"A&V","r":"Now","f":"[Web] Surfacing vertical videos in search (SEO)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Delivery","st":"Delivery","dn":"3 Jun - Ready for development. Will need to discuss with new DBS vendor managing SEO before we can start development","ticket":"TEPRODUCT-8721","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Next","f":"Interactive header in articles (image/video)","kr":"-","s":"","c":"","rag":"","date":"2026-09-30","wt":"Delivery","st":"Parking lot","dn":"","ticket":"TEPRODUCT-6808","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Next","f":"Get Started in the app","kr":"-","s":"","c":"","rag":"Amber","date":"2026-11-30","wt":"Both","st":"On Roadmap","dn":"2 Jun - Nov (Android) / FYQ4 (iOS)","ticket":"TEPRODUCT-8672","notInJPD":false},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Voting polls in newsletters","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Weekly selection for Reg","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Masthead - weekly edition promo","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Delivery","st":"On Roadmap","dn":"17 Jun - Fully refined this week, pending scheduled start for development.","ticket":"TEPRODUCT-3707","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Now","f":"[Editorial] Ability to support more Games (App & Web)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-22","wt":"Delivery","st":"Monitor","dn":"24 Jun - Launching on 25 Jun for App and Web (Subject to Go/No-Go) and 1 July for Play Tier","ticket":"TEPRODUCT-4760","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Refresh Weekly edition (app alignment)","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-04","wt":"Delivery","st":"Done","dn":"10 Jun - The weekly Refresh is Live.","ticket":"TEPRODUCT-6778","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Get Started: Phase II (Store preferences)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-07","wt":"Both","st":"On Roadmap","dn":"17 Jun - On track. Fully refined this week, development has started 19% done including API architectural spike.","ticket":"TEPRODUCT-7701","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"📧 [NL] New daily “Business in Brief” newsletter launch","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-22","wt":"Both","st":"Done","dn":"17 Jun - Complete. Web Component Released to live 11th June.","ticket":"TEPRODUCT-7740","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Add TWIB 2.0 to the web","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-15","wt":"Delivery","st":"Done","dn":"15 Jun - Released. Feature flag switched on.","ticket":"TEPRODUCT-8034","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Perso","r":"Now","f":"🌟 Economist Pro: Ask The Economist- Internal MVP for Editorial testing","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-19","wt":"Both","st":"Delivery","dn":"22 Jun - Internal MVP on track for 3 Jul. Plan being revised into two parallel streams: backend answer-quality and front-end UX (prototype linked to backend for user testing)","ticket":"TEPRODUCT-8498","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Now","f":"[App] Automated push notifications for Games","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-30","wt":"Both","st":"Discovery","dn":"23 Jun - Refinement planned for next sprint for Frontend / Backend","ticket":"TEPRODUCT-8597","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Add gifting to Interactive (Bespoke Framework) articles","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Parking lot","dn":"","ticket":"TEPRODUCT-8610","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Next","f":"[App] Get Started in the app","kr":"-","s":"","c":"","rag":"Amber","date":"2026-12-31","wt":"Both","st":"On Roadmap","dn":"23 Jun - Oct (Android) / FYQ4 (iOS) due to prioritising preview tier","ticket":"TEPRODUCT-8672","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Next","f":"[App] Liquid Glass design in iOS","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"23 Jun - MVP version being  planned for end July subject to Design Approval","ticket":"TEPRODUCT-8675","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Perso","r":"Next","f":"⭐ [AtE] Economist Pro: Ask The Economist - External Pilot","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"16 Jun - Not started","ticket":"TEPRODUCT-8825","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Next","f":"Get Started: Phase III (Extend MVP to increase content consumed in month 1)","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-8843","notInJPD":false},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"Automated Topics push notifications","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
-  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Comment / Debate sections on Articles (Web)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"Comment / Debate sections on Articles (App)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Comment / Debate sections on Articles (Web)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"iOS / Android homescreen widgets","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-3693","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"Native Newsletters in the app","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-3772","notInJPD":true},
   {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"New collections for Games","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-6251","notInJPD":true},
-  {"zone":"ENABLERS","lane":"AI Powered Cycles","t":"Web","r":"Now","f":"Design / AI integration: code prototypes ","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-09","wt":"Delivery","st":"Delivery","dn":"10 Jun - 10 Jun – On track.  AI integration progressing; ~2 days remain, with some work likely carrying into next sprint. Focus then shifts to Play web onboarding, resolving missing assets, and bookmarks for Tearing and Get Started Part 2.","ticket":"TEPRODUCT-8377","notInJPD":false},
-  {"zone":"ENABLERS","lane":"AI Powered Cycles","t":"App","r":"Now","f":"GenAI discovery loop - Marber design update","kr":"-","s":"","c":"","rag":"Amber","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"3 Jun - Specing work due for commencement","ticket":"TEPRODUCT-8674","notInJPD":false},
-  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech] [iOS/Android] Offline behaviour ","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"Parking lot","dn":"","ticket":"TEPRODUCT-6625","notInJPD":false},
-  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech]  Improve snapshot test coverage for Content(Home,Article, Edition)","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-6797","notInJPD":false},
-  {"zone":"ENABLERS","lane":"Platform Excellence","t":"Web","r":"Next","f":"Add admin panel to Economist.com allowing staff to view the site as different user types","kr":"-","s":"","c":"","rag":"","date":"2026-08-31","wt":"Both","st":"Discovery","dn":"","ticket":"TEPRODUCT-6972","notInJPD":false},
-  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"BFF as orchestration layer for content curation experience","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"Parking lot","dn":"","ticket":"TEPRODUCT-8531","notInJPD":false},
-  {"zone":"ENABLERS","lane":"Platform Excellence","t":"A&V","r":"Next","f":"[Web] Automating new podcast launches","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Delivery","st":"Delivery","dn":"2 Jun - To be ballpark sized.","ticket":"TEPRODUCT-8718","notInJPD":false},
-  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Later","f":"Review LUCIQ integration","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Voting polls in newsletters","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Weekly selection for Reg","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"ENABLERS","lane":"AI Powered Cycles","t":"Web","r":"Now","f":"Design / AI integration: code prototypes DISCOVERY","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-15","wt":"Delivery","st":"Done","dn":"17 Jun - Design playback to the team - the post MVP build will be reflected in a separate item. ","ticket":"TEPRODUCT-8377","notInJPD":false},
+  {"zone":"ENABLERS","lane":"AI Powered Cycles","t":"Web","r":"Now","f":"Develop / AI integration: Build POC","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"17 Jun - Update post design review with Mark","ticket":"TEPRODUCT-8859","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"A&V","r":"Now","f":"[Web] Automating new podcast launches","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"24 Jun - In technical discovery.","ticket":"TEPRODUCT-8718","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech] [iOS/Android] Offline behaviour ","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"23 Jun - Potential for Android by End Nov 2026","ticket":"TEPRODUCT-6625","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech]  Improve snapshot test coverage for Content(Home,Article, Edition)","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"23 Jun - Potential for Android by End Nov 2026","ticket":"TEPRODUCT-6797","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech] [Backend] BFF as orchestration layer for content curation experience","kr":"-","s":"","c":"","rag":"Green","date":"","wt":"Both","st":"Discovery","dn":"24 Jun - To be Refined in July 2026","ticket":"TEPRODUCT-8531","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech] [Backend] Upgrades for Optimisation","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Both","st":"Discovery","dn":"24 Jun - To be delivered by Aug 2026 pending further refinemenr","ticket":"TEPRODUCT-8882","notInJPD":false},
   {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Later","f":"Referers tracking in app","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Later","f":"Review LUCIQ integration","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
   {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Later","f":"Investigate + fix offline analytics","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-3699","notInJPD":true}
 ];
 // ── END ROADMAP DATA ──
+
+// ── PREV DATA — snapshot from 26 Jun 2026 ──
+const PREV_DATE = '26 Jun 2026';
+const PREV_DATA = [
+  {"zone":"STRATEGIC","lane":"AI Guided Sessions","t":"Perso","r":"Now","f":"[App] AI Session Beta (iOS)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-07","wt":"Both","st":"Delivery","dn":"21 Jun - Release Planned for 7th July.","ticket":"TEPRODUCT-8421","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] TWIB Podcast component (Play & Core Home)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"24 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-6195","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Add Continue Listening section to Play Home","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Delivery","st":"Done","dn":"24 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-7724","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"App","r":"Now","f":"[App][Fast follow] Manage Newsletters in-app (webview)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-15","wt":"Delivery","st":"Delivery","dn":"23 Jun - Due for release to Premium 15 Jun and Play 1 July","ticket":"TEPRODUCT-7761","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Featured Podcast carousel (Play & Core Home)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Delivery","st":"Done","dn":"24 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-7980","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Play: Push & Deeplinking support","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"24 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-8196","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Play: Unified AV player Page, Switch, Metadata and Playback Controls","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"Delivery","dn":"","ticket":"TEPRODUCT-8407","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[Web][App] Play: Unified Player Foundations/Architecture Phase 1","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"24 Jun - Development on unified player foundations in progress.","ticket":"TEPRODUCT-8577","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Now","f":"[App] Unified AV Player: Lock screen/OS notification","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Delivery","dn":"","ticket":"TEPRODUCT-8649","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Play: Unified AV Player Video-only Controls for Inline & Full Screen","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Delivery","dn":"","ticket":"TEPRODUCT-8600","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Unified AV Player: Compact Player and PiP in-app/outside of app","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Discovery","dn":"","ticket":"TEPRODUCT-8601","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Unified AV Player: Sleep Timer & Speed Control","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Discovery","dn":"","ticket":"TEPRODUCT-8602","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Play: Unified AV Player Page AV queue management","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"Discovery","dn":"","ticket":"TEPRODUCT-8647","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Consolidating /podcasts & /audio/podcasts pages","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"24 Jun - In technical discovery to understand scope of work before team can size.","ticket":"TEPRODUCT-8720","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[App] Play: Audio-only podcast carousel","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Delivery","st":"Parking lot","dn":"","ticket":"TEPRODUCT-8734","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Unified Show Page","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Delivery","st":"Parking lot","dn":"24 Jun - Dependent on design discovery before team can review and size.","ticket":"TEPRODUCT-8740","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Unified Episode Page","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Parking lot","dn":"24 Jun - Dependent on design discovery before team can review and size.","ticket":"TEPRODUCT-8741","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Next","f":"[Web] Play: Unified AV Portfolio page","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Delivery","st":"Parking lot","dn":"24 Jun - Dependent on design discovery before team can review and size.","ticket":"TEPRODUCT-8742","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Play","t":"A&V","r":"Later","f":"InsiderxPodcasts (January launch)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"STRATEGIC","lane":"Play","t":"Ads","r":"Later","f":"Play / Video Ad experience","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"STRATEGIC","lane":"Preview","t":"Web","r":"Now","f":"Preview Tiering - User Research and Discovery","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"Parking lot","dn":"18 Jun - On track - User testing playback completed. Option 1 prototype selected as design direction. Design refinement underway; early variant due next week and clearer scope by end June. October launch remains on track.","ticket":"TEPRODUCT-8811","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Preview","t":"Ads","r":"Next","f":"[App][Web] Ads for Core App: Preview tier","kr":"-","s":"","c":"","rag":"","date":"2026-10-31","wt":"Both","st":"Discovery","dn":"19 Jun - Building Ads Assets (Unrelated to the experience in the Web or Apps) to enable insertion based off final design decision can commence early in July","ticket":"TEPRODUCT-7919","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Preview","t":"Web","r":"Next","f":"[Web] Preview in the web","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"Discovery","dn":"24 Jun - Need Final Design Confirmed before confirming Implementation plans","ticket":"TEPRODUCT-8569","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Preview","t":"App","r":"Next","f":"[App] Preview in the app","kr":"-","s":"","c":"","rag":"Amber","date":"2026-11-30","wt":"Both","st":"Discovery","dn":"23 Jun - End Oct 2026 Release Candidate (iOS/Android)","ticket":"TEPRODUCT-8673","notInJPD":false},
+  {"zone":"STRATEGIC","lane":"Preview","t":"Ads","r":"Next","f":"[App][Web] Vertical Video Ads in Video Carousel","kr":"-","s":"","c":"","rag":"","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"","ticket":"TEPRODUCT-8877","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"App","r":"Now","f":"[App] ePaper Edition","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Both","st":"Delivery","dn":"23 Jun - Development Work Commenced and on schedule for July Release","ticket":"TEPRODUCT-8121","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"Ads","r":"Later","f":"LT: Develop 1P data strategy","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"Ads","r":"Later","f":"LT: Interactive / Contextual ad formats","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Advertising","t":"Ads","r":"Later","f":"LT: Review SourcePoint implementation","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Podcasts: Use Zephr to manage paywalls","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Delivery","st":"Delivery","dn":"24 Jun - Development planned to start this sprint.","ticket":"TEPRODUCT-2619","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Featured Vertical Video on Web Home","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Delivery","st":"Delivery","dn":"24 Jun - In UAT review - aiming for launch to Prod this week.","ticket":"TEPRODUCT-5062","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Allow Users to Watch more than 1 Video from Featured Vertical Video","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-14","wt":"Delivery","st":"Delivery","dn":"24 Jun - In technical refinement. Planning to start development this sprint.","ticket":"TEPRODUCT-6917","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[App] Improve headphone controls","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Delivery","st":"Delivery","dn":"24 Jun - Will be deprioritized to support building out unified player.","ticket":"TEPRODUCT-7444","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[Web] Vertical video - sharing/gifting","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-28","wt":"Delivery","st":"Delivery","dn":"24 Jun - In technical refinement.. Planning to start development this sprint.","ticket":"TEPRODUCT-7456","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Now","f":"[App] Hide TTS setting","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Delivery","st":"Delivery","dn":"24 Jun - Will be deprioritized to support building out unified player.","ticket":"TEPRODUCT-8762","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Later","f":"Review the Queue experience","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Audio & Video","t":"A&V","r":"Later","f":"Android Auto","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-7511","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"[App] Access to downloads ('For You' Utilities) (Core & Play)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-13","wt":"Delivery","st":"Delivery","dn":"22 Jun - In progress for iOS and Android","ticket":"TEPRODUCT-3807","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Topics Feed Ordering A/B Test & Amplitude Experimentation Integration","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-26","wt":"Both","st":"Delivery","dn":"22 Jun - Swarm testing in progress for planned release this week.","ticket":"TEPRODUCT-7495","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Extend 'For You' Experience to Reg Access Users (B2C, Web)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-09-30","wt":"Both","st":"Delivery","dn":"22 Jun - Designs for merged carousel completed. The implementation has been paused to prioritise Ask TE.","ticket":"TEPRODUCT-8027","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Web","r":"Now","f":"📧 [NL] Launch \"For You\" Newsletter (Phase 1: No teasers)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-21","wt":"Both","st":"Delivery","dn":"22 Jun - In participant research underway, end of July target date which will lead to Phase 2 (full AI based offering).","ticket":"TEPRODUCT-8139","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"[App] Organise bookmarks in collections","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"On Roadmap","dn":"22 Jun - Designs for app experience in progress","ticket":"TEPRODUCT-8386","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Now","f":"Enable Bookmarking & For You Bookmarks for Play Tier Users (Web) ","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Delivery","dn":"22 Jun - Whitelisting access in progress","ticket":"TEPRODUCT-8585","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Web","r":"Next","f":"📧 [NL] \"For You\" Newsletter (Phase 2: AI teasers)","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"Parking lot","dn":"22 Jun - Once Participant Research completes (End June) - AI Teasers + Topic selector work is released as A/B Test","ticket":"TEPRODUCT-4169","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"B2C Personalised Content Feed (Insider Video) (Web)","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"24 Apr - Decision pending on whether to combine \"insider and video into a new content type”","ticket":"TEPRODUCT-7265","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"Popular In Your Role Content Recommendations (Pro, Web)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-30","wt":"Both","st":"Delivery","dn":"2 Jun - E2E Testing completed. Due to the level of duplication across PIYO/PIYI and PIYR, exploring merging all three into 1 content collection. Designs being finalised before re-estimating","ticket":"TEPRODUCT-7917","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"Popular In Your Role Content Recommendations (Pro, App)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-8583","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Next","f":"[App] Serendipity \"Unexpected Reads\" Content Recommendations (B2C, App)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-8584","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Contextual search in bottom nav","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Filters (topic, date, section) in search results","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Relevancy and Recency in search (app only)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Short video in search (web and app)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Smart collections","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Short Video Recommendations (B2C, Web)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-8015","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Switch Data Source (GA to Amplitude)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-8023","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Personalisation","t":"Perso","r":"Later","f":"Extend Experience to Podcast Subscribers (B2C, Web, App)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-8026","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Now","f":"Update Topic pages for SEO and ads","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-14","wt":"Both","st":"Delivery","dn":"21 Jun - On track. Web work planned to finish this sprint, CTD deferred a sprint whilst component list is refined.","ticket":"TEPRODUCT-8133","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"A&V","r":"Now","f":"[Web] Surfacing vertical videos in search (SEO)","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Delivery","st":"Delivery","dn":"24 Jun - Aiming to release this week to Production.","ticket":"TEPRODUCT-8721","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Next","f":"Page performance optimisations (SEO)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Later","f":"Allow LLMs to crawl non-paywall content","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Reach","t":"Web","r":"Later","f":"Articles - Recommendations modules","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-7017","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Masthead - weekly edition promo","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Delivery","st":"On Roadmap","dn":"17 Jun - Fully refined this week, pending scheduled start for development.","ticket":"TEPRODUCT-3707","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Now","f":"[Editorial] Ability to support more Games (App & Web)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-22","wt":"Delivery","st":"Monitor","dn":"24 Jun - Launching on 25 Jun for App and Web (Subject to Go/No-Go) and 1 July for Play Tier","ticket":"TEPRODUCT-4760","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Refresh Weekly edition (app alignment)","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-04","wt":"Delivery","st":"Done","dn":"10 Jun - The weekly Refresh is Live.","ticket":"TEPRODUCT-6778","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Get Started: Phase II (Store preferences)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-07","wt":"Both","st":"On Roadmap","dn":"17 Jun - On track. Fully refined this week, development has started 19% done including API architectural spike.","ticket":"TEPRODUCT-7701","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"📧 [NL] New daily “Business in Brief” newsletter launch","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-22","wt":"Both","st":"Done","dn":"17 Jun - Complete. Web Component Released to live 11th June.","ticket":"TEPRODUCT-7740","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Add TWIB 2.0 to the web","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-15","wt":"Delivery","st":"Done","dn":"15 Jun - Released. Feature flag switched on.","ticket":"TEPRODUCT-8034","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Perso","r":"Now","f":"🌟 Economist Pro: Ask The Economist- Internal MVP for Editorial testing","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-19","wt":"Both","st":"Delivery","dn":"22 Jun - Internal MVP on track for 3 Jul. Plan being revised into two parallel streams: backend answer-quality and front-end UX (prototype linked to backend for user testing)","ticket":"TEPRODUCT-8498","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Now","f":"[App] Automated push notifications for Games","kr":"-","s":"","c":"","rag":"Amber","date":"2026-06-30","wt":"Both","st":"Discovery","dn":"23 Jun - Refinement planned for next sprint for Frontend / Backend","ticket":"TEPRODUCT-8597","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Now","f":"Add gifting to Interactive (Bespoke Framework) articles","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"Parking lot","dn":"","ticket":"TEPRODUCT-8610","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Next","f":"[App] Get Started in the app","kr":"-","s":"","c":"","rag":"Amber","date":"2026-12-31","wt":"Both","st":"On Roadmap","dn":"23 Jun - Oct (Android) / FYQ4 (iOS) due to prioritising preview tier","ticket":"TEPRODUCT-8672","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Next","f":"[App] Liquid Glass design in iOS","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"23 Jun - MVP version being  planned for end July subject to Design Approval","ticket":"TEPRODUCT-8675","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Perso","r":"Next","f":"⭐ [AtE] Economist Pro: Ask The Economist - External Pilot","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"16 Jun - Not started","ticket":"TEPRODUCT-8825","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Next","f":"Get Started: Phase III (Extend MVP to increase content consumed in month 1)","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Both","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-8843","notInJPD":false},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"Automated Topics push notifications","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"Comment / Debate sections on Articles (App)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Comment / Debate sections on Articles (Web)","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"iOS / Android homescreen widgets","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-3693","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"Native Newsletters in the app","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-3772","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"App","r":"Later","f":"New collections for Games","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-6251","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Voting polls in newsletters","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"OPERATIONAL EXCELLENCE","lane":"Value Discovery","t":"Web","r":"Later","f":"Weekly selection for Reg","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"ENABLERS","lane":"AI Powered Cycles","t":"Web","r":"Now","f":"Design / AI integration: code prototypes DISCOVERY","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-15","wt":"Delivery","st":"Done","dn":"17 Jun - Design playback to the team - the post MVP build will be reflected in a separate item. ","ticket":"TEPRODUCT-8377","notInJPD":false},
+  {"zone":"ENABLERS","lane":"AI Powered Cycles","t":"Web","r":"Now","f":"Develop / AI integration: Build POC","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"17 Jun - Update post design review with Mark","ticket":"TEPRODUCT-8859","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"A&V","r":"Now","f":"[Web] Automating new podcast launches","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Delivery","st":"Delivery","dn":"24 Jun - In technical discovery.","ticket":"TEPRODUCT-8718","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech] [iOS/Android] Offline behaviour ","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"23 Jun - Potential for Android by End Nov 2026","ticket":"TEPRODUCT-6625","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech]  Improve snapshot test coverage for Content(Home,Article, Edition)","kr":"-","s":"","c":"","rag":"Amber","date":"","wt":"Both","st":"On Roadmap","dn":"23 Jun - Potential for Android by End Nov 2026","ticket":"TEPRODUCT-6797","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech] [Backend] BFF as orchestration layer for content curation experience","kr":"-","s":"","c":"","rag":"Green","date":"","wt":"Both","st":"Discovery","dn":"24 Jun - To be Refined in July 2026","ticket":"TEPRODUCT-8531","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Next","f":"[Tech] [Backend] Upgrades for Optimisation","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-31","wt":"Both","st":"Discovery","dn":"24 Jun - To be delivered by Aug 2026 pending further refinemenr","ticket":"TEPRODUCT-8882","notInJPD":false},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Later","f":"Referers tracking in app","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Later","f":"Review LUCIQ integration","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"","notInJPD":true},
+  {"zone":"ENABLERS","lane":"Platform Excellence","t":"App","r":"Later","f":"Investigate + fix offline analytics","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"","dn":"","ticket":"TEPRODUCT-3699","notInJPD":true}
+];
+// ── END PREV DATA ──
 
 function featureEl(d) {
   const wrap = document.createElement('div');
@@ -591,6 +738,15 @@ function featureEl(d) {
     html += `<span class="pill p-date">${parts[1]}/${parts[0]}</span>`;
   }
   pillsEl.innerHTML = html;
+  // Change badge (only visible when show-changes is active)
+  const chg = DIFF[d.ticket];
+  if (chg) {
+    const LABELS = { 'new': 'NEW', 'moved-up': '↑ UP', 'moved-back': '↓ BACK', 'risk': '⚠ RISK', 'delivered': '✓ DONE' };
+    const badge = document.createElement('span');
+    badge.className = `change-badge cb-${chg}`;
+    badge.textContent = LABELS[chg] || '';
+    pillsEl.appendChild(badge);
+  }
   wrap.appendChild(dot);
   wrap.appendChild(a);
   wrap.appendChild(pillsEl);
@@ -673,6 +829,68 @@ function updateCount() {
     `${vis.length} issues · ${vis.filter(d => d.r === 'Now').length} Now · ${vis.filter(d => d.r === 'Next').length} Next`;
 }
 
+// ── Change tracking ──────────────────────────────────────────
+const HORIZON_ORDER = { Now: 0, Next: 1, Later: 2 };
+const RAG_RISK      = { Green: 0, Amber: 1, Red: 2 };
+
+function computeDiff() {
+  if (!PREV_DATA.length) return {};
+  const prevMap = {};
+  PREV_DATA.forEach(d => { if (d.ticket) prevMap[d.ticket] = d; });
+  const changes = {};
+  DATA.forEach(d => {
+    if (!d.ticket) return;
+    const prev = prevMap[d.ticket];
+    const nowDone = d.st === 'Done' || d.st === 'Monitor';
+    const wasDone = prev && (prev.st === 'Done' || prev.st === 'Monitor');
+    if (!prev) {
+      if (!nowDone) changes[d.ticket] = 'new';
+      return;
+    }
+    if (nowDone && !wasDone) { changes[d.ticket] = 'delivered'; return; }
+    if (!nowDone && prev.r !== d.r) {
+      changes[d.ticket] = (HORIZON_ORDER[d.r] ?? 3) < (HORIZON_ORDER[prev.r] ?? 3) ? 'moved-up' : 'moved-back';
+    }
+    if (!changes[d.ticket]) {
+      const rNew = RAG_RISK[d.rag] ?? -1;
+      const rOld = RAG_RISK[prev.rag] ?? -1;
+      if (rNew > rOld) changes[d.ticket] = 'risk';
+    }
+  });
+  return changes;
+}
+
+let DIFF = {};
+let changesVisible = false;
+
+function toggleChanges() {
+  if (!PREV_DATA.length) {
+    document.getElementById('changes-label').textContent = 'No snapshot yet';
+    setTimeout(() => { document.getElementById('changes-label').textContent = 'Show changes'; }, 2000);
+    return;
+  }
+  changesVisible = !changesVisible;
+  document.getElementById('rm').classList.toggle('show-changes', changesVisible);
+  document.getElementById('changes-label').textContent = changesVisible ? 'Hide changes' : 'Show changes';
+  document.getElementById('change-bar').classList.toggle('visible', changesVisible);
+}
+
+function updateChangeBar() {
+  if (!PREV_DATA.length) return;
+  const counts = { new: 0, 'moved-up': 0, 'moved-back': 0, risk: 0, delivered: 0 };
+  Object.values(DIFF).forEach(v => { if (counts[v] !== undefined) counts[v]++; });
+  const parts = [];
+  if (counts.new)          parts.push(`<span class="cb-stat"><span class="change-badge cb-new" style="display:inline-block">NEW</span> <span>${counts.new} added</span></span>`);
+  if (counts.delivered)    parts.push(`<span class="cb-stat"><span class="change-badge cb-delivered" style="display:inline-block">✓ DONE</span> <span>${counts.delivered} delivered</span></span>`);
+  if (counts['moved-up'])  parts.push(`<span class="cb-stat"><span class="change-badge cb-moved-up" style="display:inline-block">↑ UP</span> <span>${counts['moved-up']} moved forward</span></span>`);
+  if (counts.risk)         parts.push(`<span class="cb-stat"><span class="change-badge cb-risk" style="display:inline-block">⚠ RISK</span> <span>${counts.risk} at risk</span></span>`);
+  if (counts['moved-back'])parts.push(`<span class="cb-stat"><span class="change-badge cb-moved-back" style="display:inline-block">↓ BACK</span> <span>${counts['moved-back']} moved back</span></span>`);
+  const dateStr = PREV_DATE ? `Since ${PREV_DATE}` : 'Changes';
+  document.getElementById('change-bar').innerHTML =
+    `<span class="cb-since">${dateStr}</span>` +
+    parts.join('<span class="cb-sep">·</span>');
+}
+
 let deliveredVisible = false;
 function toggleDelivered() {
   deliveredVisible = !deliveredVisible;
@@ -693,6 +911,8 @@ document.getElementById('lane-select').addEventListener('change', function() {
   render();
 });
 
+DIFF = computeDiff();
+updateChangeBar();
 render();
 </script>
 </body>

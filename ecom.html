@@ -5,9 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>eCommerce Roadmap</title>
 <style>
-:root { color-scheme: light; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background: #f2ede3;
+  color: #1a1a1a;
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+/* ── Nav ─────────────────────────────────────────────────── */
 nav {
   display: flex;
   align-items: center;
@@ -15,6 +23,9 @@ nav {
   background: #fff;
   border-bottom: 1px solid #d4cec4;
   height: 44px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 .nav-brand {
   font-size: 11px;
@@ -31,12 +42,11 @@ nav {
   height: 44px;
   padding: 0 16px;
   font-size: 12px;
-  font-family: inherit;
   color: #666;
   text-decoration: none;
   border-bottom: 2px solid transparent;
-  transition: color 0.12s, border-color 0.12s;
   letter-spacing: 0.02em;
+  transition: color 0.12s;
 }
 .nav-tab:hover { color: #1a1a1a; }
 .nav-tab.active {
@@ -45,343 +55,467 @@ nav {
   font-weight: 600;
 }
 
-body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
-  background: #f2ede3;
-  color: #1a1a1a;
-  padding: 0;
-  min-height: 100vh;
-  font-size: 14px;
-}
-
-.page-content {
-  padding: 24px 28px;
-}
-
+/* ── Page layout ──────────────────────────────────────────── */
+.page-content { padding: 24px 28px; max-width: 1400px; }
 .page-header {
   display: flex;
   align-items: baseline;
   gap: 12px;
   margin-bottom: 20px;
 }
-
 h1 {
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: #1a1a1a;
 }
+.issue-count { font-size: 12px; color: #999; font-style: italic; }
 
-.subtitle {
-  font-size: 12px;
-  color: #888;
-  font-style: italic;
-}
-
-.controls {
+/* ── Team filter pills ────────────────────────────────────── */
+.filter-bar {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 6px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 7px;
 }
 .filter-label {
   font-size: 11px;
-  color: #888;
+  color: #999;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  margin-right: 2px;
 }
-select {
-  padding: 7px 10px;
-  border: 1px solid #c8c0b0;
-  border-radius: 3px;
-  font-size: 12px;
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
-  background: #fff;
-  color: #1a1a1a;
-  cursor: pointer;
-}
-select:focus { outline: 1px solid #E3120B; }
-
-.table-wrap { overflow-x: auto; }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #faf7f0;
-  border: 1px solid #c8c0b0;
-  table-layout: fixed;
-}
-
-col.lane-col    { width: 200px; }
-col.horizon-col { width: auto; }
-
-thead tr th {
-  padding: 10px 14px;
-  text-align: left;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  background: #f2ede3;
-  border-bottom: 1px solid #c8c0b0;
-  vertical-align: bottom;
-}
-
-th.h-now     { color: #2f7a2f; border-top: 3px solid #2f7a2f; }
-th.h-next    { color: #b86d00; border-top: 3px solid #b86d00; }
-th.h-later   { color: #E3120B; border-top: 3px solid #E3120B; }
-th.h-lane    { color: #1a1a1a; border-top: 3px solid transparent; }
-
-tbody tr { border-bottom: 1px dashed #c8c0b0; }
-tbody tr:last-child { border-bottom: none; }
-
-td.lane-cell {
-  padding: 11px 14px;
-  font-weight: 600;
+.fp {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
   font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  vertical-align: top;
-  border-right: 1px solid #c8c0b0;
-  background: #f2ede3;
-  white-space: normal;
-  word-wrap: break-word;
-  color: #444;
-  border-left: 3px solid #c8c0b0;
-}
-
-.lane-count {
-  display: inline-block;
-  background: #ddd8cc;
-  color: #777;
-  font-size: 10px;
-  font-weight: normal;
-  padding: 1px 5px;
-  border-radius: 9px;
-  margin-left: 4px;
-  vertical-align: middle;
-}
-
-td.feat-cell {
-  padding: 11px 14px;
-  vertical-align: top;
-  border-right: 1px solid #e0d9cc;
-}
-td.feat-cell:last-child { border-right: none; }
-
-.feat {
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: #1a1a1a;
-  margin-bottom: 5px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #ece6d8;
-}
-.feat:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-
-.tag-pill {
-  display: inline-block;
-  font-size: 10px;
-  padding: 1px 6px;
-  border-radius: 9px;
-  margin-right: 5px;
-  font-style: normal;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  vertical-align: middle;
-  white-space: nowrap;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: opacity 0.15s;
+  user-select: none;
+}
+.fp         { opacity: 0.35; }
+.fp.active  { opacity: 1; }
+.fp-inlife  { background: #DFF4F5; color: #0D7E85; border-color: #7DCDD1; }
+.fp-cp      { background: #EDE9FC; color: #5C3D9E; border-color: #B3A5ED; }
+.fp-martech { background: #E2F2E9; color: #2E7A4B; border-color: #88C9A4; }
+.fp-growth  { background: #FAEADB; color: #B84010; border-color: #F5A07A; }
+
+/* ── Delivered toggle ──────────────────────────────────────── */
+.delivered-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #aaa;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 20px;
+  padding: 3px 0;
+  border: none;
+  background: none;
+}
+.delivered-toggle:hover { color: #555; }
+.delivered-toggle svg { flex-shrink: 0; }
+
+/* Hide/show delivered column */
+.col-delivered { display: none; }
+.rm-grid-header { display: grid; grid-template-columns: 120px 1fr 1fr 1fr; }
+.rm-lane        { grid-template-columns: 120px 1fr 1fr 1fr; }
+#rm.show-delivered .rm-grid-header { grid-template-columns: 120px 1fr 1fr 1fr 1fr; }
+#rm.show-delivered .rm-lane        { grid-template-columns: 120px 1fr 1fr 1fr 1fr; }
+#rm.show-delivered .col-delivered  { display: block; }
+
+/* ── Grid ──────────────────────────────────────────────────── */
+.rm-grid {
+  border: 1px solid #c8c0b0;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.rm-grid-header {
+  background: #fff;
+  border-bottom: 1px solid #d4cec4;
 }
 
-/* Team pills — eCom */
-.pill-growth  { background: #ddf5ee; color: #226644; }
-.pill-ia      { background: #eeddf5; color: #7733aa; }
-.pill-cp      { background: #ddeeff; color: #2255aa; }
-.pill-inlife  { background: #fff0dd; color: #aa5500; }
-.pill-cops    { background: #fff5dd; color: #886600; }
-.pill-apps    { background: #fce4ec; color: #b71c1c; }
+/* Grid header — same bg-colour style as E&E */
+.grid-header-wrap {
+  border: 1px solid #c8c0b0;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  overflow: hidden;
+}
+.rm-gh {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #aaa;
+  padding: 7px 10px;
+  border-right: 1px solid #e8e2d8;
+}
+.rm-gh:last-child { border-right: none; }
+.rm-gh.h-now   { color: #7a5800; background: #fef9e6; }
+.rm-gh.h-next  { color: #a02020; background: #fdf0f0; }
+.rm-gh.h-later { color: #888;    background: #f5f5f5; }
+.rm-gh.h-done  { color: #2a7a2a; background: #f0f7f0; }
 
-/* Ticket link */
-.ticket-link {
-  display: inline-block;
-  font-size: 9.5px;
-  padding: 1px 5px;
-  border-radius: 3px;
-  margin-left: 5px;
-  font-weight: 500;
-  vertical-align: middle;
-  white-space: nowrap;
-  color: #888;
-  background: #ece6d8;
+.rm-lane {
+  display: grid;
+  border-top: 1px solid #d4cec4;
+}
+.rm-lane-name {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: #fff;
+  padding: 10px 10px;
+  background: #2a2a2a;
+  border-right: 1px solid #444;
+  line-height: 1.4;
+  text-transform: uppercase;
+  display: flex;
+  align-items: flex-start;
+}
+.rm-cell {
+  padding: 6px 8px;
+  border-right: 1px solid #e8e2d8;
+  min-height: 38px;
+  background: #fff;
+}
+.rm-cell:last-child { border-right: none; }
+.rm-cell.later-cell { background: #faf8f4; }
+.rm-cell.done-cell  { background: #f5f5f5; }
+
+/* ── Feature cards ─────────────────────────────────────────── */
+.feature {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 7px;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0ebe2;
+}
+.feature:last-child { border-bottom: none; }
+.feature.hidden { display: none; }
+
+/* Team dot */
+.team-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.dot-inlife  { background: #0D7E85; }
+.dot-cp      { background: #5C3D9E; }
+.dot-martech { background: #2E7A4B; }
+.dot-growth  { background: #B84010; }
+
+.fname {
+  flex: 1;
+  min-width: 0;
+  font-size: 11.5px;
+  color: #1a1a1a;
+  line-height: 1.45;
   text-decoration: none;
-  letter-spacing: 0.01em;
 }
-.ticket-link:hover { color: #1a1a1a; background: #d4cec4; }
+.fname:hover { color: #E3120B; }
 
+.pills {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.pill {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 8px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.p-green { background: #d4edda; color: #1a6b2a; }
+.p-amber { background: #fff3cd; color: #7a5800; }
+.p-red   { background: #fde8e8; color: #a02020; }
+.p-done  { background: #e8f0fe; color: #1a56b0; }
+.p-date  { background: #f0ebe2; color: #888; }
+
+.empty { color: #ccc; font-size: 10px; }
+
+/* ── Tooltip ─────────────────────────────────────────────── */
+#tooltip {
+  position: fixed;
+  background: #fff;
+  border: 1px solid #e0dbd3;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.5;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  z-index: 9999;
+  pointer-events: none;
+  max-width: 230px;
+  display: none;
+}
+#tooltip.visible { display: block; }
+.tt-row { display: flex; gap: 6px; margin-bottom: 3px; }
+.tt-row:last-child { margin-bottom: 0; }
+.tt-label { font-size: 9px; font-weight: 700; letter-spacing: 0.07em; color: #aaa; text-transform: uppercase; min-width: 52px; padding-top: 1px; }
+.tt-val { color: #1a1a1a; }
+.tt-val.tt-empty { color: #ccc; font-style: italic; }
+.tt-divider { border: none; border-top: 1px solid #ede8df; margin: 8px 0; }
 </style>
 </head>
 <body>
 
+<div id="tooltip"></div>
+
 <nav>
-  <span class="nav-brand">The Economist</span>
-  <a href="index.html"  class="nav-tab">Engagement Roadmap</a>
-  <a href="mapping.html" class="nav-tab">Goals &amp; Teams</a>
-  <a href="ecom.html"   class="nav-tab active">eCommerce Roadmap</a>
+  <span class="nav-brand">Product Roadmap</span>
+  <a href="index.html"              class="nav-tab">Engagement Roadmap</a>
+  <a href="engagement_compact.html" class="nav-tab">Engagement Compact</a>
+  <a href="ecom.html"               class="nav-tab active">eCommerce Roadmap</a>
 </nav>
 
 <div class="page-content">
-<div class="page-header">
-  <h1>eCommerce &amp; Subscriptions — Roadmap</h1>
-  <span class="subtitle">Goals · Now · Next · Later</span>
-</div>
+  <div class="page-header">
+    <h1>eCommerce Roadmap</h1>
+    <span class="issue-count" id="issue-count"></span>
+  </div>
 
-<div class="controls">
-  <div class="filter-group">
+  <div class="filter-bar">
     <span class="filter-label">Team</span>
-    <select id="team-select">
-      <option value="">All teams</option>
-      <option>Growth</option>
-      <option>Identity &amp; Access</option>
-      <option>Commerce Platforms</option>
-      <option>In-life</option>
-      <option>Commerce Ops</option>
-      <option>Apps</option>
-    </select>
+    <span class="fp fp-inlife  active" data-t="InLife"  onclick="toggle(this)">In Life</span>
+    <span class="fp fp-cp      active" data-t="CP"      onclick="toggle(this)">Commerce Platform</span>
+    <span class="fp fp-martech active" data-t="MarTech" onclick="toggle(this)">MarTech</span>
+    <span class="fp fp-growth  active" data-t="Growth"  onclick="toggle(this)">Growth</span>
   </div>
 
-  <div class="filter-group">
-    <span class="filter-label">Goal</span>
-    <select id="goal-select">
-      <option value="">All goals</option>
-      <option>Improve CVR (web/app)</option>
-      <option>Tiering</option>
-      <option>Reduce churn through personalisation</option>
-      <option>Involuntary Churn</option>
-      <option>Revenue Retained</option>
-      <option>Limio Replacement</option>
-      <option>Drive Platform Excellence</option>
-      <option>Drive Greater Self-Service Adoption</option>
-    </select>
-  </div>
+  <button class="delivered-toggle" id="delivered-toggle" onclick="toggleDelivered()">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M3.5 6l2 2 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span id="delivered-label">Show Delivered</span>
+  </button>
+
+  <div id="rm"></div>
 </div>
-
-<div class="table-wrap" id="table-wrap"></div>
 
 <script>
-var JIRA_BASE = "https://economist.atlassian.net/browse/";
+const TT = document.getElementById('tooltip');
 
-var DATA = [];
+function ttVal(v) {
+  return v ? `<span class="tt-val">${v}</span>` : `<span class="tt-val tt-empty">—</span>`;
+}
+function showTooltip(e, d) {
+  const ragBadge = d.rag
+    ? `<span class="pill p-${RAG_CLS[d.rag]}">${d.rag}</span>`
+    : `<span class="tt-val tt-empty">—</span>`;
+  TT.innerHTML = `
+    <div class="tt-row"><span class="tt-label">Status</span>${ttVal(d.st)}</div>
+    <div class="tt-row"><span class="tt-label">RAG</span>${ragBadge}</div>
+    <div class="tt-row"><span class="tt-label">Release</span>${ttVal(d.date)}</div>
+    <hr class="tt-divider">
+    <div class="tt-row"><span class="tt-label">Notes</span>${ttVal(d.dn)}</div>
+  `;
+  TT.classList.add('visible');
+  placeTooltip(e);
+}
+function placeTooltip(e) {
+  const TW = 230, PAD = 12;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let x = e.clientX + PAD;
+  let y = e.clientY - 10;
+  if (x + TW > vw - 8) x = e.clientX - TW - PAD;
+  const th = TT.offsetHeight;
+  if (y + th > vh - 8) y = vh - th - 8;
+  TT.style.left = x + 'px';
+  TT.style.top  = y + 'px';
+}
+function hideTooltip() { TT.classList.remove('visible'); }
 
-// Goal display order
-var GOALS = [
-  "Improve CVR (web/app)",
-  "Tiering",
-  "Reduce churn through personalisation",
-  "Involuntary Churn",
-  "Revenue Retained",
-  "Limio Replacement",
-  "Drive Platform Excellence",
-  "Drive Greater Self-Service Adoption"
+const LANES     = ['In Life', 'Commerce Platform', 'MarTech', 'Growth'];
+const LANE_TEAM = { 'In Life': 'InLife', 'Commerce Platform': 'CP', 'MarTech': 'MarTech', 'Growth': 'Growth' };
+const TEAM_CLS  = { 'InLife': 'inlife', 'CP': 'cp', 'MarTech': 'martech', 'Growth': 'growth' };
+const RAG_CLS   = { 'Green': 'green', 'Amber': 'amber', 'Red': 'red', 'Done': 'done' };
+const JIRA_BASE = 'https://economist.atlassian.net/browse/';
+
+let active = new Set(['InLife', 'CP', 'MarTech', 'Growth']);
+
+// ── ROADMAP DATA — updated 2026-06-26 ──
+const DATA = [
+  {"lane":"In Life","t":"InLife","r":"Now","f":"Winback: Redesign (Off-Limio)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-07-31","wt":"Both","st":"Discovery","dn":"18 Jun - Design work has started with development to commence in mid-July once other priorities have been released","ticket":"TEPRODUCT-4975","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Now","f":"Play: Cancellation Journey ","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"16 Apr - Refinement is underway for all backend journey changes to support Play. Frontend designs are due to be signed off shortly","ticket":"TEPRODUCT-7313","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Now","f":"Play: Switch Journey ","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"","ticket":"TEPRODUCT-7314","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Now","f":"Play: Entitlements","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-29","wt":"Both","st":"Delivery","dn":"19 Jun - In e2e testing. Fixing bugs as they arise","ticket":"TEPRODUCT-7315","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Now","f":"Play: Winback Journey","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"","ticket":"TEPRODUCT-7506","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Now","f":"Play: Restart Journey","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Done","dn":"","ticket":"TEPRODUCT-7507","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Now","f":"Price Rise FY27: Price Rise Compliance","kr":"-","s":"","c":"","rag":"Done","date":"2026-06-23","wt":"Delivery","st":"Done","dn":"18 Jun - Smoke testing in Prod will complete 22/06 and be rolled out the following day","ticket":"TEPRODUCT-7579","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Now","f":"Cancellation: Global journey","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Delivery","st":"Delivery","dn":"19 Jun - Development is complete. E2E testing to start shortly ahead of a release at the end of June\n","ticket":"TEPRODUCT-8439","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Next","f":"Payment: Optimise Failure Notifications","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-3057","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Next","f":"Move Salesforce Alert Banners into Airship","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Delivery","st":"On Roadmap","dn":"26 Sep - On Roadmap.","ticket":"TEPRODUCT-3929","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Next","f":"My Account: Home Page Redesign","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"On Roadmap","dn":"4 Jun - Deprioritised in favour of Winback and Pending Restart","ticket":"TEPRODUCT-4024","notInJPD":false},
+  {"lane":"In Life","t":"InLife","r":"Next","f":"My Account: Surface Salesforce in Services for Headless Journeys","kr":"-","s":"","c":"","rag":"Green","date":"2026-09-30","wt":"Delivery","st":"On Roadmap","dn":"24 Apr - The remaining work will be scheduled in to align with My Account frontend in May/June","ticket":"TEPRODUCT-5493","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Now","f":"SPAR Q1: Performance Improvements for Cloudflare CDN","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"On Roadmap","dn":"","ticket":"TEPRODUCT-5601","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Now","f":"Tiering: Entitlements ","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Both","st":"Discovery","dn":"18 Jun - Ready for Play Go Live","ticket":"TEPRODUCT-7292","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Now","f":"Tiering: Shared Metering Service","kr":"-","s":"","c":"","rag":"","date":"2026-07-31","wt":"Both","st":"Discovery","dn":"4 Jun - Gathering requirements; first working group planned; HL estimates pending","ticket":"TEPRODUCT-7431","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Now","f":"Tiering: Entitlements in Mobile App","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Delivery","st":"Delivery","dn":"18 Jun - iOS and Android builds now gaining adoption waiting for launch.","ticket":"TEPRODUCT-7706","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Now","f":"Commerce Services Decomposition","kr":"-","s":"","c":"","rag":"","date":"","wt":"Delivery","st":"Delivery","dn":"","ticket":"TEPRODUCT-8356","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Now","f":"Decouple Limio LFS","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"Discovery","dn":"","ticket":"TEPRODUCT-8537","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Now","f":"Decouple Limio CMS","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"Discovery","dn":"","ticket":"TEPRODUCT-8539","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Now","f":"Preview tier: Entitlements","kr":"-","s":"","c":"","rag":"","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"4 Jun - Gathering requirements; first working group planned; HL estimates pending","ticket":"TEPRODUCT-8682","notInJPD":false},
+  {"lane":"Commerce Platform","t":"CP","r":"Next","f":"⭐ Implement eligibility checks (Enabler for Renew, Gift, TPP in SPC)","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"On Roadmap","dn":"23 Jun - Re-assessing effort required within Growth; expected to share effort with Commerce Platform.","ticket":"TEPRODUCT-315","notInJPD":false},
+  {"lane":"MarTech","t":"MarTech","r":"Now","f":"Amplitude <> SFMC Integration","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Both","st":"Delivery","dn":"22 Jun - Integration started this week; will be ready for Amplitude pilot to start 30 June","ticket":"TEPRODUCT-8045","notInJPD":false},
+  {"lane":"MarTech","t":"MarTech","r":"Now","f":"Rename Core/Digital to Premium","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Delivery","st":"Delivery","dn":"22 Jun - Rename completed for E2E Testing. Awaiting any bug fixes and will resolve for 1 July launch.","ticket":"TEPRODUCT-8414","notInJPD":false},
+  {"lane":"MarTech","t":"MarTech","r":"Next","f":"New Preview tier: Introduce new Registration journeys","kr":"-","s":"","c":"","rag":"Amber","date":"2026-09-30","wt":"Both","st":"Parking lot","dn":"24 Jun - Marketing 1st round refinement completed. Ballpark sized Confirmation, Cancels, Switches, Onboarding.","ticket":"TEPRODUCT-7234","notInJPD":false},
+  {"lane":"MarTech","t":"MarTech","r":"Next","f":"Preview Newsletters (Deliver Free vs paid for Strategy)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-09-30","wt":"Both","st":"Parking lot","dn":"12 Jun - Newsletters scope being finalized by Business Design Authority","ticket":"TEPRODUCT-8801","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Now","f":"⭐ Tiering: Play Growth Transactional Journeys \"Good, better, best\"","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Delivery","dn":"25 Jun - Bug fixing in progress with development on some fast follow tickets already in progress.","ticket":"TEPRODUCT-7403","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Now","f":"Support Test: Email Capture > Plan Selection in SPC","kr":"-","s":"","c":"","rag":"Amber","date":"2026-08-31","wt":"Both","st":"On Roadmap","dn":"23 Jun - Enabler 'Passwordless checkout for print' required for v1. Reviewing cheaper option v2 with pre-selected offer.","ticket":"TEPRODUCT-7874","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Now","f":"[App] Tiering: Play Growth Transactional Journeys","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-01","wt":"Both","st":"Delivery","dn":"18 Jun - iOS and Android builds now gaining adoption waiting for launch. Remotely configurable tasks planned for launch day.","ticket":"TEPRODUCT-7977","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Now","f":"/Subscribe consolidation: Trial landing pages","kr":"-","s":"","c":"","rag":"Green","date":"2026-06-30","wt":"Both","st":"Delivery","dn":"23 Jun - Marketing effort only - requested timelines.","ticket":"TEPRODUCT-8173","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Now","f":"Expand Passwordless Checkout to Print (Enabler for Email Capture)","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-30","wt":"Delivery","st":"Delivery","dn":"19 Jun - Now owned by Jake who will address after A/B Test Higher Price for Acquisition work.","ticket":"TEPRODUCT-8353","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Now","f":"Enable Apple Pay Express Checkout from Paywalls","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-30","wt":"Both","st":"On Roadmap","dn":"23 Jun - 1-2 days effort to transfer to inline paywalls to protect advertising revenue. Then QA effort. Requires hypercare - to be released after tiering in ramped fashion.","ticket":"TEPRODUCT-8550","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Now","f":"A/B Test Higher Price for Acquisition","kr":"-","s":"","c":"","rag":"Green","date":"2026-07-31","wt":"Both","st":"Delivery","dn":"25 Jun - Solution design confirmed. On track for start of 9 July at latest.","ticket":"TEPRODUCT-8645","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"/Subscribe consolidation: Student Offers Page (include Espresso)","kr":"-","s":"","c":"","rag":"Amber","date":"2026-10-31","wt":"Both","st":"Parking lot","dn":"23 Jun - Enabled by /Subscribe Offers Page Configurability.","ticket":"TEPRODUCT-5706","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"/Subscribe consolidation: Academic offers page","kr":"-","s":"","c":"","rag":"Amber","date":"2026-10-31","wt":"Both","st":"Parking lot","dn":"23 Jun - Enabled by /Subscribe Offers Page Configurability.","ticket":"TEPRODUCT-5707","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"/Subscribe consolidation: Gift offers page","kr":"-","s":"","c":"","rag":"Amber","date":"2026-10-31","wt":"Delivery","st":"Parking lot","dn":"23 Jun - Enabled by /Subscribe Offers Page Configurability.","ticket":"TEPRODUCT-5708","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"/Subscribe consolidation: Flexible landing pages","kr":"-","s":"","c":"","rag":"Amber","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"23 Jun - Enabled by /Subscribe Offers Page Configurability.","ticket":"TEPRODUCT-8056","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"/Subscribe consolidation: Multi-year landing pages","kr":"-","s":"","c":"","rag":"Amber","date":"2026-09-30","wt":"Both","st":"Discovery","dn":"23 Jun - Enabled by /Subscribe Offers Page Configurability.","ticket":"TEPRODUCT-8057","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"Enable Apple Pay Express Checkout from Banners","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-17","wt":"Delivery","st":"Delivery","dn":"21 May - QA effort only. Requires hypercare - to be released after tiering.","ticket":"TEPRODUCT-8161","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"Passwordless Registration for Gift Article Recipients","kr":"-","s":"","c":"","rag":"Green","date":"2026-08-17","wt":"Both","st":"Delivery","dn":"23 Jun - Knowledge transfer in progress from Commerce Platform to Growth. Expected small effort in Growth.","ticket":"TEPRODUCT-8476","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"Support Test: Remove/Reduce Billing Address Step in Checkout","kr":"-","s":"","c":"","rag":"Amber","date":"2026-08-31","wt":"Both","st":"Discovery","dn":"23 Jun - Next step: identify test country with tax and legal.","ticket":"TEPRODUCT-8559","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"[Preview] Registered User Onboarding Journey","kr":"-","s":"","c":"","rag":"Green","date":"2026-10-31","wt":"Both","st":"Discovery","dn":"28 Apr - Kick-off planned with web team.\n","ticket":"TEPRODUCT-8561","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"App: Test Annual Billed Monthly (Minimum Term) on iOS","kr":"-","s":"","c":"","rag":"","date":"2026-08-31","wt":"Both","st":"Discovery","dn":"23 Jun - Reviewing implementation in sandbox.","ticket":"TEPRODUCT-8628","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"App: Mandatory Account Creation","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"Parking lot","dn":"1 Jun - Requires review of discovery done in January 2026 and estimation","ticket":"TEPRODUCT-8638","notInJPD":false},
+  {"lane":"Growth","t":"Growth","r":"Next","f":"App: A/B Testing from Acquisition Paywall","kr":"-","s":"","c":"","rag":"","date":"","wt":"Both","st":"Parking lot","dn":"1 Jun - Requires review of discovery done in previous team and estimation","ticket":"TEPRODUCT-8658","notInJPD":false}
 ];
+// ── END ROADMAP DATA ──
 
-// Horizon config
-var HORIZONS = [
-  { key: "Now",   label: "Now",   thcls: "h-now"   },
-  { key: "Next",  label: "Next",  thcls: "h-next"  },
-  { key: "Later", label: "Later", thcls: "h-later" }
-];
-
-// Team pill config
-var TEAM_PILL = {
-  "Growth":               ["pill-growth", "Growth"],
-  "Identity & Access":    ["pill-ia",     "I&A"],
-  "Commerce Platforms":   ["pill-cp",     "Cmrc"],
-  "In-life":              ["pill-inlife", "In-life"],
-  "Commerce Ops":         ["pill-cops",   "Ops"],
-  "Apps":                 ["pill-apps",   "Apps"]
-};
-
-function render() {
-  var selTeam = document.getElementById("team-select").value;
-  var selGoal = document.getElementById("goal-select").value;
-
-  var colgroup = "<colgroup><col class=\"lane-col\">" +
-    HORIZONS.map(function() { return "<col class=\"horizon-col\">"; }).join("") +
-    "</colgroup>";
-
-  var headerRow = "<tr><th class=\"h-lane\">Goal</th>" +
-    HORIZONS.map(function(h) {
-      return "<th class=\"" + h.thcls + "\">" + h.label + "</th>";
-    }).join("") +
-    "</tr>";
-
-  var bodyRows = "";
-  var anyRow = false;
-
-  GOALS.forEach(function(goal) {
-    if (selGoal && goal !== selGoal) return;
-
-    var cells = HORIZONS.map(function(h) {
-      return DATA.filter(function(d) {
-        return d.lane === goal &&
-               d.r    === h.key &&
-               (!selTeam || d.t === selTeam);
-      });
-    });
-
-    var total = cells.reduce(function(s, c) { return s + c.length; }, 0);
-    if (total === 0) return;
-
-    var tds = cells.map(function(items) {
-      if (!items.length) return "<td class=\"feat-cell\"></td>";
-      var feats = items.map(function(item) {
-        var pill = "";
-        if (item.t) {
-          var pd = TEAM_PILL[item.t] || ["", item.t];
-          pill = "<span class=\"tag-pill " + pd[0] + "\">" + pd[1] + "</span>";
-        }
-        var ticketLink = item.ticket
-          ? "<a class=\"ticket-link\" href=\"" + JIRA_BASE + item.ticket + "\" target=\"_blank\" rel=\"noopener\">" + item.ticket + "</a>"
-          : "";
-        return "<div class=\"feat\">" + pill + item.f + ticketLink + "</div>";
-      }).join("");
-      return "<td class=\"feat-cell\">" + feats + "</td>";
-    }).join("");
-
-    bodyRows += "<tr><td class=\"lane-cell\">" +
-      goal + "<span class=\"lane-count\">" + total + "</span></td>" + tds + "</tr>";
-    anyRow = true;
-  });
-
-  if (!anyRow) {
-    bodyRows = "<tr><td class=\"feat-cell\" style=\"padding:40px;text-align:center;color:#aaa;font-style:italic;\" colspan=\"" +
-      (HORIZONS.length + 1) + "\">No features match the current filter.</td></tr>";
+function featureEl(d) {
+  const wrap = document.createElement('div');
+  wrap.className = 'feature';
+  wrap.dataset.team = d.t;
+  const tc = TEAM_CLS[d.t] || 'growth';
+  const rc = RAG_CLS[d.rag];
+  const dot = document.createElement('span');
+  dot.className = `team-dot dot-${tc}`;
+  const a = document.createElement('a');
+  a.className = 'fname';
+  a.href = JIRA_BASE + d.ticket;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = d.f;
+  const pillsEl = document.createElement('div');
+  pillsEl.className = 'pills';
+  let html = '';
+  if (rc) html += `<span class="pill p-${rc}">${d.rag}</span>`;
+  if (d.date) {
+    const parts = d.date.slice(5).split('-');
+    html += `<span class="pill p-date">${parts[1]}/${parts[0]}</span>`;
   }
-
-  document.getElementById("table-wrap").innerHTML =
-    "<table>" + colgroup + "<thead>" + headerRow + "</thead><tbody>" + bodyRows + "</tbody></table>";
+  pillsEl.innerHTML = html;
+  wrap.appendChild(dot);
+  wrap.appendChild(a);
+  wrap.appendChild(pillsEl);
+  wrap.addEventListener('mouseenter', (e) => showTooltip(e, d));
+  wrap.addEventListener('mousemove',  (e) => placeTooltip(e));
+  wrap.addEventListener('mouseleave', hideTooltip);
+  return wrap;
 }
 
-fetch("ecom_data.json")
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    DATA = data;
-    document.getElementById("team-select").addEventListener("change", render);
-    document.getElementById("goal-select").addEventListener("change", render);
-    render();
-  })
-  .catch(function(err) {
-    document.getElementById("table-wrap").innerHTML =
-      '<p style="padding:40px;color:#c00">Failed to load ecom_data.json: ' + err + '</p>';
+function render() {
+  const rm = document.getElementById('rm');
+  rm.innerHTML = '';
+  const wtOk = d => !d.wt || d.wt === 'Delivery' || d.wt === 'Both';
+  const isDelivered = d => d.st === 'Done' || d.st === 'Monitor';
+  const notDelivered = d => !isDelivered(d);
+
+  const hasAny = LANES.some(lane => {
+    const t = LANE_TEAM[lane];
+    return active.has(t) && DATA.some(d => d.lane === lane && wtOk(d));
   });
+  if (!hasAny) return;
+
+  const grid = document.createElement('div');
+  grid.className = 'rm-grid';
+  const hdr = document.createElement('div');
+  hdr.className = 'rm-grid-header';
+  hdr.innerHTML = '<div class="rm-gh"></div><div class="rm-gh h-done col-delivered">Delivered</div><div class="rm-gh h-now">Now</div><div class="rm-gh h-next">Next</div><div class="rm-gh h-later">Later</div>';
+  grid.appendChild(hdr);
+
+  LANES.forEach(lane => {
+    const t = LANE_TEAM[lane];
+    if (!active.has(t)) return;
+    const nowItems   = DATA.filter(d => d.lane === lane && d.r === 'Now'   && wtOk(d) && notDelivered(d));
+    const nextItems  = DATA.filter(d => d.lane === lane && d.r === 'Next'  && wtOk(d) && notDelivered(d));
+    const laterItems = DATA.filter(d => d.lane === lane && d.r === 'Later' && wtOk(d) && notDelivered(d));
+    const doneItems  = DATA.filter(d => d.lane === lane && isDelivered(d)  && wtOk(d));
+    if (!nowItems.length && !nextItems.length && !laterItems.length && !doneItems.length) return;
+
+    const row = document.createElement('div');
+    row.className = 'rm-lane';
+    const lnDiv = document.createElement('div');
+    lnDiv.className = 'rm-lane-name';
+    lnDiv.textContent = lane;
+    const nowDiv  = document.createElement('div'); nowDiv.className  = 'rm-cell';
+    const nxtDiv  = document.createElement('div'); nxtDiv.className  = 'rm-cell';
+    const latDiv  = document.createElement('div'); latDiv.className  = 'rm-cell later-cell';
+    const doneDiv = document.createElement('div'); doneDiv.className = 'rm-cell done-cell col-delivered';
+
+    [[nowItems, nowDiv],[nextItems, nxtDiv],[laterItems, latDiv],[doneItems, doneDiv]].forEach(([items, cell]) => {
+      if (!items.length) {
+        cell.innerHTML = '<span class="empty">—</span>';
+      } else {
+        items.forEach(d => { cell.appendChild(featureEl(d)); });
+      }
+    });
+
+    row.appendChild(lnDiv);
+    row.appendChild(doneDiv);
+    row.appendChild(nowDiv);
+    row.appendChild(nxtDiv);
+    row.appendChild(latDiv);
+    grid.appendChild(row);
+  });
+
+  rm.appendChild(grid);
+  updateCount();
+}
+
+function updateCount() {
+  const wtOk = d => !d.wt || d.wt === 'Delivery' || d.wt === 'Both';
+  const vis = DATA.filter(d => active.has(d.t) && wtOk(d));
+  document.getElementById('issue-count').textContent =
+    `${vis.length} issues · ${vis.filter(d => d.r === 'Now').length} Now · ${vis.filter(d => d.r === 'Next').length} Next`;
+}
+
+let deliveredVisible = false;
+function toggleDelivered() {
+  deliveredVisible = !deliveredVisible;
+  document.getElementById('rm').classList.toggle('show-delivered', deliveredVisible);
+  document.getElementById('delivered-label').textContent = deliveredVisible ? 'Hide Delivered' : 'Show Delivered';
+}
+
+function toggle(el) {
+  const t = el.dataset.t;
+  if (active.has(t) && active.size === 1) return;
+  if (active.has(t)) { active.delete(t); el.classList.remove('active'); }
+  else { active.add(t); el.classList.add('active'); }
+  render();
+}
+
+render();
 </script>
-</div>
 </body>
 </html>
